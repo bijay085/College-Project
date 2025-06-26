@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FraudShield Dashboard</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="index.css" />
+  <script src="index.js" defer></script>
+</head>
+<body>
+  <header>
+    <img src="assets/logo.png" alt="FraudShield Portal" />
+
+    <nav>
+      <button class="tab-btn active" data-tab="home">🏠 Home</button>
+      <button class="tab-btn" data-tab="bulk">📂 Bulk Check</button>
+      <button class="tab-btn" data-tab="logs">🧾 Logs</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Home Tab -->
+    <section id="home" class="tab-content active">
+
+      <!-- 1) What is FraudShield? (text left, blank right) -->
+      <div class="two-col left">
+        <div class="text">
+          <h2>What is FraudShield?</h2>
+          <p>
+            FraudShield is a real-time fraud-detection engine that uses
+            explainable logic and behavioral intelligence to spot risky
+            transactions before they hit your books.
+          </p>
+        </div>
+        <div class="media"><!-- intentionally blank; or drop in <img src="…"> here --></div>
+      </div>
+
+      <!-- 2) Why FraudShield? (blank left, text right) -->
+      <div class="two-col right">
+        <div class="media"><!-- blank or <img src="assets/why.svg" alt="Why FraudShield?"> --></div>
+        <div class="text">
+          <h3>Why Choose FraudShield?</h3>
+          <ul>
+            <li><strong>Instant scoring:</strong> get a clear risk score in <em>milliseconds</em></li>
+            <li><strong>Explainable rules:</strong> know exactly why a transaction flagged</li>
+            <li><strong>Behavioral checks:</strong> detect bots, stolen cards, disposable emails</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 3) How to Use (text left, blank right) -->
+      <div class="two-col left">
+        <div class="text">
+          <h3>Getting Started</h3>
+          <ol>
+            <li>Switch tabs to explore features</li>
+            <li>Bulk upload your transaction files</li>
+            <li>Watch real-time logs and download results</li>
+          </ol>
+        </div>
+        <div class="media"><!-- blank or drop in <img src="assets/howto.svg"> --></div>
+      </div>
+
+    </section>
+
+    <!-- Bulk Check Tab -->
+    <section id="bulk" class="tab-content">
+      <h2>Bulk Transaction Check</h2>
+      <div class="upload-box">
+        <label for="bulkFile">
+          Upload <span class="primary-accent">.csv, .json, .xlsx, or .txt</span>:
+        </label>
+        <input type="file" id="bulkFile" accept=".csv,.json,.xlsx,.txt" />
+        <button id="bulkSubmit" class="submit-btn">Submit</button>
+        <div class="upload-progress-bar hidden">
+          <div class="upload-progress-bar-inner"></div>
+        </div>
+        <p class="upload-desc">
+          We'll run fraud checks and give you a summary + downloadable result.
+        </p>
+      </div>
+      <div id="bulkResults"></div>
+    </section>
+
+    <!-- Logs Tab -->
+    <section id="logs" class="tab-content">
+      <h2>Live Logs</h2>
+      <p>This section shows logs sent via the integrated checkout script.</p>
+      <div id="logOutput">No logs yet.</div>
+    </section>
+  </main>
+</body>
+</html>

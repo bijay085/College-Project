@@ -1,0 +1,543 @@
+/* index.css - Neuomorphic Top Bar & Streamlined Panels */
+
+:root {
+  --bg: #f4f6fa;
+  --text: #444;
+  --accent: #FF6F61;
+  --shadow-light: rgba(255, 255, 255, 0.7);
+  --shadow-dark: rgba(0, 0, 0, 0.1);
+  --radius: 4px;   /* more square, but not fully square */
+  --spacing: 32px;
+  --transition: 0.3s ease;
+}
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  height: 100%;
+}
+
+/* Top Bar */
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 4px;           /* minimal horizontal padding */
+  padding-right: 24px; /* add right padding to push nav away from edge */
+  min-height: 40px;         /* even shorter nav bar */
+  height: 40px;
+  background: rgba(244,246,250,0.92);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 24px var(--shadow-dark);
+  z-index: 100;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+header img {
+  height: 60px;
+  width: 60px;
+  object-fit: contain;
+  margin-left: 4px;
+}
+
+/* Remove the panel look from the nav bar */
+header nav {
+  background: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: 40px !important;  /* force nav bar to match header */
+  min-height: 0 !important;
+  align-items: center;
+  gap: 16px;                /* slightly tighter gap */
+  display: flex;
+  margin-right: 0 !important; /* remove previous margin-right */
+}
+
+/* If you still see a gap, also reset any margins */
+header nav,
+header nav * {
+  margin: 0;
+}
+
+header nav {
+  display: flex;
+  gap: var(--spacing);
+}
+
+/* Tab Buttons */
+.tab-btn {
+  background: #e5e7eb;
+  border: none;
+  padding: 2px 5px;        /* less padding */
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 1rem;         /* smaller text */
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+  min-width: 16px;
+  min-height: 12px;
+}
+
+.tab-btn:hover {
+  background: #d1d5db;
+  /* slightly darker on hover */
+  color: #222;
+  /* no box-shadow */
+}
+
+.tab-btn.active {
+  background: #6366f1;
+  /* distinct indigo for active */
+  color: #fff;
+  /* no box-shadow */
+}
+
+/* Main Content */
+main {
+  padding: calc(var(--spacing) * 2) var(--spacing);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn var(--transition);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Panel Styling: only core wrappers */
+.dashboard-panel,
+.upload-box {
+  background: #f8fafc;
+  /* off-white for panels */
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  margin-bottom: var(--spacing);
+  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+  margin-bottom: calc(var(--spacing) * 2);
+}
+
+.section:nth-child(even) {
+  flex-direction: row-reverse;
+}
+
+.section-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  padding: var(--spacing);
+}
+
+.section-content h2,
+.section-content h3,
+.two-col .text h2,
+.two-col .text h3 {
+  margin-bottom: 18px;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.section-content p,
+.section-content ul,
+.two-col .text p,
+.two-col .text ul,
+.two-col .text ol {
+  margin-bottom: 18px;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.section-content ul,
+.two-col .text ul {
+  padding-left: 18px;
+}
+
+.section-content li,
+.two-col .text li {
+  margin-bottom: 8px;
+}
+
+.section-img {
+  flex: 1;
+  text-align: center;
+}
+
+.section-img img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: 4px 4px 12px var(--shadow-dark), -4px -4px 12px var(--shadow-light);
+}
+
+.section-img img:hover {
+  transform: scale(1.05);
+  transition: transform var(--transition);
+}
+
+/* Consolidated Two-Column and Section Layout */
+.two-col, .section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
+  gap: var(--spacing);
+  margin-bottom: calc(var(--spacing) * 2);
+  grid-template-areas: "text media";
+}
+
+.two-col.left, .section.left {
+  grid-template-areas: "text media";
+}
+
+.two-col.right, .section.right {
+  grid-template-areas: "media text";
+}
+
+.two-col .text, .section-content {
+  grid-area: text;
+  padding: var(--spacing);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  direction: ltr;
+}
+
+.two-col .media, .section-img {
+  grid-area: media;
+  min-height: 150px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: var(--radius);
+}
+
+.two-col .media img, .section-img img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  box-shadow: 4px 4px 12px var(--shadow-dark), -4px -4px 12px var(--shadow-light);
+  transition: transform var(--transition);
+}
+
+.two-col .media img:hover, .section-img img:hover {
+  transform: scale(1.05);
+}
+
+.two-col .text h2,
+.two-col .text h3,
+.section-content h2,
+.section-content h3 {
+  margin-bottom: 18px;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.two-col .text p,
+.two-col .text ul,
+.two-col .text ol,
+.section-content p,
+.section-content ul {
+  margin-bottom: 18px;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.two-col .text ul,
+.section-content ul {
+  list-style: disc inside;
+  padding-left: 18px;
+}
+
+.two-col .text li,
+.section-content li {
+  margin-bottom: 8px;
+}
+
+/* Optional placeholder styling for empty side */
+.two-col .media:empty,
+.section-img:empty {
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: var(--radius);
+}
+
+/* Hide empty results/logs until populated */
+#bulkResults:empty,
+#logOutput:empty {
+  display: none;
+}
+
+/* Style results/logs when they have content */
+#bulkResults:not(:empty),
+#logOutput:not(:empty) {
+  background: #f8fafc;
+  /* match panel bg */
+  border-radius: var(--radius);
+  padding: var(--spacing);
+  margin-bottom: var(--spacing);
+  box-shadow: 8px 8px 16px var(--shadow-dark), -8px -8px 16px var(--shadow-light);
+  white-space: pre-wrap;
+  font-family: monospace;
+}
+
+/* Upload Box Specific */
+.upload-box {
+  text-align: center;
+  padding: 40px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.upload-box label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 6px;
+}
+
+.upload-box input[type="file"] {
+  margin: 8px 0;
+  padding: 6px;
+  font-size: 0.95rem;
+}
+
+.upload-desc {
+  font-size: 0.95rem;
+  color: #475569;
+  max-width: 420px;
+  margin-bottom: 16px;
+}
+
+.upload-progress-bar {
+  width: 100%;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 16px 0;
+  display: block;
+}
+
+.upload-progress-bar-inner {
+  height: 100%;
+  background: #6366f1;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Typography and Lists */
+h2 {
+  margin-bottom: var(--spacing);
+  font-size: 1.75rem;
+}
+
+h3 {
+  margin-bottom: calc(var(--spacing)/2);
+  font-size: 1.25rem;
+}
+
+ul.feature-list {
+  list-style: disc inside;
+  margin-bottom: var(--spacing);
+  color: var(--text);
+}
+
+.text-muted {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.primary-accent {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Utility Classes */
+.hidden {
+  display: none !important;
+}
+
+/* Submit Button Styling */
+button[type="submit"],
+.submit-btn {
+  background: #6366f1;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 24px;
+  font-size: 1rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  margin-top: 12px;
+  display: inline-block;
+}
+
+button[type="submit"]:hover,
+.submit-btn:hover {
+  background: #4f46e5;
+}
+
+/* Ensure form elements are spaced and aligned */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.upload-box form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Bulk Results Summary Box */
+#bulkResults {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 48px;
+  margin-bottom: 48px;
+  padding: 20px;
+}
+
+#bulkResults > div.summary-box {
+  background: #e2e8f0;
+  border-radius: 20px;
+  padding: 28px 32px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  font-size: 1rem;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+#bulkResults > div.summary-box b {
+  font-size: 1.3rem;
+  display: block;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+#bulkResults > div.summary-box span {
+  display: block;
+  margin: 8px 0;
+  color: #10b981;
+  font-weight: 500;
+}
+
+/* --- Tweaks: scrollable panes, big vertical gaps, squarer corners --- */
+/* Two-col grid: big vertical & horizontal gaps */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--spacing);
+  row-gap: calc(var(--spacing) * 2);
+  /* very tall gap between rows */
+  margin: calc(var(--spacing) * 2) 0;
+  /* big top/bottom margin per section */
+  align-items: start;
+  grid-template-areas: "text media";
+}
+
+/* Alternating text/media placement */
+.two-col.left {
+  grid-template-areas: "text media";
+}
+
+.two-col.right {
+  grid-template-areas: "media text";
+}
+
+/* Scrollable panes with fixed max-height */
+.two-col .text,
+.two-col .media {
+  grid-area: auto;
+  max-height: 60vh;
+  /* cap each column at 60% of viewport */
+  overflow-y: auto;
+  /* vertical scrollbar when needed */
+  padding: var(--spacing);
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* If you drop in images, keep them fitting & rounded */
+.two-col .media img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+/* Tighter corners on all panels */
+.dashboard-panel,
+.upload-box,
+.section,
+.section-content,
+.section-img,
+.two-col,
+.two-col .text,
+.two-col .media,
+#bulkResults>div,
+.summary-box,
+#bulkResults:not(:empty),
+#logOutput:not(:empty) {
+  border-radius: 24px 24px 48px 48px;
+  min-height: 350px; /* increase height for a taller look */
+}
+
+/* And bump up spacing around other sections too */
+header,
+main {
+  padding-top: var(--spacing);
+  padding-bottom: var(--spacing);
+}
