@@ -1,0 +1,5 @@
+email,card_number,ip,fingerprint,price
+user1@mailinator.com,4111111234567890,192.168.1.10,fprint123,49.99
+user2@gmail.com,5555550000000001,10.0.0.5,fprint456,149.00
+user3@tempmail.com,3782820000000002,8.8.8.8,fprint789,9.99
+user4@yahoo.com,4000001234567899,123.45.67.89,fprint999,300.00

@@ -3,95 +3,554 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FraudShield Dashboard</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
+  <meta name="description" content="FraudShield - Advanced real-time fraud detection and prevention dashboard" />
+  <meta name="keywords" content="fraud detection, transaction security, risk assessment, financial protection" />
+  <meta name="author" content="FraudShield Security Solutions" />
+  <title>FraudShield Dashboard - Advanced Fraud Detection Platform</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="index.css" />
+  
+  <!-- Scripts -->
   <script src="index.js" defer></script>
 </head>
-<body>
-  <header>
-    <img src="assets/logo.png" alt="FraudShield Portal" />
 
-    <nav>
-      <button class="tab-btn active" data-tab="home">🏠 Home</button>
-      <button class="tab-btn" data-tab="bulk">📂 Bulk Check</button>
-      <button class="tab-btn" data-tab="logs">🧾 Logs</button>
+<body>
+  <!-- Enhanced Header with Status Indicator -->
+  <header>
+    <div class="logo-section">
+      <img src="assets/logo.png" alt="FraudShield Portal" />
+      <div class="status-indicator" id="apiStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">Connecting...</span>
+      </div>
+    </div>
+    
+    <nav role="navigation" aria-label="Main navigation">
+      <button class="tab-btn active" data-tab="home" aria-selected="true">
+        <span class="icon">🏠</span>
+        <span class="label">Dashboard</span>
+      </button>
+      <button class="tab-btn" data-tab="bulk" aria-selected="false">
+        <span class="icon">📊</span>
+        <span class="label">Bulk Analysis</span>
+      </button>
+      <button class="tab-btn" data-tab="logs" aria-selected="false">
+        <span class="icon">📋</span>
+        <span class="label">Activity Logs</span>
+      </button>
+      <button class="tab-btn" data-tab="settings" aria-selected="false">
+        <span class="icon">⚙️</span>
+        <span class="label">Settings</span>
+      </button>
     </nav>
   </header>
 
-  <main>
-    <!-- Home Tab -->
-    <section id="home" class="tab-content active">
+  <main role="main">
+    
+    <!-- Enhanced Home/Dashboard Tab -->
+    <section id="home" class="tab-content active" role="tabpanel" aria-labelledby="home-tab">
+      
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="hero-content">
+          <h1>Welcome to FraudShield</h1>
+          <p class="hero-subtitle">Advanced rule-based fraud detection with transparent, explainable results</p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number" id="totalChecks">1,247</span>
+              <span class="stat-label">Transactions Analyzed</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="fraudBlocked">89</span>
+              <span class="stat-label">Fraud Attempts Blocked</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number" id="accuracyRate">99.2%</span>
+              <span class="stat-label">Detection Accuracy</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <!-- 1) What is FraudShield? (text left, blank right) -->
+      <!-- What is FraudShield? -->
       <div class="two-col left">
         <div class="text">
-          <h2>What is FraudShield?</h2>
+          <h2>🛡️ Intelligent Rule-Based Protection</h2>
           <p>
-            FraudShield is a real-time fraud-detection engine that uses
-            explainable logic and behavioral intelligence to spot risky
-            transactions before they hit your books.
+            FraudShield uses <strong>advanced algorithms and rule engines</strong> to provide 
+            real-time fraud detection for your business. Our system analyzes transaction patterns, 
+            device fingerprints, and behavioral indicators using proven detection methods.
           </p>
+          <p>
+            Built for businesses that need <em>speed, accuracy, and complete transparency</em> 
+            in their fraud detection pipeline. Every decision is explainable and auditable.
+          </p>
+          <div class="feature-highlights">
+            <span class="highlight-badge">⚡ Sub-second Analysis</span>
+            <span class="highlight-badge">🔍 100% Explainable</span>
+            <span class="highlight-badge">📊 Rule-Based Logic</span>
+          </div>
         </div>
-        <div class="media"><!-- intentionally blank; or drop in <img src="…"> here --></div>
+        <div class="media">
+          <div class="demo-visualization">
+            <div class="vis-header">Live Detection Engine</div>
+            <div class="threat-item safe">
+              <span class="threat-icon">✅</span>
+              <span class="threat-text">Transaction #1001 - Clean</span>
+              <span class="threat-score">0.12</span>
+            </div>
+            <div class="threat-item warning">
+              <span class="threat-icon">⚠️</span>
+              <span class="threat-text">Transaction #1002 - Review</span>
+              <span class="threat-score">0.65</span>
+            </div>
+            <div class="threat-item danger">
+              <span class="threat-icon">❌</span>
+              <span class="threat-text">Transaction #1003 - Blocked</span>
+              <span class="threat-score">0.91</span>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- 2) Why FraudShield? (blank left, text right) -->
+      <!-- Why Choose FraudShield? -->
       <div class="two-col right">
-        <div class="media"><!-- blank or <img src="assets/why.svg" alt="Why FraudShield?"> --></div>
+        <div class="media">
+          <div class="benefits-showcase">
+            <div class="benefit-item">
+              <div class="benefit-icon">🚀</div>
+              <div class="benefit-content">
+                <h4>Lightning Fast</h4>
+                <p>Millisecond response times with deterministic results</p>
+              </div>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon">🔍</div>
+              <div class="benefit-content">
+                <h4>Fully Transparent</h4>
+                <p>Every flag comes with clear reasons and rule explanations</p>
+              </div>
+            </div>
+            <div class="benefit-item">
+              <div class="benefit-icon">🎯</div>
+              <div class="benefit-content">
+                <h4>Precise Detection</h4>
+                <p>Fine-tuned rules minimize false positives</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="text">
-          <h3>Why Choose FraudShield?</h3>
-          <ul>
-            <li><strong>Instant scoring:</strong> get a clear risk score in <em>milliseconds</em></li>
-            <li><strong>Explainable rules:</strong> know exactly why a transaction flagged</li>
-            <li><strong>Behavioral checks:</strong> detect bots, stolen cards, disposable emails</li>
+          <h3>🎯 Why Choose Rule-Based Detection</h3>
+          <ul class="premium-list">
+            <li>
+              <strong>Complete Transparency:</strong> Know exactly why each transaction was flagged
+            </li>
+            <li>
+              <strong>Proven Algorithms:</strong> Aho-Corasick, Z-Score analysis, Levenshtein distance, and more
+            </li>
+            <li>
+              <strong>No Black Box:</strong> Every decision is auditable and explainable to regulators
+            </li>
+            <li>
+              <strong>Instant Deployment:</strong> No training data required - works immediately
+            </li>
+            <li>
+              <strong>Easy Tuning:</strong> Adjust thresholds and rules in real-time
+            </li>
           </ul>
+          <div class="future-note">
+            <p><em>🔮 Future Enhancement: Machine learning capabilities will be added to complement our rule-based foundation.</em></p>
+          </div>
         </div>
       </div>
 
-      <!-- 3) How to Use (text left, blank right) -->
+      <!-- Detection Methods -->
       <div class="two-col left">
         <div class="text">
-          <h3>Getting Started</h3>
-          <ol>
-            <li>Switch tabs to explore features</li>
-            <li>Bulk upload your transaction files</li>
-            <li>Watch real-time logs and download results</li>
-          </ol>
+          <h3>🔬 Advanced Detection Methods</h3>
+          <div class="detection-methods">
+            <div class="method-item">
+              <span class="method-icon">📧</span>
+              <div class="method-content">
+                <h4>Email Analysis</h4>
+                <p>Disposable email detection using pattern matching</p>
+              </div>
+            </div>
+            <div class="method-item">
+              <span class="method-icon">💳</span>
+              <div class="method-content">
+                <h4>BIN Validation</h4>
+                <p>Card issuer verification and geographic matching</p>
+              </div>
+            </div>
+            <div class="method-item">
+              <span class="method-icon">🌍</span>
+              <div class="method-content">
+                <h4>Geo-Location</h4>
+                <p>IP vs billing address distance calculation</p>
+              </div>
+            </div>
+            <div class="method-item">
+              <span class="method-icon">⏱️</span>
+              <div class="method-content">
+                <h4>Timing Analysis</h4>
+                <p>Bot detection through checkout speed analysis</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="media"><!-- blank or drop in <img src="assets/howto.svg"> --></div>
+        <div class="media">
+          <div class="algorithm-showcase">
+            <div class="algorithm-item">
+              <h4>Current Algorithms</h4>
+              <div class="algo-list">
+                <span class="algo-tag">Aho-Corasick Pattern Matching</span>
+                <span class="algo-tag">Great-Circle Distance</span>
+                <span class="algo-tag">Z-Score Anomaly Detection</span>
+                <span class="algo-tag">Levenshtein String Distance</span>
+                <span class="algo-tag">Bloom Filter Tracking</span>
+              </div>
+            </div>
+            <div class="performance-metrics">
+              <div class="metric">
+                <span class="metric-value">< 100ms</span>
+                <span class="metric-label">Average Response</span>
+              </div>
+              <div class="metric">
+                <span class="metric-value">8+</span>
+                <span class="metric-label">Detection Rules</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Start Guide -->
+      <div class="two-col right">
+        <div class="media">
+          <div class="workflow-preview">
+            <div class="workflow-step active">
+              <span class="step-icon">📁</span>
+              <span class="step-name">Upload Data</span>
+            </div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">
+              <span class="step-icon">⚙️</span>
+              <span class="step-name">Rule Engine</span>
+            </div>
+            <div class="workflow-arrow">→</div>
+            <div class="workflow-step">
+              <span class="step-icon">📊</span>
+              <span class="step-name">Results</span>
+            </div>
+          </div>
+        </div>
+        <div class="text">
+          <h3>🚀 Get Started in Minutes</h3>
+          <div class="step-guide">
+            <div class="step">
+              <span class="step-number">1</span>
+              <div class="step-content">
+                <h4>Upload Transaction Data</h4>
+                <p>CSV, Excel, or JSON files with transaction details</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">2</span>
+              <div class="step-content">
+                <h4>Rule Engine Analysis</h4>
+                <p>8+ detection rules analyze each transaction instantly</p>
+              </div>
+            </div>
+            <div class="step">
+              <span class="step-number">3</span>
+              <div class="step-content">
+                <h4>Download Results</h4>
+                <p>Get detailed reports with fraud scores and triggered rules</p>
+              </div>
+            </div>
+          </div>
+          <button class="cta-button" onclick="switchToTab('bulk')">
+            📊 Start Analysis
+          </button>
+        </div>
       </div>
 
     </section>
 
-    <!-- Bulk Check Tab -->
-    <section id="bulk" class="tab-content">
-      <h2>Bulk Transaction Check</h2>
-      <div class="upload-box">
-        <label for="bulkFile">
-          Upload <span class="primary-accent">.csv, .json, .xlsx, or .txt</span>:
-        </label>
-        <input type="file" id="bulkFile" accept=".csv,.json,.xlsx,.txt" />
-        <button id="bulkSubmit" class="submit-btn">Submit</button>
-        <div class="upload-progress-bar hidden">
-          <div class="upload-progress-bar-inner"></div>
-        </div>
-        <p class="upload-desc">
-          We'll run fraud checks and give you a summary + downloadable result.
-        </p>
+    <!-- Enhanced Bulk Check Tab -->
+    <section id="bulk" class="tab-content" role="tabpanel" aria-labelledby="bulk-tab">
+      
+      <div class="page-header">
+        <h2>📊 Bulk Transaction Analysis</h2>
+        <p class="page-subtitle">Upload your transaction data for comprehensive fraud analysis</p>
       </div>
-      <div id="bulkResults"></div>
+
+      <!-- File Upload Section -->
+      <div class="upload-section">
+        <div class="upload-box" id="uploadBox">
+          <div class="upload-icon">📁</div>
+          <h3>Upload Transaction Data</h3>
+          <p class="upload-desc">
+            Drag & drop your file here or click to browse
+          </p>
+          <p class="file-types">
+            Supported formats: <span class="primary-accent">CSV, JSON, Excel (.xlsx), TXT</span>
+          </p>
+          
+          <input type="file" id="bulkFile" accept=".csv,.json,.xlsx,.txt,.xls" aria-label="Upload transaction file" />
+          
+          <div class="file-info hidden" id="fileInfo">
+            <div class="file-details">
+              <span class="file-name" id="fileName"></span>
+              <span class="file-size" id="fileSize"></span>
+            </div>
+          </div>
+
+          <button id="bulkSubmit" class="submit-btn" disabled>
+            <span class="btn-icon">🔍</span>
+            <span class="btn-text">Analyze Transactions</span>
+          </button>
+
+          <!-- Progress Bar -->
+          <div class="upload-progress-bar hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <div class="upload-progress-bar-inner"></div>
+            <span class="progress-text">Processing...</span>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="upload-stats">
+            <div class="stat">
+              <span class="stat-label">Max File Size:</span>
+              <span class="stat-value">16 MB</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Max Records:</span>
+              <span class="stat-value">5,000</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Processing Time:</span>
+              <span class="stat-value">~2-5 sec</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div id="bulkResults" class="results-section" aria-live="polite"></div>
+
     </section>
 
-    <!-- Logs Tab -->
-    <section id="logs" class="tab-content">
-      <h2>Live Logs</h2>
-      <p>This section shows logs sent via the integrated checkout script.</p>
-      <div id="logOutput">No logs yet.</div>
+    <!-- Enhanced Logs Tab -->
+    <section id="logs" class="tab-content" role="tabpanel" aria-labelledby="logs-tab">
+      
+      <div class="page-header">
+        <h2>📋 Real-time Activity Logs</h2>
+        <p class="page-subtitle">Monitor live fraud detection events and system activity</p>
+      </div>
+
+      <!-- Log Controls -->
+      <div class="log-controls">
+        <div class="control-group">
+          <label for="logLevel">Log Level:</label>
+          <select id="logLevel">
+            <option value="all">All Events</option>
+            <option value="info">Info</option>
+            <option value="warning">Warnings</option>
+            <option value="error">Errors</option>
+            <option value="fraud">Fraud Alerts</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <button id="clearLogs" class="secondary-btn">🗑️ Clear Logs</button>
+          <button id="exportLogs" class="secondary-btn">💾 Export</button>
+        </div>
+      </div>
+
+      <!-- Live Log Feed -->
+      <div class="log-container">
+        <div id="logOutput" class="log-output">
+          <div class="log-placeholder">
+            <div class="placeholder-icon">📋</div>
+            <h3>Waiting for Activity</h3>
+            <p>Fraud detection events and system logs will appear here in real-time</p>
+          </div>
+        </div>
+      </div>
+
     </section>
+
+    <!-- Enhanced Settings Tab -->
+    <section id="settings" class="tab-content" role="tabpanel" aria-labelledby="settings-tab">
+      
+      <div class="page-header">
+        <h2>⚙️ System Configuration</h2>
+        <p class="page-subtitle">Configure fraud detection rules and system parameters</p>
+      </div>
+
+      <!-- Settings Grid -->
+      <div class="settings-grid">
+        
+        <!-- Detection Thresholds -->
+        <div class="settings-card">
+          <h3>🎯 Detection Thresholds</h3>
+          <div class="setting-item">
+            <label for="fraudThreshold">Fraud Threshold</label>
+            <input type="range" id="fraudThreshold" min="0.5" max="1.0" step="0.1" value="0.7" />
+            <span class="threshold-value" id="fraudThresholdValue">0.7</span>
+          </div>
+          <div class="setting-item">
+            <label for="suspiciousThreshold">Suspicious Threshold</label>
+            <input type="range" id="suspiciousThreshold" min="0.1" max="0.7" step="0.1" value="0.4" />
+            <span class="threshold-value" id="suspiciousThresholdValue">0.4</span>
+          </div>
+          <button id="saveThresholds" class="primary-btn">💾 Save Thresholds</button>
+        </div>
+
+        <!-- Rule Configuration -->
+        <div class="settings-card">
+          <h3>⚙️ Detection Rules</h3>
+          <div class="rule-toggles">
+            <div class="rule-item">
+              <label class="rule-label">
+                <input type="checkbox" id="disposableEmailRule" checked>
+                <span class="rule-name">Disposable Email Detection</span>
+                <span class="rule-weight">Weight: 0.4</span>
+              </label>
+            </div>
+            <div class="rule-item">
+              <label class="rule-label">
+                <input type="checkbox" id="suspiciousBinRule" checked>
+                <span class="rule-name">Suspicious BIN Check</span>
+                <span class="rule-weight">Weight: 0.5</span>
+              </label>
+            </div>
+            <div class="rule-item">
+              <label class="rule-label">
+                <input type="checkbox" id="priceTamperingRule" checked>
+                <span class="rule-name">Price Tampering Detection</span>
+                <span class="rule-weight">Weight: 0.5</span>
+              </label>
+            </div>
+            <div class="rule-item">
+              <label class="rule-label">
+                <input type="checkbox" id="geoMismatchRule" checked>
+                <span class="rule-name">Geographic Mismatch</span>
+                <span class="rule-weight">Weight: 0.6</span>
+              </label>
+            </div>
+          </div>
+          <button id="saveRules" class="primary-btn">💾 Save Rules</button>
+        </div>
+
+        <!-- System Health -->
+        <div class="settings-card">
+          <h3>💚 System Status</h3>
+          <div class="health-item">
+            <span class="health-label">API Status</span>
+            <span class="health-status online" id="apiHealth">
+              <span class="status-indicator">🟢</span> Online
+            </span>
+          </div>
+          <div class="health-item">
+            <span class="health-label">Database</span>
+            <span class="health-status" id="dbHealth">
+              <span class="status-indicator">🟡</span> Checking...
+            </span>
+          </div>
+          <div class="health-item">
+            <span class="health-label">Rule Engine</span>
+            <span class="health-status" id="ruleEngineHealth">
+              <span class="status-indicator">🟢</span> Active
+            </span>
+          </div>
+          <div class="health-item">
+            <span class="health-label">Last Check</span>
+            <span class="health-status" id="lastUpdate">Just now</span>
+          </div>
+          <button id="healthCheck" class="secondary-btn">🔄 Refresh Status</button>
+        </div>
+
+        <!-- Live Statistics -->
+        <div class="settings-card">
+          <h3>📊 Live Statistics</h3>
+          <div class="stats-grid">
+            <div class="stat-display">
+              <span class="stat-number" id="todayChecks">0</span>
+              <span class="stat-label">Today's Checks</span>
+            </div>
+            <div class="stat-display">
+              <span class="stat-number" id="weeklyFraud">0</span>
+              <span class="stat-label">Fraud This Week</span>
+            </div>
+            <div class="stat-display">
+              <span class="stat-number" id="avgResponseTime">85ms</span>
+              <span class="stat-label">Avg Response Time</span>
+            </div>
+            <div class="stat-display">
+              <span class="stat-number" id="totalRules">8</span>
+              <span class="stat-label">Active Rules</span>
+            </div>
+          </div>
+          <button id="refreshStats" class="secondary-btn">📈 Refresh Stats</button>
+        </div>
+
+        <!-- System Configuration -->
+        <div class="settings-card">
+          <h3>🔧 System Configuration</h3>
+          <div class="config-item">
+            <label for="maxFileSize">Max File Size (MB)</label>
+            <input type="number" id="maxFileSize" min="1" max="50" value="16" />
+          </div>
+          <div class="config-item">
+            <label for="maxRecords">Max Records per File</label>
+            <input type="number" id="maxRecords" min="100" max="10000" value="5000" />
+          </div>
+          <div class="config-item">
+            <label for="logRetention">Log Retention (Days)</label>
+            <input type="number" id="logRetention" min="1" max="365" value="30" />
+          </div>
+          <button id="saveConfig" class="primary-btn">💾 Save Configuration</button>
+        </div>
+
+        <!-- Export/Import -->
+        <div class="settings-card">
+          <h3>📥 Data Management</h3>
+          <div class="data-actions">
+            <button id="exportSettings" class="secondary-btn">📤 Export Settings</button>
+            <button id="importSettings" class="secondary-btn">📥 Import Settings</button>
+            <input type="file" id="settingsFile" accept=".json" style="display: none;">
+          </div>
+          <div class="backup-info">
+            <p>Last backup: <span id="lastBackup">Never</span></p>
+            <button id="createBackup" class="secondary-btn">💾 Create Backup</button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
+
+  <!-- Toast Notifications -->
+  <div id="toastContainer" class="toast-container" aria-live="assertive"></div>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loading-spinner"></div>
+    <p>Processing your request...</p>
+  </div>
+
 </body>
 </html>
