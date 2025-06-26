@@ -1,0 +1,499 @@
+/* css/bulk-analysis.css - Bulk Analysis Page Styles */
+
+/* Enhanced Upload Section */
+.upload-section {
+  margin-bottom: var(--spacing-3xl);
+}
+
+.upload-box {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--surface-cream) 100%);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  max-width: 700px;
+  margin: 0 auto;
+  border: 2px dashed var(--gray-300);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.upload-box:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2xl);
+}
+
+.upload-icon {
+  font-size: 4rem;
+  margin-bottom: var(--spacing);
+  color: var(--primary);
+}
+
+.upload-box h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  color: var(--text-primary);
+}
+
+.upload-desc {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.file-types {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-xl);
+}
+
+.primary-accent {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* File Input Styling */
+input[type="file"] {
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  font-family: inherit;
+  transition: border-color var(--transition-normal);
+}
+
+input[type="file"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* File Info Display */
+.file-info {
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing);
+  background: var(--gray-50);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--gray-200);
+}
+
+.file-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.file-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.file-size {
+  color: var(--text-muted);
+}
+
+/* Upload Stats */
+.upload-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--gray-200);
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+/* Enhanced Buttons */
+.submit-btn {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border: none;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing) var(--spacing-xl);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  justify-content: center;
+  min-width: 180px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  margin: var(--spacing-lg) auto;
+}
+
+.submit-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s;
+}
+
+.submit-btn:hover::before {
+  left: 100%;
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-xl);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-icon {
+  font-size: 1.1rem;
+}
+
+.secondary-btn {
+  background: var(--surface);
+  color: var(--text-primary);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-sm) var(--spacing);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.secondary-btn:hover {
+  background: var(--gray-50);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Progress Bar */
+.upload-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin: var(--spacing-lg) 0;
+  position: relative;
+}
+
+.upload-progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: var(--radius-sm);
+}
+
+.progress-text {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: var(--spacing-xs);
+}
+
+/* Results Section */
+.results-section {
+  margin-top: var(--spacing-3xl);
+}
+
+/* Professional Table Styling */
+#bulkResults {
+  width: 100%;
+  max-width: 1400px;
+  margin: var(--spacing-3xl) auto;
+  animation: slideInFromBottom 0.8s var(--ease-out);
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#bulkResults:empty {
+  display: none;
+}
+
+#bulkResults h3 {
+  text-align: center;
+  margin-bottom: var(--spacing-3xl);
+  font-size: 2.25rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+#bulkResults h3::after {
+  content: '';
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: var(--radius-sm);
+  animation: expandLine 1s ease-out;
+}
+
+@keyframes expandLine {
+  from { width: 0; }
+  to { width: 120px; }
+}
+
+/* Table Container */
+.table-container {
+  background: var(--surface);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+  border: 1px solid var(--gray-100);
+  position: relative;
+  margin: var(--spacing-xl) 0;
+}
+
+.table-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+  animation: gradientShift 4s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* Enhanced Table */
+.bulk-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  background: var(--surface);
+}
+
+.bulk-table th {
+  background: linear-gradient(135deg, var(--gray-50), var(--gray-100));
+  color: var(--text-primary);
+  font-weight: 700;
+  padding: var(--spacing-lg) var(--spacing);
+  text-align: left;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border: none;
+  position: relative;
+}
+
+.bulk-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.bulk-table th.sortable::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: scaleX(0);
+  transition: transform var(--transition-normal);
+}
+
+.bulk-table th.sortable:hover::after {
+  transform: scaleX(1);
+}
+
+.bulk-table th.sort-asc::before {
+  content: '↑';
+  margin-right: 4px;
+}
+
+.bulk-table th.sort-desc::before {
+  content: '↓';
+  margin-right: 4px;
+}
+
+.bulk-table td {
+  padding: var(--spacing) var(--spacing);
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: middle;
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+}
+
+.bulk-table tbody tr {
+  transition: all var(--transition-normal);
+}
+
+.bulk-table tbody tr:hover {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.03), rgba(59, 130, 246, 0.03));
+  transform: translateX(4px);
+  box-shadow: 4px 0 0 0 var(--primary);
+}
+
+/* Decision Row Styles */
+.decision-row.decision-not_fraud {
+  border-left: 4px solid var(--success);
+}
+
+.decision-row.decision-suspicious {
+  border-left: 4px solid var(--warning);
+}
+
+.decision-row.decision-fraud {
+  border-left: 4px solid var(--danger);
+}
+
+.decision-row.decision-error {
+  border-left: 4px solid var(--gray-400);
+}
+
+/* Status Badges */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-safe {
+  background: var(--success-bg);
+  color: var(--success);
+  border: 1px solid var(--success-light);
+}
+
+.status-suspicious {
+  background: var(--warning-bg);
+  color: var(--warning);
+  border: 1px solid var(--warning-light);
+}
+
+.status-fraud {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger-light);
+}
+
+/* Summary Box */
+.summary-box {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-xl) 0;
+  text-align: center;
+}
+
+.summary-box b {
+  display: block;
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing);
+  color: var(--text-primary);
+}
+
+/* Loading Animation */
+.loading {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design for Bulk Analysis */
+@media (max-width: 1200px) {
+  .upload-box {
+    padding: var(--spacing-2xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .upload-box {
+    padding: var(--spacing-xl);
+  }
+  
+  .bulk-table th,
+  .bulk-table td {
+    padding: var(--spacing-sm);
+    font-size: 0.8rem;
+  }
+  
+  .upload-stats {
+    flex-direction: column;
+    gap: var(--spacing);
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-box {
+    padding: var(--spacing-lg);
+  }
+  
+  .bulk-table {
+    font-size: 0.7rem;
+  }
+  
+  .submit-btn {
+    min-width: auto;
+    width: 100%;
+  }
+}
