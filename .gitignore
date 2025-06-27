@@ -1,4 +1,11 @@
 # Ignore all log files in the project
 *.log
+
+# Ignore all CSV files
 *.csv
+
+# Ignore VS Code settings folder
 .vscode/
+
+# Ignore Python __pycache__ folders
+__pycache__/
