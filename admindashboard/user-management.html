@@ -9,14 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="user-management.css">
     
-    <!--
     <script>
         const userData = sessionStorage.getItem('fraudshield_user');
         if (!userData || JSON.parse(userData).user.role !== 'admin') {
             window.location.href = '/user_auth/pages/login.html';
         }
     </script>
-    -->
 </head>
 
 <body>
@@ -26,7 +24,7 @@
                 <img src="../assets/logo.png" alt="FraudShield" class="logo">
                 <h1>User Management</h1>
             </div>
-            <button class="back-btn" onclick="window.location.href='../index.html'">
+            <button class="back-btn" onclick="window.location.href='/index.html'">
                 <i class="fas fa-arrow-left"></i>
                 Back to Dashboard
             </button>

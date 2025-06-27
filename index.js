@@ -104,15 +104,7 @@ class AuthManager {
         const logControls = document.getElementById('logControls');
         const logContainer = document.getElementById('logContainer');
 
-        // Allow all authenticated users to view logs, but only admins see controls
-        if (AuthManager.isAuthenticated()) {
-            if (logsAccessCheck) logsAccessCheck.classList.add('hidden');
-            if (logContainer) logContainer.classList.remove('hidden');
-            if (logsTab) logsTab.style.opacity = '1';
-            if (!isAdmin && logControls) logControls.classList.add('hidden');
-            if (isAdmin && logControls) logControls.classList.remove('hidden');
-        } else {
-            // Not authenticated: restrict access
+        if (!isAdmin) {
             if (logsAccessCheck) logsAccessCheck.classList.remove('hidden');
             if (logControls) logControls.classList.add('hidden');
             if (logContainer) logContainer.classList.add('hidden');
@@ -197,7 +189,7 @@ class AuthManager {
                 <span class="stat-label">Active Today</span>
               </div>
             </div>
-            <button id="manageUsers" class="secondary-btn" href='/admindashboard/user-management.html'>👥 Manage Users</button>
+            <button id="manageUsers" class="secondary-btn">👥 Manage Users</button>
           </div>
         `;
 

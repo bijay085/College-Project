@@ -11,7 +11,7 @@ from typing import Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import bcrypt
 from bson import ObjectId
@@ -166,13 +166,6 @@ def log_auth_attempt(email: str, success: bool, ip_address: str, user_agent: Opt
 # ============================================================================
 # API ENDPOINTS
 # ============================================================================
-
-@app.after_request
-def add_cors_headers(response):
-    """Add CORS headers and cache preflight for health endpoint"""
-    if request.path == "/auth/health":
-        response.headers["Access-Control-Max-Age"] = "600"  # cache preflight for 10 minutes
-    return response
 
 @app.route("/auth/health", methods=["GET"])
 def health_check():
