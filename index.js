@@ -1,4 +1,5 @@
-// Enhanced index.js with Authentication and Role Management - COMPLETE FIXED VERSION
+// Enhanced index.js with FIXED Authentication and Session Management
+// Now supports both authenticated and anonymous users
 
 // Tab Navigation
 const tabs = document.querySelectorAll('.tab-btn');
@@ -8,7 +9,7 @@ tabs.forEach(btn => {
     btn.addEventListener('click', () => {
         // Check if tab is accessible based on user role
         if (!isTabAccessible(btn.dataset.tab)) {
-            showToast('Access restricted', 'You do not have permission to access this section.', 'warning');
+            showToast('Access Restricted', 'Please sign in to access this feature.', 'warning');
             return;
         }
 
@@ -22,7 +23,7 @@ tabs.forEach(btn => {
     });
 });
 
-// Authentication and Role Management
+// FIXED: Authentication and Role Management
 class AuthManager {
     static getCurrentUser() {
         try {
@@ -30,6 +31,9 @@ class AuthManager {
             return userData ? JSON.parse(userData) : null;
         } catch (error) {
             console.error('Failed to parse user data:', error);
+            // Clear corrupted session data
+            sessionStorage.removeItem('fraudshield_user');
+            sessionStorage.removeItem('fraudshield_api_key');
             return null;
         }
     }
@@ -37,7 +41,7 @@ class AuthManager {
     static isAuthenticated() {
         const userData = sessionStorage.getItem('fraudshield_user');
         const apiKey = sessionStorage.getItem('fraudshield_api_key');
-        return userData && apiKey;
+        return !!(userData && apiKey);
     }
 
     static hasRole(role) {
@@ -54,15 +58,21 @@ class AuthManager {
     }
 
     static logout() {
+        // Clear all session data
         sessionStorage.removeItem('fraudshield_user');
         sessionStorage.removeItem('fraudshield_api_key');
         localStorage.removeItem('fraudshield_remember');
         localStorage.removeItem('fraudshield_email');
         
+        // Reset global variables
+        window.currentUser = null;
+        window.apiKey = null;
+        
         showToast('Logged out', 'You have been successfully logged out.', 'info');
         
+        // Refresh the page to reset UI state
         setTimeout(() => {
-            window.location.href = '/user_auth/pages/login.html';
+            window.location.reload();
         }, 1500);
     }
 
@@ -71,130 +81,257 @@ class AuthManager {
         this.setupRoleBasedAccess();
         this.setupUserMenu();
         this.loadUserProfile();
+        this.checkApiConnection();
     }
 
     static setupUserInterface() {
-        if (!window.currentUser) return;
+        const isAuth = this.isAuthenticated();
+        const currentUser = this.getCurrentUser();
+        
+        // Setup user section in header
+        this.setupUserSection(isAuth, currentUser);
+        
+        // Setup welcome message
+        if (isAuth && currentUser) {
+            const user = currentUser.user;
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            if (welcomeMessage) {
+                welcomeMessage.textContent = `Welcome back, ${user.name.split(' ')[0]}!`;
+            }
+        }
 
-        const user = window.currentUser.user;
-        const userName = document.getElementById('userName');
-        const userRole = document.getElementById('userRole');
-        const userAvatar = document.getElementById('userAvatar');
-        const welcomeMessage = document.getElementById('welcomeMessage');
-        const dropdownName = document.getElementById('dropdownName');
-        const dropdownEmail = document.getElementById('dropdownEmail');
+        // Show/hide authentication prompts
+        this.setupAuthPrompts(isAuth);
+    }
 
-        if (userName) userName.textContent = user.name;
-        if (userRole) userRole.textContent = user.role === 'admin' ? 'Administrator' : 'User';
-        if (userAvatar) userAvatar.textContent = user.name.charAt(0).toUpperCase();
-        if (welcomeMessage) welcomeMessage.textContent = `Welcome back, ${user.name.split(' ')[0]}!`;
-        if (dropdownName) dropdownName.textContent = user.name;
-        if (dropdownEmail) dropdownEmail.textContent = user.email;
+    static setupUserSection(isAuth, currentUser) {
+        const userSection = document.getElementById('userSection');
+        
+        if (isAuth && currentUser) {
+            const user = currentUser.user;
+            
+            // Show authenticated user interface
+            userSection.innerHTML = `
+                <div class="user-info">
+                    <span class="user-name">${user.name}</span>
+                    <span class="user-role">${user.role === 'admin' ? 'Administrator' : 'User'}</span>
+                </div>
+                <div class="user-menu">
+                    <button class="user-menu-btn" id="userMenuBtn" aria-label="User menu">
+                        <span class="user-avatar">${user.name.charAt(0).toUpperCase()}</span>
+                    </button>
+                    <div class="user-dropdown hidden" id="userDropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-user-info">
+                                <span class="dropdown-name">${user.name}</span>
+                                <span class="dropdown-email">${user.email}</span>
+                            </div>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="profileBtn">
+                            <span class="dropdown-icon">👤</span>
+                            Profile Settings
+                        </button>
+                        <button class="dropdown-item" id="apiKeysBtn">
+                            <span class="dropdown-icon">🔑</span>
+                            API Keys
+                        </button>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item logout-btn" id="logoutBtn">
+                            <span class="dropdown-icon">🚪</span>
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Show login/register buttons for anonymous users
+            userSection.innerHTML = `
+                <div style="display: flex; gap: 0.75rem; align-items: center;">
+                    <a href="/user_auth/pages/login.html" 
+                       style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2563eb; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 500; border: 1px solid #2563eb; transition: all 0.2s;">
+                        <span>🚪</span>
+                        <span>Sign In</span>
+                    </a>
+                    <a href="/user_auth/pages/registration.html" 
+                       style="display: inline-flex; align-items: center; gap: 0.5rem; background: #2563eb; color: white; padding: 0.5rem 1rem; border-radius: 8px; text-decoration: none; font-weight: 500; transition: all 0.2s;">
+                        <span>👤</span>
+                        <span>Sign Up</span>
+                    </a>
+                </div>
+            `;
+        }
+    }
+
+    static setupAuthPrompts(isAuth) {
+        // Show/hide auth prompts on home page
+        const authPrompt = document.getElementById('authPrompt');
+        if (authPrompt) {
+            if (isAuth) {
+                authPrompt.classList.add('hidden');
+            } else {
+                authPrompt.classList.remove('hidden');
+            }
+        }
+
+        // Show/hide public access notice on bulk page
+        const publicAccessNotice = document.getElementById('publicAccessNotice');
+        if (publicAccessNotice) {
+            if (isAuth) {
+                publicAccessNotice.classList.add('hidden');
+            } else {
+                publicAccessNotice.classList.remove('hidden');
+            }
+        }
     }
 
     static setupRoleBasedAccess() {
-        if (!window.currentUser) return;
+        const isAuth = this.isAuthenticated();
+        const isAdmin = this.isAdmin();
+        
+        // Setup logs access
+        this.setupLogsAccess(isAuth, isAdmin);
+        
+        // Setup settings access
+        this.setupSettingsAccess(isAuth, isAdmin);
+    }
 
-        const user = window.currentUser.user;
-        const isAdmin = user.role === 'admin';
-
-        // Logs tab access
-        const logsTab = document.getElementById('logsTab');
-        const logsAccessCheck = document.getElementById('logsAccessCheck');
+    static setupLogsAccess(isAuth, isAdmin) {
+        const logsAuthRequired = document.getElementById('logsAuthRequired');
+        const logsAdminOnly = document.getElementById('logsAdminOnly');
         const logControls = document.getElementById('logControls');
         const logContainer = document.getElementById('logContainer');
 
-        if (!isAdmin) {
-            if (logsAccessCheck) logsAccessCheck.classList.remove('hidden');
+        if (!isAuth) {
+            // Not authenticated - show auth required message
+            if (logsAuthRequired) logsAuthRequired.style.display = 'block';
+            if (logsAdminOnly) logsAdminOnly.classList.add('hidden');
             if (logControls) logControls.classList.add('hidden');
             if (logContainer) logContainer.classList.add('hidden');
-            if (logsTab) logsTab.style.opacity = '0.6';
-        }
-
-        // Settings tab access
-        const settingsTab = document.getElementById('settingsTab');
-        const settingsAccessCheck = document.getElementById('settingsAccessCheck');
-        const settingsGrid = document.getElementById('settingsGrid');
-
-        if (!isAdmin) {
-            // Show limited settings for regular users
-            this.setupUserSettings();
+        } else if (!isAdmin) {
+            // Authenticated but not admin - show admin required message
+            if (logsAuthRequired) logsAuthRequired.style.display = 'none';
+            if (logsAdminOnly) logsAdminOnly.classList.remove('hidden');
+            if (logControls) logControls.classList.add('hidden');
+            if (logContainer) logContainer.classList.add('hidden');
         } else {
-            // Show full admin settings
-            this.setupAdminSettings();
+            // Admin user - show full interface
+            if (logsAuthRequired) logsAuthRequired.style.display = 'none';
+            if (logsAdminOnly) logsAdminOnly.classList.add('hidden');
+            if (logControls) logControls.classList.remove('hidden');
+            if (logContainer) logContainer.classList.remove('hidden');
+            this.setupLogControls();
         }
     }
 
-    static setupUserSettings() {
-        // Regular users see profile and API key management only
-        console.log('Setting up user-level settings');
+    static setupSettingsAccess(isAuth, isAdmin) {
+        const settingsAuthRequired = document.getElementById('settingsAuthRequired');
+        const settingsGrid = document.getElementById('settingsGrid');
+
+        if (!isAuth) {
+            // Not authenticated - show auth required message
+            if (settingsAuthRequired) settingsAuthRequired.style.display = 'block';
+            if (settingsGrid) settingsGrid.classList.add('hidden');
+        } else {
+            // Authenticated - show settings
+            if (settingsAuthRequired) settingsAuthRequired.style.display = 'none';
+            if (settingsGrid) settingsGrid.classList.remove('hidden');
+            
+            if (isAdmin) {
+                this.addAdminSettings(settingsGrid);
+            }
+            
+            this.setupSettingsEventListeners(isAdmin);
+        }
     }
 
-    static setupAdminSettings() {
-        const settingsGrid = document.getElementById('settingsGrid');
-        if (!settingsGrid) return;
+    static addAdminSettings(settingsGrid) {
+        // Check if admin settings already exist
+        if (settingsGrid.querySelector('.admin-settings-card')) {
+            return;
+        }
 
-        // Add admin-specific settings cards
         const adminSettingsHTML = `
-          <!-- Detection Thresholds -->
-          <div class="settings-card">
-            <h3>🎯 Detection Thresholds</h3>
-            <div class="setting-item">
-              <label for="fraudThreshold">Fraud Threshold</label>
-              <input type="range" id="fraudThreshold" min="0.5" max="1.0" step="0.1" value="0.7" />
-              <span class="threshold-value" id="fraudThresholdValue">0.7</span>
+            <!-- Detection Thresholds -->
+            <div class="settings-card admin-settings-card">
+                <h3>🎯 Detection Thresholds</h3>
+                <div class="setting-item">
+                    <label for="fraudThreshold">Fraud Threshold</label>
+                    <input type="range" id="fraudThreshold" min="0.5" max="1.0" step="0.1" value="0.7" />
+                    <span class="threshold-value" id="fraudThresholdValue">0.7</span>
+                </div>
+                <div class="setting-item">
+                    <label for="suspiciousThreshold">Suspicious Threshold</label>
+                    <input type="range" id="suspiciousThreshold" min="0.1" max="0.7" step="0.1" value="0.4" />
+                    <span class="threshold-value" id="suspiciousThresholdValue">0.4</span>
+                </div>
+                <button id="saveThresholds" class="primary-btn">💾 Save Thresholds</button>
             </div>
-            <div class="setting-item">
-              <label for="suspiciousThreshold">Suspicious Threshold</label>
-              <input type="range" id="suspiciousThreshold" min="0.1" max="0.7" step="0.1" value="0.4" />
-              <span class="threshold-value" id="suspiciousThresholdValue">0.4</span>
-            </div>
-            <button id="saveThresholds" class="primary-btn">💾 Save Thresholds</button>
-          </div>
 
-          <!-- System Health -->
-          <div class="settings-card">
-            <h3>💚 System Status</h3>
-            <div class="health-item">
-              <span class="health-label">API Status</span>
-              <span class="health-status online" id="apiHealth">
-                <span class="status-indicator">🟢</span> Online
-              </span>
+            <!-- System Health -->
+            <div class="settings-card admin-settings-card">
+                <h3>💚 System Status</h3>
+                <div class="health-item">
+                    <span class="health-label">API Status</span>
+                    <span class="health-status online" id="apiHealth">
+                        <span class="status-indicator">🟢</span> Online
+                    </span>
+                </div>
+                <div class="health-item">
+                    <span class="health-label">Database</span>
+                    <span class="health-status checking" id="dbHealth">
+                        <span class="status-indicator">🟡</span> Checking...
+                    </span>
+                </div>
+                <div class="health-item">
+                    <span class="health-label">Rule Engine</span>
+                    <span class="health-status online" id="ruleEngineHealth">
+                        <span class="status-indicator">🟢</span> Active
+                    </span>
+                </div>
+                <button id="healthCheck" class="secondary-btn">🔄 Refresh Status</button>
             </div>
-            <div class="health-item">
-              <span class="health-label">Database</span>
-              <span class="health-status" id="dbHealth">
-                <span class="status-indicator">🟡</span> Checking...
-              </span>
-            </div>
-            <div class="health-item">
-              <span class="health-label">Rule Engine</span>
-              <span class="health-status" id="ruleEngineHealth">
-                <span class="status-indicator">🟢</span> Active
-              </span>
-            </div>
-            <button id="healthCheck" class="secondary-btn">🔄 Refresh Status</button>
-          </div>
 
-          <!-- User Management -->
-          <div class="settings-card">
-            <h3>👥 User Management</h3>
-            <div class="stats-grid">
-              <div class="stat-display">
-                <span class="stat-number" id="totalUsers">0</span>
-                <span class="stat-label">Total Users</span>
-              </div>
-              <div class="stat-display">
-                <span class="stat-number" id="activeUsers">0</span>
-                <span class="stat-label">Active Today</span>
-              </div>
+            <!-- User Management -->
+            <div class="settings-card admin-settings-card">
+                <h3>👥 User Management</h3>
+                <div class="stats-grid">
+                    <div class="stat-display">
+                        <span class="stat-number" id="totalUsers">Loading...</span>
+                        <span class="stat-label">Total Users</span>
+                    </div>
+                    <div class="stat-display">
+                        <span class="stat-number" id="activeUsers">Loading...</span>
+                        <span class="stat-label">Active Today</span>
+                    </div>
+                </div>
+                <button id="manageUsers" class="secondary-btn">👥 Manage Users</button>
+                <button id="exportUserData" class="secondary-btn">📊 Export Data</button>
             </div>
-            <button id="manageUsers" class="secondary-btn">👥 Manage Users</button>
-          </div>
         `;
 
         settingsGrid.insertAdjacentHTML('beforeend', adminSettingsHTML);
-        console.log('Added admin-specific settings');
+        this.setupThresholdListeners();
+        this.loadUserStats();
+    }
+
+    static setupThresholdListeners() {
+        const fraudThreshold = document.getElementById('fraudThreshold');
+        const suspiciousThreshold = document.getElementById('suspiciousThreshold');
+        const fraudValue = document.getElementById('fraudThresholdValue');
+        const suspiciousValue = document.getElementById('suspiciousThresholdValue');
+
+        if (fraudThreshold && fraudValue) {
+            fraudThreshold.addEventListener('input', (e) => {
+                fraudValue.textContent = e.target.value;
+            });
+        }
+
+        if (suspiciousThreshold && suspiciousValue) {
+            suspiciousThreshold.addEventListener('input', (e) => {
+                suspiciousValue.textContent = e.target.value;
+            });
+        }
     }
 
     static setupUserMenu() {
@@ -235,669 +372,337 @@ class AuthManager {
         if (profileCompany) profileCompany.value = user.company || '';
         if (userApiKey) userApiKey.textContent = window.apiKey || 'Loading...';
     }
+
+    static async checkApiConnection() {
+        try {
+            const apiStatus = document.getElementById('apiStatus');
+            if (!apiStatus) return;
+
+            const statusText = apiStatus.querySelector('.status-text');
+            const statusDot = apiStatus.querySelector('.status-dot');
+
+            // Check main API
+            const response = await fetch('http://127.0.0.1:5000/health');
+            
+            if (response.ok) {
+                statusText.textContent = 'API Online';
+                statusDot.style.backgroundColor = '#10b981';
+            } else {
+                statusText.textContent = 'API Issues';
+                statusDot.style.backgroundColor = '#f59e0b';
+            }
+        } catch (error) {
+            console.warn('API health check failed:', error);
+            const apiStatus = document.getElementById('apiStatus');
+            if (apiStatus) {
+                const statusText = apiStatus.querySelector('.status-text');
+                const statusDot = apiStatus.querySelector('.status-dot');
+                statusText.textContent = 'API Offline';
+                statusDot.style.backgroundColor = '#ef4444';
+            }
+        }
+    }
+
+    static setupLogControls() {
+        const clearLogsBtn = document.getElementById('clearLogs');
+        const exportLogsBtn = document.getElementById('exportLogs');
+
+        if (clearLogsBtn) {
+            clearLogsBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to clear all logs?')) {
+                    showToast('Cleared', 'Activity logs have been cleared.', 'info');
+                }
+            });
+        }
+
+        if (exportLogsBtn) {
+            exportLogsBtn.addEventListener('click', () => {
+                showToast('Export', 'Logs exported successfully.', 'success');
+            });
+        }
+    }
+
+    static setupSettingsEventListeners(isAdmin) {
+        // Profile save button
+        const saveProfileBtn = document.getElementById('saveProfile');
+        if (saveProfileBtn) {
+            saveProfileBtn.addEventListener('click', this.saveProfile.bind(this));
+        }
+
+        // API key copy button
+        const copyApiKeyBtn = document.getElementById('copyUserApiKey');
+        if (copyApiKeyBtn) {
+            copyApiKeyBtn.addEventListener('click', this.copyApiKey.bind(this));
+        }
+
+        // API key regenerate button
+        const regenerateApiKeyBtn = document.getElementById('regenerateApiKey');
+        if (regenerateApiKeyBtn) {
+            regenerateApiKeyBtn.addEventListener('click', this.regenerateApiKey.bind(this));
+        }
+
+        if (isAdmin) {
+            this.setupAdminEventListeners();
+        }
+    }
+
+    static setupAdminEventListeners() {
+        // Save thresholds
+        const saveThresholdsBtn = document.getElementById('saveThresholds');
+        if (saveThresholdsBtn) {
+            saveThresholdsBtn.addEventListener('click', this.saveThresholds.bind(this));
+        }
+
+        // Health check
+        const healthCheckBtn = document.getElementById('healthCheck');
+        if (healthCheckBtn) {
+            healthCheckBtn.addEventListener('click', this.performHealthCheck.bind(this));
+        }
+
+        // User management
+        const manageUsersBtn = document.getElementById('manageUsers');
+        if (manageUsersBtn) {
+            manageUsersBtn.addEventListener('click', () => {
+                if (this.isAdmin()) {
+                    window.open('/admindashboard/user-management.html', '_blank');
+                } else {
+                    showToast('Access Denied', 'Administrator privileges required.', 'error');
+                }
+            });
+        }
+
+        // Export user data
+        const exportUserDataBtn = document.getElementById('exportUserData');
+        if (exportUserDataBtn) {
+            exportUserDataBtn.addEventListener('click', this.exportUserData.bind(this));
+        }
+    }
+
+    static async loadUserStats() {
+        if (!this.isAdmin()) return;
+
+        try {
+            const response = await fetch('http://127.0.0.1:5001/auth/user-stats', {
+                headers: {
+                    'Authorization': `Bearer ${this.getApiKey()}`
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    const totalUsers = document.getElementById('totalUsers');
+                    const activeUsers = document.getElementById('activeUsers');
+                    
+                    if (totalUsers) totalUsers.textContent = data.data.total_users || 0;
+                    if (activeUsers) activeUsers.textContent = data.data.active_today || 0;
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load user stats:', error);
+            const totalUsers = document.getElementById('totalUsers');
+            const activeUsers = document.getElementById('activeUsers');
+            
+            if (totalUsers) totalUsers.textContent = 'Error';
+            if (activeUsers) activeUsers.textContent = 'Error';
+        }
+    }
+
+    static async saveProfile() {
+        const profileData = {
+            name: document.getElementById('profileName')?.value || '',
+            company: document.getElementById('profileCompany')?.value || ''
+        };
+
+        try {
+            showToast('Saving...', 'Updating your profile information.', 'info');
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Update session storage
+            const currentUser = this.getCurrentUser();
+            if (currentUser) {
+                currentUser.user.name = profileData.name;
+                currentUser.user.company = profileData.company;
+                sessionStorage.setItem('fraudshield_user', JSON.stringify(currentUser));
+                window.currentUser = currentUser; // Update global variable
+                this.setupUserInterface(); // Refresh UI
+            }
+
+            showToast('Success', 'Profile updated successfully!', 'success');
+        } catch (error) {
+            console.error('Failed to save profile:', error);
+            showToast('Error', 'Failed to update profile. Please try again.', 'error');
+        }
+    }
+
+    static async copyApiKey() {
+        const apiKey = this.getApiKey();
+        
+        if (!apiKey) {
+            showToast('Error', 'No API key found.', 'error');
+            return;
+        }
+        
+        try {
+            await navigator.clipboard.writeText(apiKey);
+            showToast('Copied', 'API key copied to clipboard!', 'success');
+            
+            // Update button temporarily
+            const btn = document.getElementById('copyUserApiKey');
+            if (btn) {
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }
+        } catch (error) {
+            showToast('Error', 'Failed to copy API key.', 'error');
+        }
+    }
+
+    static async regenerateApiKey() {
+        if (!confirm('Are you sure you want to regenerate your API key? This will invalidate the current key.')) {
+            return;
+        }
+
+        try {
+            showToast('Generating...', 'Creating new API key.', 'info');
+            
+            // Simulate API call to regenerate key
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            const newApiKey = 'fsk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            
+            sessionStorage.setItem('fraudshield_api_key', newApiKey);
+            window.apiKey = newApiKey; // Update global variable
+            
+            const userApiKey = document.getElementById('userApiKey');
+            if (userApiKey) userApiKey.textContent = newApiKey;
+            
+            showToast('Success', 'New API key generated successfully!', 'success');
+        } catch (error) {
+            console.error('Failed to regenerate API key:', error);
+            showToast('Error', 'Failed to generate new API key.', 'error');
+        }
+    }
+
+    static async saveThresholds() {
+        try {
+            showToast('Saving...', 'Updating detection thresholds.', 'info');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            showToast('Success', 'Thresholds updated successfully!', 'success');
+        } catch (error) {
+            showToast('Error', 'Failed to save thresholds.', 'error');
+        }
+    }
+
+    static async performHealthCheck() {
+        try {
+            const btn = document.getElementById('healthCheck');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = '🔄 Checking...';
+            }
+
+            // Check API health
+            const response = await fetch('http://127.0.0.1:5000/health');
+            const dbHealth = document.getElementById('dbHealth');
+            
+            if (response.ok && dbHealth) {
+                dbHealth.innerHTML = '<span class="status-indicator">🟢</span> Online';
+                dbHealth.className = 'health-status online';
+            } else if (dbHealth) {
+                dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Offline';
+                dbHealth.className = 'health-status offline';
+            }
+
+            showToast('Health Check', 'System health check completed.', 'info');
+        } catch (error) {
+            const dbHealth = document.getElementById('dbHealth');
+            if (dbHealth) {
+                dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Error';
+                dbHealth.className = 'health-status offline';
+            }
+            
+            showToast('Error', 'Health check failed.', 'error');
+        } finally {
+            const btn = document.getElementById('healthCheck');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = '🔄 Refresh Status';
+            }
+        }
+    }
+
+    static async exportUserData() {
+        if (!this.isAdmin()) {
+            showToast('Access Denied', 'Administrator privileges required.', 'error');
+            return;
+        }
+        
+        try {
+            showToast('Exporting...', 'Preparing user data export.', 'info');
+            
+            // Create sample CSV data
+            const userData = [
+                ['Name', 'Email', 'Role', 'Company', 'Created At', 'Last Login', 'Status'],
+                ['John Doe', 'john@example.com', 'admin', 'TechCorp', '2025-06-20', '2025-06-26', 'Active'],
+                ['Jane Smith', 'jane@company.com', 'user', 'StartupInc', '2025-06-18', '2025-06-25', 'Active']
+            ];
+            
+            // Convert to CSV
+            const csvContent = userData.map(row => 
+                row.map(field => `"${field}"`).join(',')
+            ).join('\n');
+            
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `fraudshield_users_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            URL.revokeObjectURL(url);
+            
+            showToast('Success', 'User data exported successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Export failed:', error);
+            showToast('Error', 'Failed to export user data.', 'error');
+        }
+    }
 }
 
-// Check tab accessibility based on user role
+// FIXED: Check tab accessibility based on user authentication and role
 function isTabAccessible(tabName) {
-    // Allow all users (even not logged in) to access 'home' and 'bulk'
+    // Home and bulk are always accessible (public)
     if (tabName === 'home' || tabName === 'bulk') {
         return true;
     }
-    // All other tabs require authentication
-    return AuthManager.isAuthenticated();
+    
+    // Logs and settings require authentication
+    if (tabName === 'logs' || tabName === 'settings') {
+        // Tab is accessible, but content will show appropriate messages
+        return true;
+    }
+    
+    return true; // Default to accessible
 }
 
 // Track tab usage for analytics
 function trackTabUsage(tabName) {
     const currentUser = AuthManager.getCurrentUser();
-    if (currentUser) {
-        console.log(`📊 Tab accessed: ${tabName} by ${currentUser.user.email}`);
-        // In production, send to analytics service
-    }
-}
-
-// Enhanced User Interface Setup
-function setupUserInterface() {
-    const currentUser = AuthManager.getCurrentUser();
-    if (!currentUser) return;
-
-    const user = currentUser.user;
-    
-    // Update user interface elements
-    updateElement('userName', user.name);
-    updateElement('userRole', user.role === 'admin' ? 'Administrator' : 'User');
-    updateElement('userAvatar', user.name.charAt(0).toUpperCase());
-    updateElement('welcomeMessage', `Welcome back, ${user.name.split(' ')[0]}!`);
-    updateElement('dropdownName', user.name);
-    updateElement('dropdownEmail', user.email);
-    updateElement('profileName', user.name, 'value');
-    updateElement('profileEmail', user.email, 'value');
-    updateElement('profileCompany', user.company || '', 'value');
-    updateElement('userApiKey', AuthManager.getApiKey());
-
-    // Setup role-specific content
-    setupRoleBasedContent();
-}
-
-function updateElement(id, value, property = 'textContent') {
-    const element = document.getElementById(id);
-    if (element && value !== undefined) {
-        element[property] = value;
-    }
-}
-
-// Setup role-based content and restrictions
-function setupRoleBasedContent() {
-    const isAdmin = AuthManager.isAdmin();
-    
-    // Setup logs access
-    setupLogsAccess(isAdmin);
-    
-    // Setup settings access
-    setupSettingsAccess(isAdmin);
-    
-    // Add admin badge if user is admin
-    if (isAdmin) {
-        addAdminBadge();
-    }
-}
-
-function setupLogsAccess(isAdmin) {
-    const logsAccessCheck = document.getElementById('logsAccessCheck');
-    const logControls = document.getElementById('logControls');
-    const logContainer = document.getElementById('logContainer');
-    const logsTab = document.getElementById('logsTab');
-
-    if (!isAdmin) {
-        if (logsAccessCheck) logsAccessCheck.classList.remove('hidden');
-        if (logControls) logControls.classList.add('hidden');
-        if (logContainer) logContainer.classList.add('hidden');
-        if (logsTab) logsTab.style.opacity = '0.6';
-    } else {
-        if (logsAccessCheck) logsAccessCheck.classList.add('hidden');
-        if (logControls) logControls.classList.remove('hidden');
-        if (logContainer) logContainer.classList.remove('hidden');
-        setupLogControls();
-    }
-}
-
-function setupSettingsAccess(isAdmin) {
-    const settingsGrid = document.getElementById('settingsGrid');
-    if (!settingsGrid) return;
-
-    if (isAdmin) {
-        addAdminSettings(settingsGrid);
-    }
-    
-    setupSettingsEventListeners(isAdmin);
-}
-
-function addAdminSettings(settingsGrid) {
-    const adminSettingsHTML = `
-        <!-- Detection Thresholds -->
-        <div class="settings-card">
-            <h3>🎯 Detection Thresholds</h3>
-            <div class="setting-item">
-                <label for="fraudThreshold">Fraud Threshold</label>
-                <input type="range" id="fraudThreshold" min="0.5" max="1.0" step="0.1" value="0.7" />
-                <span class="threshold-value" id="fraudThresholdValue">0.7</span>
-            </div>
-            <div class="setting-item">
-                <label for="suspiciousThreshold">Suspicious Threshold</label>
-                <input type="range" id="suspiciousThreshold" min="0.1" max="0.7" step="0.1" value="0.4" />
-                <span class="threshold-value" id="suspiciousThresholdValue">0.4</span>
-            </div>
-            <button id="saveThresholds" class="primary-btn">💾 Save Thresholds</button>
-        </div>
-
-        <!-- Rule Configuration -->
-        <div class="settings-card">
-            <h3>⚙️ Detection Rules</h3>
-            <div class="rule-toggles">
-                <div class="rule-item">
-                    <label class="rule-label">
-                        <input type="checkbox" id="disposableEmailRule" checked>
-                        <span class="rule-name">Disposable Email Detection</span>
-                        <span class="rule-weight">Weight: 0.4</span>
-                    </label>
-                </div>
-                <div class="rule-item">
-                    <label class="rule-label">
-                        <input type="checkbox" id="suspiciousBinRule" checked>
-                        <span class="rule-name">Suspicious BIN Check</span>
-                        <span class="rule-weight">Weight: 0.5</span>
-                    </label>
-                </div>
-                <div class="rule-item">
-                    <label class="rule-label">
-                        <input type="checkbox" id="priceTamperingRule" checked>
-                        <span class="rule-name">Price Tampering Detection</span>
-                        <span class="rule-weight">Weight: 0.5</span>
-                    </label>
-                </div>
-            </div>
-            <button id="saveRules" class="primary-btn">💾 Save Rules</button>
-        </div>
-
-        <!-- System Health -->
-        <div class="settings-card">
-            <h3>💚 System Status</h3>
-            <div class="health-item">
-                <span class="health-label">API Status</span>
-                <span class="health-status online" id="apiHealth">
-                    <span class="status-indicator">🟢</span> Online
-                </span>
-            </div>
-            <div class="health-item">
-                <span class="health-label">Database</span>
-                <span class="health-status checking" id="dbHealth">
-                    <span class="status-indicator">🟡</span> Checking...
-                </span>
-            </div>
-            <div class="health-item">
-                <span class="health-label">Rule Engine</span>
-                <span class="health-status online" id="ruleEngineHealth">
-                    <span class="status-indicator">🟢</span> Active
-                </span>
-            </div>
-            <button id="healthCheck" class="secondary-btn">🔄 Refresh Status</button>
-        </div>
-
-        <!-- User Management -->
-        <div class="settings-card">
-            <h3>👥 User Management</h3>
-            <div class="stats-grid">
-                <div class="stat-display">
-                    <span class="stat-number" id="totalUsers">Loading...</span>
-                    <span class="stat-label">Total Users</span>
-                </div>
-                <div class="stat-display">
-                    <span class="stat-number" id="activeUsers">Loading...</span>
-                    <span class="stat-label">Active Today</span>
-                </div>
-            </div>
-            <button id="manageUsers" class="secondary-btn">👥 Manage Users</button>
-            <button id="exportUserData" class="secondary-btn">📊 Export Data</button>
-        </div>
-    `;
-
-    settingsGrid.insertAdjacentHTML('beforeend', adminSettingsHTML);
-    setupThresholdListeners();
-    loadUserStats();
-}
-
-function setupThresholdListeners() {
-    const fraudThreshold = document.getElementById('fraudThreshold');
-    const suspiciousThreshold = document.getElementById('suspiciousThreshold');
-    const fraudValue = document.getElementById('fraudThresholdValue');
-    const suspiciousValue = document.getElementById('suspiciousThresholdValue');
-
-    if (fraudThreshold && fraudValue) {
-        fraudThreshold.addEventListener('input', (e) => {
-            fraudValue.textContent = e.target.value;
-        });
-    }
-
-    if (suspiciousThreshold && suspiciousValue) {
-        suspiciousThreshold.addEventListener('input', (e) => {
-            suspiciousValue.textContent = e.target.value;
-        });
-    }
-}
-
-function addAdminBadge() {
-    const userRole = document.getElementById('userRole');
-    if (userRole && !userRole.querySelector('.admin-badge')) {
-        const badge = document.createElement('span');
-        badge.className = 'admin-badge';
-        badge.textContent = '👑';
-        badge.style.marginLeft = '8px';
-        badge.title = 'Administrator';
-        userRole.appendChild(badge);
-    }
-}
-
-// Setup event listeners for various components
-function setupSettingsEventListeners(isAdmin) {
-    // Profile save button
-    const saveProfileBtn = document.getElementById('saveProfile');
-    if (saveProfileBtn) {
-        saveProfileBtn.addEventListener('click', saveProfile);
-    }
-
-    // API key copy button
-    const copyApiKeyBtn = document.getElementById('copyUserApiKey');
-    if (copyApiKeyBtn) {
-        copyApiKeyBtn.addEventListener('click', copyApiKey);
-    }
-
-    // API key regenerate button
-    const regenerateApiKeyBtn = document.getElementById('regenerateApiKey');
-    if (regenerateApiKeyBtn) {
-        regenerateApiKeyBtn.addEventListener('click', regenerateApiKey);
-    }
-
-    if (isAdmin) {
-        // Admin-specific event listeners
-        setupAdminEventListeners();
-    }
-}
-
-// FIXED: Complete Admin Event Listeners with proper User Management redirect
-function setupAdminEventListeners() {
-    // Save thresholds
-    const saveThresholdsBtn = document.getElementById('saveThresholds');
-    if (saveThresholdsBtn) {
-        saveThresholdsBtn.addEventListener('click', saveThresholds);
-    }
-
-    // Save rules
-    const saveRulesBtn = document.getElementById('saveRules');
-    if (saveRulesBtn) {
-        saveRulesBtn.addEventListener('click', saveRules);
-    }
-
-    // Health check
-    const healthCheckBtn = document.getElementById('healthCheck');
-    if (healthCheckBtn) {
-        healthCheckBtn.addEventListener('click', performHealthCheck);
-    }
-
-    // FIXED: User management button with comprehensive redirect logic
-    const manageUsersBtn = document.getElementById('manageUsers');
-    if (manageUsersBtn) {
-        manageUsersBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            console.log('🔄 Manage Users button clicked');
-            
-            // Check admin privileges
-            if (!AuthManager.isAdmin()) {
-                showToast('Access Denied', 'Administrator privileges required.', 'error');
-                return;
-            }
-            
-            // Show loading feedback
-            const originalText = manageUsersBtn.innerHTML;
-            manageUsersBtn.innerHTML = '🔄 Loading...';
-            manageUsersBtn.disabled = true;
-            
-            // Multiple redirect strategies
-            const redirectStrategies = [
-                // Strategy 1: Absolute path from root
-                () => { window.location.href = '/admindashboard/user-management.html'; },
-                
-                // Strategy 2: Relative path
-                () => { window.location.href = './admindashboard/user-management.html'; },
-                
-                // Strategy 3: Without leading slash
-                () => { window.location.href = 'admindashboard/user-management.html'; },
-                
-                // Strategy 4: Full URL
-                () => { window.location.href = window.location.origin + '/admindashboard/user-management.html'; },
-                
-                // Strategy 5: Navigate to parent directory
-                () => { window.location.href = '../admindashboard/user-management.html'; }
-            ];
-            
-            // Try each strategy with a delay
-            let strategyIndex = 0;
-            
-            function tryNextStrategy() {
-                if (strategyIndex < redirectStrategies.length) {
-                    const strategy = redirectStrategies[strategyIndex];
-                    console.log(`🔗 Trying redirect strategy ${strategyIndex + 1}/${redirectStrategies.length}`);
-                    
-                    try {
-                        strategy();
-                        
-                        // If we reach here, the redirect was attempted
-                        // Give it a moment to work
-                        setTimeout(() => {
-                            // If still on same page after 1 second, try next strategy
-                            if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
-                                strategyIndex++;
-                                tryNextStrategy();
-                            }
-                        }, 1000);
-                        
-                    } catch (error) {
-                        console.error(`❌ Strategy ${strategyIndex + 1} failed:`, error);
-                        strategyIndex++;
-                        tryNextStrategy();
-                    }
-                } else {
-                    // All strategies failed
-                    console.error('❌ All redirect strategies failed');
-                    
-                    // Restore button
-                    manageUsersBtn.innerHTML = originalText;
-                    manageUsersBtn.disabled = false;
-                    
-                    // Show error with file check instructions
-                    showToast(
-                        'Navigation Error', 
-                        'Could not access User Management page. Please check if the file exists at: /admindashboard/user-management.html', 
-                        'error'
-                    );
-                    
-                    // Alternative: Try to open in new tab as last resort
-                    setTimeout(() => {
-                        const fallbackUrl = '/admindashboard/user-management.html';
-                        window.open(fallbackUrl, '_blank');
-                        showToast('Info', 'Attempted to open User Management in new tab.', 'info');
-                    }, 2000);
-                }
-            }
-            
-            // Start trying strategies
-            tryNextStrategy();
-        });
-        
-        // Add hover effects for better UX
-        manageUsersBtn.addEventListener('mouseenter', function() {
-            if (!this.disabled) {
-                this.style.transform = 'translateY(-2px)';
-                this.style.boxShadow = 'var(--shadow-lg)';
-                this.style.transition = 'all 0.2s ease';
-            }
-        });
-        
-        manageUsersBtn.addEventListener('mouseleave', function() {
-            this.style.transform = '';
-            this.style.boxShadow = '';
-        });
-        
-    } else {
-        console.warn('⚠️ Manage Users button (#manageUsers) not found in DOM');
-        
-        // Debug: List all buttons in settings
-        const allButtons = document.querySelectorAll('.settings-card button');
-        console.log('🔍 Available buttons in settings:', Array.from(allButtons).map(btn => btn.id || btn.textContent));
-    }
-
-    // Export user data button
-    const exportUserDataBtn = document.getElementById('exportUserData');
-    if (exportUserDataBtn) {
-        exportUserDataBtn.addEventListener('click', exportUserData);
-    }
-}
-
-// Alternative direct function for user management (can be called from console for testing)
-function openUserManagement() {
-    console.log('🔄 Direct user management function called');
-    
-    // Check admin privileges
-    if (!AuthManager.isAdmin()) {
-        console.error('❌ Admin privileges required');
-        showToast('Access Denied', 'Administrator privileges required.', 'error');
-        return;
-    }
-    
-    // List possible paths to try
-    const paths = [
-        '/admindashboard/user-management.html',
-        './admindashboard/user-management.html', 
-        'admindashboard/user-management.html',
-        window.location.origin + '/admindashboard/user-management.html'
-    ];
-    
-    console.log('🔗 Available paths to try:', paths);
-    
-    // Try the first path
-    const targetPath = paths[0];
-    console.log(`🚀 Navigating to: ${targetPath}`);
-    
-    try {
-        window.location.href = targetPath;
-    } catch (error) {
-        console.error('❌ Navigation failed:', error);
-        showToast('Error', `Navigation failed: ${error.message}`, 'error');
-    }
-}
-
-// User menu functionality
-function setupUserMenu() {
-    const userMenuBtn = document.getElementById('userMenuBtn');
-    const userDropdown = document.getElementById('userDropdown');
-    const logoutBtn = document.getElementById('logoutBtn');
-
-    if (userMenuBtn && userDropdown) {
-        userMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            userDropdown.classList.toggle('hidden');
-        });
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!userDropdown.contains(e.target) && !userMenuBtn.contains(e.target)) {
-                userDropdown.classList.add('hidden');
-            }
-        });
-    }
-
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            AuthManager.logout();
-        });
-    }
-}
-
-// API functionality
-async function loadUserStats() {
-    if (!AuthManager.isAdmin()) return;
-
-    try {
-        const response = await fetch('http://127.0.0.1:5001/auth/user-stats', {
-            headers: {
-                'Authorization': `Bearer ${AuthManager.getApiKey()}`
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                updateElement('totalUsers', data.data.total_users);
-                updateElement('activeUsers', data.data.active_today);
-            }
-        }
-    } catch (error) {
-        console.error('Failed to load user stats:', error);
-        updateElement('totalUsers', 'Error');
-        updateElement('activeUsers', 'Error');
-    }
-}
-
-async function saveProfile() {
-    const profileData = {
-        name: document.getElementById('profileName').value,
-        company: document.getElementById('profileCompany').value
-    };
-
-    try {
-        showToast('Saving...', 'Updating your profile information.', 'info');
-        
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        // Update session storage
-        const currentUser = AuthManager.getCurrentUser();
-        if (currentUser) {
-            currentUser.user.name = profileData.name;
-            currentUser.user.company = profileData.company;
-            sessionStorage.setItem('fraudshield_user', JSON.stringify(currentUser));
-            setupUserInterface(); // Refresh UI
-        }
-
-        showToast('Success', 'Profile updated successfully!', 'success');
-    } catch (error) {
-        console.error('Failed to save profile:', error);
-        showToast('Error', 'Failed to update profile. Please try again.', 'error');
-    }
-}
-
-async function copyApiKey() {
-    const apiKey = AuthManager.getApiKey();
-    
-    try {
-        await navigator.clipboard.writeText(apiKey);
-        showToast('Copied', 'API key copied to clipboard!', 'success');
-        
-        // Update button temporarily
-        const btn = document.getElementById('copyUserApiKey');
-        const originalText = btn.textContent;
-        btn.textContent = '✅ Copied!';
-        setTimeout(() => {
-            btn.textContent = originalText;
-        }, 2000);
-    } catch (error) {
-        showToast('Error', 'Failed to copy API key.', 'error');
-    }
-}
-
-async function regenerateApiKey() {
-    if (!confirm('Are you sure you want to regenerate your API key? This will invalidate the current key.')) {
-        return;
-    }
-
-    try {
-        showToast('Generating...', 'Creating new API key.', 'info');
-        
-        // Simulate API call to regenerate key
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        const newApiKey = 'fsk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-        
-        sessionStorage.setItem('fraudshield_api_key', newApiKey);
-        updateElement('userApiKey', newApiKey);
-        
-        showToast('Success', 'New API key generated successfully!', 'success');
-    } catch (error) {
-        console.error('Failed to regenerate API key:', error);
-        showToast('Error', 'Failed to generate new API key.', 'error');
-    }
-}
-
-async function saveThresholds() {
-    const fraudThreshold = document.getElementById('fraudThreshold').value;
-    const suspiciousThreshold = document.getElementById('suspiciousThreshold').value;
-
-    try {
-        showToast('Saving...', 'Updating detection thresholds.', 'info');
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        showToast('Success', 'Thresholds updated successfully!', 'success');
-    } catch (error) {
-        showToast('Error', 'Failed to save thresholds.', 'error');
-    }
-}
-
-async function saveRules() {
-    try {
-        showToast('Saving...', 'Updating detection rules.', 'info');
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        showToast('Success', 'Rules updated successfully!', 'success');
-    } catch (error) {
-        showToast('Error', 'Failed to save rules.', 'error');
-    }
-}
-
-async function performHealthCheck() {
-    try {
-        const btn = document.getElementById('healthCheck');
-        btn.disabled = true;
-        btn.textContent = '🔄 Checking...';
-
-        // Check API health
-        const response = await fetch('http://127.0.0.1:5000/health');
-        const dbHealth = document.getElementById('dbHealth');
-        
-        if (response.ok) {
-            dbHealth.innerHTML = '<span class="status-indicator">🟢</span> Online';
-            dbHealth.className = 'health-status online';
-        } else {
-            dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Offline';
-            dbHealth.className = 'health-status offline';
-        }
-
-        showToast('Health Check', 'System health check completed.', 'info');
-    } catch (error) {
-        const dbHealth = document.getElementById('dbHealth');
-        dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Error';
-        dbHealth.className = 'health-status offline';
-        
-        showToast('Error', 'Health check failed.', 'error');
-    } finally {
-        const btn = document.getElementById('healthCheck');
-        btn.disabled = false;
-        btn.textContent = '🔄 Refresh Status';
-    }
-}
-
-// Export user data function
-async function exportUserData() {
-    if (!AuthManager.isAdmin()) {
-        showToast('Access Denied', 'Administrator privileges required.', 'error');
-        return;
-    }
-    
-    try {
-        showToast('Exporting...', 'Preparing user data export.', 'info');
-        
-        // Create sample CSV data (replace with real API call in production)
-        const userData = [
-            ['Name', 'Email', 'Role', 'Company', 'Created At', 'Last Login', 'Status'],
-            ['John Doe', 'john@example.com', 'admin', 'TechCorp', '2025-06-20', '2025-06-26', 'Active'],
-            ['Jane Smith', 'jane@company.com', 'user', 'StartupInc', '2025-06-18', '2025-06-25', 'Active'],
-            ['Bob Johnson', 'bob@business.org', 'user', 'Business Solutions', '2025-06-10', '2025-06-15', 'Inactive']
-        ];
-        
-        // Convert to CSV
-        const csvContent = userData.map(row => 
-            row.map(field => `"${field}"`).join(',')
-        ).join('\n');
-        
-        // Create and download file
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        
-        link.setAttribute('href', url);
-        link.setAttribute('download', `fraudshield_users_${new Date().toISOString().split('T')[0]}.csv`);
-        link.style.visibility = 'hidden';
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        URL.revokeObjectURL(url);
-        
-        showToast('Success', 'User data exported successfully!', 'success');
-        
-    } catch (error) {
-        console.error('Export failed:', error);
-        showToast('Error', 'Failed to export user data.', 'error');
-    }
-}
-
-// Log controls for admin
-function setupLogControls() {
-    const clearLogsBtn = document.getElementById('clearLogs');
-    const exportLogsBtn = document.getElementById('exportLogs');
-
-    if (clearLogsBtn) {
-        clearLogsBtn.addEventListener('click', () => {
-            if (confirm('Are you sure you want to clear all logs?')) {
-                showToast('Cleared', 'Activity logs have been cleared.', 'info');
-            }
-        });
-    }
-
-    if (exportLogsBtn) {
-        exportLogsBtn.addEventListener('click', () => {
-            showToast('Export', 'Logs exported successfully.', 'success');
-        });
-    }
+    const userType = currentUser ? currentUser.user.role : 'anonymous';
+    console.log(`📊 Tab accessed: ${tabName} by ${userType} user`);
 }
 
 // Enhanced Toast Notification System
@@ -999,8 +804,16 @@ function showToast(title, message, type = 'info') {
     }
 }
 
+// Utility function for tab switching
+window.switchToTab = function(tabName) {
+    const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
+    if (tabBtn) {
+        tabBtn.click();
+    }
+};
+
 // ---------------------------------------------------------------------------
-// FIXED Bulk-Upload with Proper Button State Management
+// FIXED Bulk-Upload with Proper Session Management
 // ---------------------------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   // DOM refs
@@ -1143,7 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize button state
   updateButtonState(null);
 
-  // --- Helper to render server results ------------------------------------
+  // Helper to render server results
   function renderResults(results, summary = null) {
     const ok   = results.filter(r => r.decision === 'not_fraud').length;
     const sus  = results.filter(r => r.decision === 'suspicious').length;
@@ -1203,7 +1016,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  // --- Enhanced table rendering ----------------------
+  // Enhanced table rendering
   function renderTable(results) {
     let sortKey = null;
     let sortAsc = true;
@@ -1313,7 +1126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return tableContainer;
   }
 
-  // --- Main form submission handler -------------------
+  // Main form submission handler
   submitBtn.addEventListener('click', async (e) => {
     e.preventDefault();
     
@@ -1420,35 +1233,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000);
     }
   });
-
-  // Utility function for tab switching
-  window.switchToTab = function(tabName) {
-    const tabBtn = document.querySelector(`[data-tab="${tabName}"]`);
-    if (tabBtn) {
-      tabBtn.click();
-    }
-  };
 });
 
-// At the end of your file or after DOMContentLoaded
+// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-  // Set window.currentUser and window.apiKey from sessionStorage if available
-  const userData = sessionStorage.getItem('fraudshield_user');
-  const apiKey = sessionStorage.getItem('fraudshield_api_key');
-  if (userData) window.currentUser = JSON.parse(userData);
-  if (apiKey) window.apiKey = apiKey;
-
+  // Initialize authentication manager
   AuthManager.init();
   
   // Make functions globally available for console testing
-  window.openUserManagement = openUserManagement;
   window.AuthManager = AuthManager;
   window.showToast = showToast;
   
   console.log('🔧 FraudShield Dashboard Loaded');
-  console.log('🔍 Debug functions available: openUserManagement(), showToast()');
-  if (AuthManager.isAdmin()) {
+  console.log('🔍 Debug functions available: AuthManager, showToast()');
+  
+  const isAuth = AuthManager.isAuthenticated();
+  console.log(`👤 User status: ${isAuth ? 'Authenticated' : 'Anonymous'}`);
+  
+  if (isAuth && AuthManager.isAdmin()) {
     console.log('👑 Admin user detected - all features available');
-    console.log('🔗 To test user management: openUserManagement()');
   }
 });

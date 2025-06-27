@@ -1,8 +1,8 @@
 /**
- * Enhanced Login Page JavaScript - Database Integration - FIXED VERSION
+ * Enhanced Login Page JavaScript - COMPLETELY FIXED VERSION
  * Author: FraudShield Team
  * Location: user_auth/pages/login.js
- * About: Complete login form with real database authentication via Python API
+ * About: Complete login form with proper session management and redirect handling
  */
 
 class LoginForm {
@@ -34,7 +34,7 @@ class LoginForm {
         // API Configuration
         this.API_BASE_URL = 'http://127.0.0.1:5001/auth';
         this.MAX_RETRIES = 3;
-        this.RETRY_DELAY = 1000; // 1 second
+        this.RETRY_DELAY = 1000;
         
         this.init();
     }
@@ -44,6 +44,44 @@ class LoginForm {
         this.animateEntrance();
         this.loadRememberedUser();
         this.checkApiConnection();
+        this.checkExistingSession();
+    }
+
+    async checkExistingSession() {
+        try {
+            const userData = sessionStorage.getItem('fraudshield_user');
+            const sessionId = sessionStorage.getItem('fraudshield_session_id');
+            
+            if (userData && sessionId) {
+                // Validate existing session
+                const response = await fetch(`${this.API_BASE_URL}/validate-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ session_id: sessionId })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        console.log('✅ Valid existing session found, redirecting...');
+                        this.redirectUser(JSON.parse(userData).user);
+                        return;
+                    }
+                }
+                
+                // Invalid session, clear storage
+                this.clearSession();
+            }
+        } catch (error) {
+            console.warn('Session validation failed:', error);
+            this.clearSession();
+        }
+    }
+
+    clearSession() {
+        sessionStorage.removeItem('fraudshield_user');
+        sessionStorage.removeItem('fraudshield_api_key');
+        sessionStorage.removeItem('fraudshield_session_id');
     }
 
     async checkApiConnection() {
@@ -289,7 +327,6 @@ class LoginForm {
             
             if (result.success) {
                 this.handleLoginSuccess(result.data, remember);
-                // ✅ FIXED: Removed hardcoded redirect - let handleLoginSuccess handle it
             } else {
                 this.handleLoginError(result.error);
             }
@@ -357,6 +394,11 @@ class LoginForm {
             sessionStorage.setItem('fraudshield_api_key', userData.api_key);
         }
         
+        // Store session ID for validation
+        if (userData.session_id) {
+            sessionStorage.setItem('fraudshield_session_id', userData.session_id);
+        }
+        
         // Handle remember me functionality
         if (remember) {
             localStorage.setItem('fraudshield_remember', 'true');
@@ -368,7 +410,7 @@ class LoginForm {
         
         this.showSuccess('Login successful! Redirecting...');
         
-        // ✅ FIXED: Redirect based on user role with proper timing
+        // Redirect based on user role with proper timing
         setTimeout(() => {
             this.redirectUser(userData.user);
         }, 1500);
@@ -379,28 +421,35 @@ class LoginForm {
         
         console.log(`🚀 Redirecting ${role} user...`);
         
-        // ✅ FIXED: Actually redirect based on role
+        // Check if there's a specific redirect URL in query params
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect');
+        
+        if (redirectUrl) {
+            // Decode and redirect to specific URL
+            try {
+                const decodedUrl = decodeURIComponent(redirectUrl);
+                if (decodedUrl.startsWith('/') || decodedUrl.startsWith(window.location.origin)) {
+                    window.location.href = decodedUrl;
+                    return;
+                }
+            } catch (error) {
+                console.warn('Invalid redirect URL:', redirectUrl);
+            }
+        }
+        
+        // Default redirects based on role
         if (role === 'admin') {
-            this.showSuccess('Welcome Admin! Redirecting to admin dashboard...');
+            this.showSuccess('Welcome Admin! Redirecting to dashboard...');
             setTimeout(() => {
                 window.location.href = '/index.html';
             }, 1000);
         } else {
             this.showSuccess('Welcome! Redirecting to dashboard...');
             setTimeout(() => {
-                window.location.href = '/index.html'; // Main dashboard for regular users
+                window.location.href = '/index.html';
             }, 1000);
         }
-    }
-
-    getRedirectUrl(role) {
-        const redirectUrls = {
-            'admin': '/admin-dashboard.html',
-            'user': '/index.html',
-            'moderator': '/moderator-dashboard.html'
-        };
-        
-        return redirectUrls[role] || '/index.html';
     }
 
     handleLoginError(errorMessage) {
@@ -521,6 +570,7 @@ class LoginForm {
     static logout() {
         sessionStorage.removeItem('fraudshield_user');
         sessionStorage.removeItem('fraudshield_api_key');
+        sessionStorage.removeItem('fraudshield_session_id');
         localStorage.removeItem('fraudshield_remember');
         localStorage.removeItem('fraudshield_email');
         console.log('👋 User logged out');
@@ -540,20 +590,10 @@ class LoginForm {
 
 // Initialize the login form when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in
+    // Check if user is already logged in (but don't redirect automatically)
     if (LoginForm.isLoggedIn()) {
-        console.log('👤 User already logged in, redirecting...');
-        const user = LoginForm.getCurrentUser();
-        if (user && user.user) {
-            // Redirect to appropriate dashboard based on role
-            const role = user.user.role || 'user';
-            if (role === 'admin') {
-                window.location.href = '/admin-dashboard.html';
-            } else {
-                window.location.href = '/index.html';
-            }
-        }
-        return;
+        console.log('👤 User already appears to be logged in, validating session...');
+        // Let the LoginForm handle session validation
     }
     
     window.loginForm = new LoginForm();
@@ -562,9 +602,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.log('🔧 Development Mode - Demo credentials:');
         console.log('Admin: admin@fraudshield.com / Admin@123!');
-        console.log('User: user@example.com / User@123!');
+        console.log('User: user@example.com / User@123! (if exists)');
         console.log('');
         console.log('📡 Make sure auth API is running: python user_auth/auth_api.py');
+        console.log('📊 Make sure MongoDB is running');
     }
 });
 

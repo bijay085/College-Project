@@ -25,27 +25,28 @@
   <link rel="stylesheet" href="css/logs.css" />
   <link rel="stylesheet" href="css/settings.css" />
   
-  <!-- Authentication Check Script -->
+  <!-- FIXED: Removed forced authentication check - Allow public access -->
   <script>
-    // Check authentication before page loads
+    // Only set global user data if authenticated, don't force redirect
     (function() {
       const userData = sessionStorage.getItem('fraudshield_user');
       const apiKey = sessionStorage.getItem('fraudshield_api_key');
       
-      if (!userData || !apiKey) {
-        // Redirect to login if not authenticated
-        window.location.href = '/user_auth/pages/login.html';
-        return;
-      }
-      
-      // Store user data globally for use in other scripts
-      try {
-        window.currentUser = JSON.parse(userData);
-        window.apiKey = apiKey;
-        console.log('🔐 Authenticated user:', window.currentUser.user.email, 'Role:', window.currentUser.user.role);
-      } catch (error) {
-        console.error('Failed to parse user data:', error);
-        window.location.href = '/user_auth/pages/login.html';
+      if (userData && apiKey) {
+        try {
+          window.currentUser = JSON.parse(userData);
+          window.apiKey = apiKey;
+          console.log('🔐 Authenticated user:', window.currentUser.user.email, 'Role:', window.currentUser.user.role);
+        } catch (error) {
+          console.error('Failed to parse user data:', error);
+          // Clear invalid session data
+          sessionStorage.removeItem('fraudshield_user');
+          sessionStorage.removeItem('fraudshield_api_key');
+        }
+      } else {
+        console.log('👤 Anonymous user - public access enabled');
+        window.currentUser = null;
+        window.apiKey = null;
       }
     })();
   </script>
@@ -81,39 +82,9 @@
       </button>
     </nav>
 
-    <!-- User Profile Section -->
-    <div class="user-section">
-      <div class="user-info">
-        <span class="user-name" id="userName">Loading...</span>
-        <span class="user-role" id="userRole">User</span>
-      </div>
-      <div class="user-menu">
-        <button class="user-menu-btn" id="userMenuBtn" aria-label="User menu">
-          <span class="user-avatar" id="userAvatar">U</span>
-        </button>
-        <div class="user-dropdown hidden" id="userDropdown">
-          <div class="dropdown-header">
-            <div class="dropdown-user-info">
-              <span class="dropdown-name" id="dropdownName">User Name</span>
-              <span class="dropdown-email" id="dropdownEmail">user@example.com</span>
-            </div>
-          </div>
-          <div class="dropdown-divider"></div>
-          <button class="dropdown-item" id="profileBtn">
-            <span class="dropdown-icon">👤</span>
-            Profile Settings
-          </button>
-          <button class="dropdown-item" id="apiKeysBtn">
-            <span class="dropdown-icon">🔑</span>
-            API Keys
-          </button>
-          <div class="dropdown-divider"></div>
-          <button class="dropdown-item logout-btn" id="logoutBtn">
-            <span class="dropdown-icon">🚪</span>
-            Sign Out
-          </button>
-        </div>
-      </div>
+    <!-- User Profile Section - Show login button if not authenticated -->
+    <div class="user-section" id="userSection">
+      <!-- Content will be dynamically generated based on auth status -->
     </div>
   </header>
 
@@ -140,6 +111,22 @@
               <span class="stat-number" id="accuracyRate">99.2%</span>
               <span class="stat-label">Detection Accuracy</span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Authentication Prompt for Non-Authenticated Users -->
+      <div id="authPrompt" class="hidden">
+        <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 12px; margin: 2rem 0; border: 1px solid #e2e8f0;">
+          <h3 style="color: #1e293b; margin-bottom: 1rem;">🔐 Want Full Access?</h3>
+          <p style="color: #64748b; margin-bottom: 1.5rem;">Create a free account to access advanced features, activity logs, and system settings.</p>
+          <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <a href="/user_auth/pages/registration.html" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+              <span>👤</span> Create Account
+            </a>
+            <a href="/user_auth/pages/login.html" style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2563eb; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid #2563eb;">
+              <span>🚪</span> Sign In
+            </a>
           </div>
         </div>
       </div>
@@ -243,12 +230,27 @@
 
     </section>
 
-    <!-- Enhanced Bulk Check Tab -->
+    <!-- Enhanced Bulk Check Tab - ALWAYS ACCESSIBLE -->
     <section id="bulk" class="tab-content" role="tabpanel" aria-labelledby="bulk-tab">
       
       <div class="page-header">
         <h2>📊 Bulk Transaction Analysis</h2>
         <p class="page-subtitle">Upload your transaction data for comprehensive fraud analysis</p>
+      </div>
+
+      <!-- Public Access Notice -->
+      <div id="publicAccessNotice" class="hidden">
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 1.25rem;">ℹ️</span>
+            <div>
+              <strong style="color: #1d4ed8;">Public Demo Mode</strong>
+              <p style="margin: 0.25rem 0 0 0; color: #1e40af; font-size: 0.9rem;">
+                You're using FraudShield as a guest. <a href="/user_auth/pages/registration.html" style="color: #2563eb; text-decoration: underline;">Create an account</a> for unlimited analysis and advanced features.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- File Upload Section -->
@@ -304,7 +306,7 @@
 
     </section>
 
-    <!-- Enhanced Logs Tab -->
+    <!-- Enhanced Logs Tab - AUTH REQUIRED -->
     <section id="logs" class="tab-content" role="tabpanel" aria-labelledby="logs-tab">
       
       <div class="page-header">
@@ -312,18 +314,31 @@
         <p class="page-subtitle">Monitor live fraud detection events and system activity</p>
       </div>
 
-      <!-- Role Access Check -->
-      <div id="logsAccessCheck" class="hidden">
-        <div class="access-denied">
-          <div class="access-denied-icon">🔒</div>
-          <h3>Access Restricted</h3>
-          <p>Activity logs are only available to administrators.</p>
-          <p>Contact your system administrator for access.</p>
+      <!-- Auth Required Notice -->
+      <div id="logsAuthRequired" class="access-denied">
+        <div class="access-denied-icon">🔒</div>
+        <h3>Authentication Required</h3>
+        <p>Activity logs require a user account to protect sensitive data.</p>
+        <div style="margin-top: 1.5rem;">
+          <a href="/user_auth/pages/login.html" class="btn btn-primary">
+            <span>🚪</span> Sign In
+          </a>
+          <a href="/user_auth/pages/registration.html" class="btn btn-secondary" style="margin-left: 1rem;">
+            <span>👤</span> Create Account
+          </a>
         </div>
       </div>
 
-      <!-- Log Controls -->
-      <div class="log-controls" id="logControls">
+      <!-- Admin Only Notice -->
+      <div id="logsAdminOnly" class="access-denied hidden">
+        <div class="access-denied-icon">👑</div>
+        <h3>Administrator Access Required</h3>
+        <p>Activity logs are only available to administrators.</p>
+        <p>Contact your system administrator for access.</p>
+      </div>
+
+      <!-- Log Controls - Only shown to admins -->
+      <div class="log-controls hidden" id="logControls">
         <div class="control-group">
           <label for="logLevel">Log Level:</label>
           <select id="logLevel">
@@ -341,7 +356,7 @@
       </div>
 
       <!-- Live Log Feed -->
-      <div class="log-container" id="logContainer">
+      <div class="log-container hidden" id="logContainer">
         <div id="logOutput" class="log-output">
           <div class="log-placeholder">
             <div class="placeholder-icon">📋</div>
@@ -353,7 +368,7 @@
 
     </section>
 
-    <!-- Enhanced Settings Tab -->
+    <!-- Enhanced Settings Tab - AUTH REQUIRED -->
     <section id="settings" class="tab-content" role="tabpanel" aria-labelledby="settings-tab">
       
       <div class="page-header">
@@ -361,20 +376,25 @@
         <p class="page-subtitle">Configure fraud detection rules and system parameters</p>
       </div>
 
-      <!-- Role Access Check -->
-      <div id="settingsAccessCheck" class="hidden">
-        <div class="access-denied">
-          <div class="access-denied-icon">🔒</div>
-          <h3>Access Restricted</h3>
-          <p>System settings are only available to administrators.</p>
-          <p>Contact your system administrator to modify system configuration.</p>
+      <!-- Auth Required Notice -->
+      <div id="settingsAuthRequired" class="access-denied">
+        <div class="access-denied-icon">🔒</div>
+        <h3>Authentication Required</h3>
+        <p>Settings require a user account to protect system configuration.</p>
+        <div style="margin-top: 1.5rem;">
+          <a href="/user_auth/pages/login.html" class="btn btn-primary">
+            <span>🚪</span> Sign In
+          </a>
+          <a href="/user_auth/pages/registration.html" class="btn btn-secondary" style="margin-left: 1rem;">
+            <span>👤</span> Create Account
+          </a>
         </div>
       </div>
 
-      <!-- Settings Grid -->
-      <div class="settings-grid" id="settingsGrid">
+      <!-- Settings Grid - Only shown to authenticated users -->
+      <div class="settings-grid hidden" id="settingsGrid">
         
-        <!-- User Profile Settings (Available to all users) -->
+        <!-- User Profile Settings (Available to all authenticated users) -->
         <div class="settings-card">
           <h3>👤 Profile Settings</h3>
           <div class="setting-item">
@@ -392,7 +412,7 @@
           <button id="saveProfile" class="primary-btn">💾 Save Profile</button>
         </div>
 
-        <!-- API Key Management (Available to all users) -->
+        <!-- API Key Management (Available to all authenticated users) -->
         <div class="settings-card">
           <h3>🔑 API Key Management</h3>
           <div class="api-key-display">
