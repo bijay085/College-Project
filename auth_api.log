@@ -189,3 +189,30 @@
 2025-06-27 17:11:34,279 - INFO - Default admin: admin@fraudshield.com / Admin@123!
 2025-06-27 17:11:34,308 - WARNING -  * Debugger is active!
 2025-06-27 17:11:34,311 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 17:15:27,370 - INFO - 127.0.0.1 - - [27/Jun/2025 17:15:27] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 17:15:27,382 - INFO - 127.0.0.1 - - [27/Jun/2025 17:15:27] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 17:15:34,530 - INFO - 127.0.0.1 - - [27/Jun/2025 17:15:34] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 17:15:34,823 - ERROR - [ERROR] Failed to create session: E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }', 'keyPattern': {'token': 1}, 'keyValue': {'token': None}} | Extra: None
+2025-06-27 17:15:34,825 - INFO - Auth attempt - Email: admin@fraudshield.com, Success: True, IP: 127.0.0.1
+2025-06-27 17:15:34,825 - INFO - User logged in successfully: admin@fraudshield.com
+2025-06-27 17:15:34,826 - INFO - 127.0.0.1 - - [27/Jun/2025 17:15:34] "POST /auth/login HTTP/1.1" 200 -
+2025-06-27 17:15:37,435 - INFO - 127.0.0.1 - - [27/Jun/2025 17:15:37] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:15:37,458 - INFO - 127.0.0.1 - - [27/Jun/2025 17:15:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:17:44,087 - INFO - 127.0.0.1 - - [27/Jun/2025 17:17:44] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:17:44,105 - INFO - 127.0.0.1 - - [27/Jun/2025 17:17:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:17:46,622 - INFO - 127.0.0.1 - - [27/Jun/2025 17:17:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:17:47,682 - INFO - 127.0.0.1 - - [27/Jun/2025 17:17:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:19:39,649 - INFO - 127.0.0.1 - - [27/Jun/2025 17:19:39] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:19:39,672 - INFO - 127.0.0.1 - - [27/Jun/2025 17:19:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:20:45,048 - INFO - 127.0.0.1 - - [27/Jun/2025 17:20:45] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:20:45,065 - INFO - 127.0.0.1 - - [27/Jun/2025 17:20:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:20:45,252 - INFO - 127.0.0.1 - - [27/Jun/2025 17:20:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:20:45,482 - INFO - 127.0.0.1 - - [27/Jun/2025 17:20:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:21:13,259 - INFO - 127.0.0.1 - - [27/Jun/2025 17:21:13] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:21:13,278 - INFO - 127.0.0.1 - - [27/Jun/2025 17:21:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:22:22,488 - INFO - 127.0.0.1 - - [27/Jun/2025 17:22:22] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:22:22,506 - INFO - 127.0.0.1 - - [27/Jun/2025 17:22:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:22:24,221 - INFO - 127.0.0.1 - - [27/Jun/2025 17:22:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:22:24,517 - INFO - 127.0.0.1 - - [27/Jun/2025 17:22:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:23:45,897 - INFO - 127.0.0.1 - - [27/Jun/2025 17:23:45] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:23:45,914 - INFO - 127.0.0.1 - - [27/Jun/2025 17:23:45] "GET /auth/admin/stats HTTP/1.1" 200 -
