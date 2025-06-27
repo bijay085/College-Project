@@ -66,7 +66,7 @@
     
     // For demo purposes, you can also allow a hardcoded API key
     // Remove this in production
-    return "fsk_demo_checkout_key_2024";
+    return "fsk_WUKvd3azRKQqWTp79OXoUZ7NcKsgpWBS0eWfP9LqjZ4";
   }
 
   function getUserEmail() {

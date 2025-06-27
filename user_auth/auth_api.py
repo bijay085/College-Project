@@ -1316,17 +1316,17 @@ def delete_user(user_id: str) -> ResponseTuple:
 @require_admin_auth()
 def get_admin_stats() -> ResponseTuple:
     """Get detailed admin statistics"""
-    # Rate limit: one request per ADMIN_STATS_RATE_LIMIT_SECONDS per user
-    api_key = request.headers.get('Authorization', '').replace('Bearer ', '')
-    now = time.time()
-    last_access = admin_stats_last_access.get(api_key, 0)
-    if now - last_access < ADMIN_STATS_RATE_LIMIT_SECONDS:
-        return jsonify({
-            "success": False,
-            "error": f"Too many requests. Please wait {ADMIN_STATS_RATE_LIMIT_SECONDS} seconds between requests.",
-            "timestamp": datetime.now().isoformat()
-        }), 429
-    admin_stats_last_access[api_key] = now
+    # REMOVE THESE LINES:
+    # api_key = request.headers.get('Authorization', '').replace('Bearer ', '')
+    # now = time.time()
+    # last_access = admin_stats_last_access.get(api_key, 0)
+    # if now - last_access < ADMIN_STATS_RATE_LIMIT_SECONDS:
+    #     return jsonify({
+    #         "success": False,
+    #         "error": f"Too many requests. Please wait {ADMIN_STATS_RATE_LIMIT_SECONDS} seconds between requests.",
+    #         "timestamp": datetime.now().isoformat()
+    #     }), 429
+    # admin_stats_last_access[api_key] = now
 
     try:
         db = db_manager.get_database()

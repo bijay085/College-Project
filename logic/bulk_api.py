@@ -129,12 +129,23 @@ def log_activity(user_info, action, details, fraud_result=None):
         return
     
     try:
+        # Determine log level based on action and result
+        log_level = "info"  # default
+        if fraud_result:
+            if fraud_result.get("decision") == "fraud":
+                log_level = "fraud"
+            elif fraud_result.get("decision") == "suspicious":
+                log_level = "warning"
+        elif "error" in action.lower():
+            log_level = "error"
+        
         log_entry = {
             "user_email": user_info.get("email"),
             "user_id": user_info.get("user_id"),
             "api_key": request.headers.get('Authorization', '').replace('Bearer ', '')[:20] + "...",
             "action": action,
             "details": details,
+            "log_level": log_level,  # Add this field
             "timestamp": datetime.now(),
             "ip_address": request.remote_addr,
             "user_agent": request.headers.get('User-Agent', ''),
@@ -151,7 +162,6 @@ def log_activity(user_info, action, details, fraud_result=None):
             })
         
         logs_collection.insert_one(log_entry)
-        app.logger.info(f"📝 Activity logged for {user_info.get('email')}: {action}")
         
     except Exception as e:
         app.logger.error(f"Failed to log activity: {e}")
@@ -378,29 +388,35 @@ def get_user_logs():
             return create_error_response("User information not available", 500)
         
         user_email = user_info.get("email")
-        if not user_email:
-            return create_error_response("User email not available", 500)
+        user_role = user_info.get("role")
         
         # Get query parameters
-        limit = min(int(request.args.get('limit', 50)), 100)  # Max 100 logs
+        limit = min(int(request.args.get('limit', 50)), 100)
         skip = int(request.args.get('skip', 0))
         log_level = request.args.get('level', 'all')
         
-        # Build query filter
-        query_filter = {"user_email": user_email}
+        # Build query filter - ADMIN SEES ALL, USER SEES ONLY THEIR LOGS
+        if user_role == 'admin':
+            query_filter = {}  # Admin sees all logs
+        else:
+            query_filter = {"user_email": user_email}  # User sees only their logs
         
         # Add log level filter if specified
         if log_level != 'all':
             if log_level == 'fraud':
-                query_filter["decision"] = {"$in": ["fraud", "suspicious"]}
+                query_filter["log_level"] = "fraud"
+            elif log_level == 'warning':
+                query_filter["log_level"] = "warning"  
             elif log_level == 'error':
-                query_filter["details.error"] = {"$exists": True}
+                query_filter["log_level"] = "error"
+            elif log_level == 'info':
+                query_filter["log_level"] = "info"
         
-        # Get logs for this user only
+        # Get logs
         logs_cursor = logs_collection.find(query_filter).sort("timestamp", -1).skip(skip).limit(limit)
         logs = list(logs_cursor)
         
-        # Convert ObjectId to string and format timestamps
+        # Format logs
         formatted_logs = []
         for log in logs:
             log["_id"] = str(log["_id"])
@@ -408,19 +424,18 @@ def get_user_logs():
                 log["timestamp"] = log["timestamp"].isoformat() if hasattr(log["timestamp"], "isoformat") else str(log["timestamp"])
             formatted_logs.append(log)
         
-        # Get total count for pagination
         total_count = logs_collection.count_documents(query_filter)
         
         response_data = {
             "logs": formatted_logs,
             "total_count": total_count,
             "user_email": user_email,
+            "user_role": user_role,
+            "viewing_all": user_role == 'admin',
             "limit": limit,
             "skip": skip,
             "has_more": total_count > (skip + limit)
         }
-        
-        app.logger.info(f"Retrieved {len(formatted_logs)} logs for user: {user_email}")
         
         return create_success_response(response_data, f"Retrieved {len(formatted_logs)} logs")
         

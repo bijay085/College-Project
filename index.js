@@ -2004,76 +2004,14 @@ document.addEventListener('DOMContentLoaded', function() {
       window.activityLogsManager = ActivityLogsManager.init();
     }, 1000);
   }
-});
 
-/**
- * FIXED: Enhanced initialization script for index.html
- */
-(function() {
-    // Check for persistent session first
-    let userData = sessionStorage.getItem('fraudshield_user');
-    let apiKey = sessionStorage.getItem('fraudshield_api_key');
-    
-    // If not in sessionStorage, check localStorage for persistent session
-    if (!userData || !apiKey) {
-        const persistentUser = localStorage.getItem('fraudshield_persistent_user');
-        const persistentApiKey = localStorage.getItem('fraudshield_persistent_api_key');
-        const loginTimestamp = localStorage.getItem('fraudshield_login_timestamp');
-        
-        if (persistentUser && persistentApiKey) {
-            // Check if session is still valid (not older than 30 days)
-            if (loginTimestamp) {
-                const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-                if (parseInt(loginTimestamp) < thirtyDaysAgo) {
-                    console.log('🕐 Persistent session expired during load');
-                    // Clear expired data
-                    localStorage.removeItem('fraudshield_persistent_user');
-                    localStorage.removeItem('fraudshield_persistent_api_key');
-                    localStorage.removeItem('fraudshield_persistent_session_id');
-                    localStorage.removeItem('fraudshield_remember');
-                    localStorage.removeItem('fraudshield_email');
-                    localStorage.removeItem('fraudshield_login_timestamp');
-                } else {
-                    // Use persistent data
-                    userData = persistentUser;
-                    apiKey = persistentApiKey;
-                    
-                    // Restore to sessionStorage
-                    sessionStorage.setItem('fraudshield_user', userData);
-                    sessionStorage.setItem('fraudshield_api_key', apiKey);
-                    
-                    const persistentSessionId = localStorage.getItem('fraudshield_persistent_session_id');
-                    if (persistentSessionId) {
-                        sessionStorage.setItem('fraudshield_session_id', persistentSessionId);
-                    }
-                    
-                    console.log('🔄 Persistent session restored on page load');
-                }
-            }
-        }
-    }
-    
-    if (userData && apiKey) {
-        try {
-            window.currentUser = JSON.parse(userData);
-            window.apiKey = apiKey;
-            console.log('🔐 Authenticated user:', window.currentUser.user.email, 'Role:', window.currentUser.user.role);
-        } catch (error) {
-            console.error('Failed to parse user data:', error);
-            // Clear invalid session data from both storages
-            sessionStorage.removeItem('fraudshield_user');
-            sessionStorage.removeItem('fraudshield_api_key');
-            sessionStorage.removeItem('fraudshield_session_id');
-            localStorage.removeItem('fraudshield_persistent_user');
-            localStorage.removeItem('fraudshield_persistent_api_key');
-            localStorage.removeItem('fraudshield_persistent_session_id');
-            
-            window.currentUser = null;
-            window.apiKey = null;
-        }
-    } else {
-        console.log('👤 Anonymous user - public access enabled');
-        window.currentUser = null;
-        window.apiKey = null;
-    }
-})();
+  // Ensure log level filter always refreshes logs on change
+  const logLevelSelect = document.getElementById('logLevel');
+  if (logLevelSelect) {
+    logLevelSelect.addEventListener('change', function() {
+      if (window.activityLogsManager) {
+        window.activityLogsManager.loadUserLogs(true);
+      }
+    });
+  }
+});
