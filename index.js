@@ -329,6 +329,36 @@ class AuthManager {
             // Authenticated - show settings
             if (settingsAuthRequired) settingsAuthRequired.style.display = 'none';
             if (settingsGrid) settingsGrid.classList.remove('hidden');
+
+            // Lock buttons for non-admin users
+            if (!isAdmin) {
+                // Disable profile editing
+                const profileName = document.getElementById('profileName');
+                const profileCompany = document.getElementById('profileCompany');
+                const saveProfileBtn = document.getElementById('saveProfile');
+                
+                if (profileName) {
+                    profileName.disabled = true;
+                    profileName.style.cursor = 'not-allowed';
+                }
+                if (profileCompany) {
+                    profileCompany.disabled = true;
+                    profileCompany.style.cursor = 'not-allowed';
+                }
+                if (saveProfileBtn) {
+                    saveProfileBtn.disabled = true;
+                    saveProfileBtn.style.cursor = 'not-allowed';
+                    saveProfileBtn.style.opacity = '0.5';
+                }
+                
+                // Disable API key regeneration
+                const regenerateBtn = document.getElementById('regenerateApiKey');
+                if (regenerateBtn) {
+                    regenerateBtn.disabled = true;
+                    regenerateBtn.style.cursor = 'not-allowed';
+                    regenerateBtn.style.opacity = '0.5';
+                }
+            }
             
             if (isAdmin) {
                 this.addAdminSettings(settingsGrid);
@@ -1253,6 +1283,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('http://127.0.0.1:5000/bulk-check', {
         method: 'POST',
         body: formData,
+        mode: 'cors'  // Add this line
       });
 
       if (progressInner) progressInner.style.width = '50%';

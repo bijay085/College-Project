@@ -28,7 +28,10 @@ class MongoManager:
             # User authentication collections
             "users": self.db[os.getenv("USERS_COLLECTION", "users")],
             "sites": self.db[os.getenv("SITES_COLLECTION", "sites")],
-            "api_logs": self.db[os.getenv("API_LOGS_COLLECTION", "api_logs")]
+            "api_logs": self.db[os.getenv("API_LOGS_COLLECTION", "api_logs")],
+            
+            # Metrics collection for tracking various metrics
+            "metrics": self.db[os.getenv("METRICS_COLLECTION", "metrics")]
         }
        
     def get_collection(self, name: str):

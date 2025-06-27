@@ -60,14 +60,22 @@ header img:hover {
   border: 1px solid var(--gray-200);
   font-size: 0.85rem;
   font-weight: 500;
+  /* Ensure status bar and dot are vertically centered and inline */
+  height: 32px;
+  min-width: 90px;
+  justify-content: flex-start;
+  position: relative;
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--success);
   animation: pulse 2s infinite;
+  display: inline-block;
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
 @keyframes pulse {
@@ -77,6 +85,32 @@ header img:hover {
 
 .status-text {
   color: var(--text-secondary);
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  /* Prevent stacking */
+  white-space: nowrap;
+  margin-left: 2px;
+}
+
+.status-indicator .status-dot + .status-text {
+  margin-left: 4px;
+}
+
+/* Fix for status-indicator alignment in logo-section */
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing);
+  margin-right: 0;
+}
+
+.logo-section .status-indicator {
+  margin-left: 18px;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: center;
 }
 
 /* Navigation */

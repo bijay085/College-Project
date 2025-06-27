@@ -348,5 +348,6 @@ if __name__ == "__main__":
         debug=True,
         host='127.0.0.1',
         port=5000,
-        threaded=True
+        threaded=True,
+        use_reloader=False  # Add this line to disable the reloader
     )

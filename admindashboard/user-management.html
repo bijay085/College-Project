@@ -9,11 +9,233 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="user-management.css">
     
+    <!-- ENHANCED SECURITY SCRIPT - Must be first -->
     <script>
-        const userData = sessionStorage.getItem('fraudshield_user');
-        if (!userData || JSON.parse(userData).user.role !== 'admin') {
-            window.location.href = '/user_auth/pages/login.html';
+        class AdminSecurity {
+            constructor() {
+                this.checkInterval = null;
+                this.lastSessionId = null;
+                this.redirecting = false;
+                
+                this.init();
+            }
+            
+            init() {
+                // Initial security check
+                if (!this.validateAdminAccess()) {
+                    this.redirectToLogin('Initial access denied');
+                    return;
+                }
+                
+                // Store initial session for comparison
+                this.lastSessionId = sessionStorage.getItem('fraudshield_session_id');
+                
+                // Start continuous monitoring
+                this.startSessionMonitoring();
+                
+                // Listen for storage changes (logout from other tabs)
+                window.addEventListener('storage', (e) => {
+                    if (e.key === 'fraudshield_user' || e.key === 'fraudshield_api_key') {
+                        this.handleSessionChange('Storage change detected');
+                    }
+                });
+                
+                // Listen for focus events (user returns to tab)
+                window.addEventListener('focus', () => {
+                    this.validateAdminAccess('Focus event check');
+                });
+                
+                // Before page unload, clear monitoring
+                window.addEventListener('beforeunload', () => {
+                    if (this.checkInterval) {
+                        clearInterval(this.checkInterval);
+                    }
+                });
+                
+                console.log('🔒 Admin security monitoring activated');
+            }
+            
+            validateAdminAccess(reason = 'Standard check') {
+                try {
+                    // Check if user data exists
+                    const userData = sessionStorage.getItem('fraudshield_user');
+                    const apiKey = sessionStorage.getItem('fraudshield_api_key');
+                    const sessionId = sessionStorage.getItem('fraudshield_session_id');
+                    
+                    if (!userData || !apiKey) {
+                        console.warn(`❌ No user data found (${reason})`);
+                        return false;
+                    }
+                    
+                    // Parse and validate user data
+                    let user;
+                    try {
+                        user = JSON.parse(userData);
+                    } catch (e) {
+                        console.warn(`❌ Invalid user data format (${reason})`);
+                        return false;
+                    }
+                    
+                    // Check if user has admin role
+                    if (!user || !user.user || user.user.role !== 'admin') {
+                        console.warn(`❌ Non-admin access attempt (${reason})`, user?.user?.role);
+                        return false;
+                    }
+                    
+                    // Check for session changes
+                    if (this.lastSessionId && sessionId !== this.lastSessionId) {
+                        console.warn(`❌ Session change detected (${reason})`);
+                        return false;
+                    }
+                    
+                    console.log(`✅ Admin access validated (${reason})`);
+                    return true;
+                    
+                } catch (error) {
+                    console.error(`❌ Access validation error (${reason}):`, error);
+                    return false;
+                }
+            }
+            
+            async validateSessionWithServer() {
+                try {
+                    const sessionId = sessionStorage.getItem('fraudshield_session_id');
+                    if (!sessionId) return false;
+                    
+                    const response = await fetch('http://127.0.0.1:5001/auth/validate-session', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ session_id: sessionId })
+                    });
+                    
+                    if (!response.ok) return false;
+                    
+                    const result = await response.json();
+                    return result.success && result.data?.user?.role === 'admin';
+                    
+                } catch (error) {
+                    console.warn('Server session validation failed:', error);
+                    return false;
+                }
+            }
+            
+            startSessionMonitoring() {
+                // Check every 5 seconds
+                this.checkInterval = setInterval(() => {
+                    if (!this.validateAdminAccess('Periodic check')) {
+                        this.handleSessionChange('Periodic validation failed');
+                    }
+                }, 5000);
+                
+                // Additional server validation every 30 seconds
+                setInterval(async () => {
+                    const isValid = await this.validateSessionWithServer();
+                    if (!isValid) {
+                        this.handleSessionChange('Server validation failed');
+                    }
+                }, 30000);
+            }
+            
+            handleSessionChange(reason) {
+                if (this.redirecting) return;
+                
+                console.warn(`🚨 Admin session invalidated: ${reason}`);
+                
+                // Clear the monitoring interval
+                if (this.checkInterval) {
+                    clearInterval(this.checkInterval);
+                }
+                
+                // Clear invalid session data
+                this.clearSession();
+                
+                // Redirect to login
+                this.redirectToLogin(reason);
+            }
+            
+            clearSession() {
+                try {
+                    sessionStorage.removeItem('fraudshield_user');
+                    sessionStorage.removeItem('fraudshield_api_key');
+                    sessionStorage.removeItem('fraudshield_session_id');
+                    localStorage.removeItem('fraudshield_remember');
+                    localStorage.removeItem('fraudshield_email');
+                } catch (error) {
+                    console.error('Error clearing session:', error);
+                }
+            }
+            
+            redirectToLogin(reason) {
+                if (this.redirecting) return;
+                this.redirecting = true;
+                
+                console.log(`🔄 Redirecting to login: ${reason}`);
+                
+                // Show user-friendly message
+                this.showSecurityAlert(reason);
+                
+                // Redirect after a brief delay
+                setTimeout(() => {
+                    const currentUrl = encodeURIComponent(window.location.href);
+                    window.location.href = `/user_auth/pages/login.html?redirect=${currentUrl}&reason=admin_required`;
+                }, 2000);
+            }
+            
+            showSecurityAlert(reason) {
+                // Create alert if it doesn't exist
+                let alert = document.getElementById('security-alert');
+                if (!alert) {
+                    alert = document.createElement('div');
+                    alert.id = 'security-alert';
+                    alert.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: #fef2f2;
+                        border: 2px solid #ef4444;
+                        color: #dc2626;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                        z-index: 10000;
+                        max-width: 500px;
+                        text-align: center;
+                        font-family: Inter, sans-serif;
+                        font-weight: 500;
+                        animation: slideDown 0.3s ease-out;
+                    `;
+                    
+                    // Add animation keyframes
+                    if (!document.getElementById('security-alert-styles')) {
+                        const style = document.createElement('style');
+                        style.id = 'security-alert-styles';
+                        style.textContent = `
+                            @keyframes slideDown {
+                                from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                                to { opacity: 1; transform: translateX(-50%) translateY(0); }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+                    
+                    document.body.appendChild(alert);
+                }
+                
+                alert.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <i class="fas fa-shield-alt" style="font-size: 18px;"></i>
+                        <div>
+                            <strong>Access Denied</strong><br>
+                            <small>Admin privileges required. Redirecting to login...</small>
+                        </div>
+                    </div>
+                `;
+            }
         }
+
+        // Initialize security monitoring immediately
+        window.adminSecurity = new AdminSecurity();
     </script>
 </head>
 
@@ -121,6 +343,7 @@
         </div>
     </main>
 
+    <!-- User Modal -->
     <div class="modal-overlay hidden" id="userModal">
         <div class="modal">
             <div class="modal-header">

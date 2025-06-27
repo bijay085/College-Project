@@ -21,7 +21,7 @@ import bcrypt
 import pymongo
 from pymongo import database
 from bson import ObjectId
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, g
 from flask_cors import CORS
 
 # Add parent directory to path for imports
@@ -904,6 +904,461 @@ def validate_api_key() -> ResponseTuple:
     except Exception as e:
         logger.error(f"API key validation error: {e}")
         return create_error_response("API key validation failed", 500)
+
+# ============================================================================
+# USER MANAGEMENT ENDPOINTS (ADMIN ONLY)
+# ============================================================================
+
+from functools import wraps
+
+def require_admin_auth():
+    """Decorator to require admin authentication"""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            try:
+                # Get authorization header
+                auth_header = request.headers.get('Authorization')
+                if not auth_header or not auth_header.startswith('Bearer '):
+                    return create_error_response("Authentication required", 401)
+                
+                # Extract API key
+                api_key = auth_header.replace('Bearer ', '')
+                
+                # Validate API key and check admin role
+                db = db_manager.get_database()
+                if db is None:
+                    return create_error_response("Database unavailable", 503)
+                
+                user = db.users.find_one({"api_key": api_key})
+                if not user:
+                    return create_error_response("Invalid API key", 401)
+                
+                if user.get('role') != 'admin':
+                    return create_error_response("Admin access required", 403)
+                
+                # Store user info for use in endpoint
+                g.current_user = user
+                return f(*args, **kwargs)
+                
+            except Exception as e:
+                logger.error(f"Admin auth check failed: {e}")
+                return create_error_response("Authentication failed", 401)
+        
+        return decorated_function
+    return decorator
+
+@app.route("/auth/users", methods=["GET"])
+@require_admin_auth()
+def get_all_users() -> ResponseTuple:
+    """Get all users (admin only)"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Get query parameters
+        search = request.args.get('search', '').strip()
+        role_filter = request.args.get('role', '').strip()
+        page = int(request.args.get('page', 1))
+        limit = int(request.args.get('limit', 100))
+        
+        # Build query
+        query = {}
+        if search:
+            query['$or'] = [
+                {'name': {'$regex': search, '$options': 'i'}},
+                {'email': {'$regex': search, '$options': 'i'}},
+                {'company': {'$regex': search, '$options': 'i'}}
+            ]
+        
+        if role_filter:
+            query['role'] = role_filter
+        
+        # Get total count
+        total_count = db.users.count_documents(query)
+        
+        # Get users with pagination
+        skip = (page - 1) * limit
+        cursor = db.users.find(query, {
+            'password_hash': 0  # Exclude password hash
+        }).sort('created_at', -1).skip(skip).limit(limit)
+        
+        users = []
+        for user in cursor:
+            user_data = {
+                'id': str(user['_id']),
+                'name': user.get('name', ''),
+                'email': user.get('email', ''),
+                'company': user.get('company', ''),
+                'role': user.get('role', 'user'),
+                'created_at': user.get('created_at').isoformat() if user.get('created_at') else None,
+                'last_login': user.get('last_login').isoformat() if user.get('last_login') else None,
+                'is_verified': user.get('is_verified', False),
+                'login_attempts': user.get('login_attempts', 0),
+                'locked_until': user.get('locked_until').isoformat() if user.get('locked_until') else None,
+                'api_key': user.get('api_key', ''),
+                'status': 'locked' if user.get('locked_until') and user.get('locked_until') > datetime.now() else 'active'
+            }
+            users.append(user_data)
+        
+        response_data = {
+            'users': users,
+            'pagination': {
+                'page': page,
+                'limit': limit,
+                'total': total_count,
+                'pages': (total_count + limit - 1) // limit
+            }
+        }
+        
+        logger.info(f"Retrieved {len(users)} users (page {page}, total: {total_count})")
+        return create_success_response(response_data, f"Retrieved {len(users)} users")
+        
+    except ValueError as e:
+        return create_error_response(f"Invalid parameters: {str(e)}", 400)
+    except Exception as e:
+        logger.error(f"Get users error: {e}")
+        return create_error_response("Failed to retrieve users", 500)
+
+@app.route("/auth/users", methods=["POST"])
+@require_admin_auth()
+def create_user() -> ResponseTuple:
+    """Create a new user (admin only)"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        data = request.get_json()
+        if not data:
+            return create_error_response("No data provided", 400)
+        
+        # Extract and validate data
+        name = (data.get('name') or '').strip()
+        email = (data.get('email') or '').strip().lower()
+        company = (data.get('company') or '').strip()
+        password = data.get('password') or ''
+        role = data.get('role', 'user').strip()
+        locked = data.get('locked', False)
+        
+        # Validation
+        if not name or len(name) < 2:
+            return create_error_response("Valid name is required")
+        
+        if not email or not validate_email(email):
+            return create_error_response("Valid email is required")
+        
+        if not password or len(password) < 8:
+            return create_error_response("Password must be at least 8 characters")
+        
+        if role not in ['user', 'admin']:
+            return create_error_response("Role must be 'user' or 'admin'")
+        
+        # Check if user already exists
+        existing_user = db.users.find_one({"email": email})
+        if existing_user:
+            return create_error_response("User with this email already exists")
+        
+        # Hash password
+        password_hash = hash_password(password)
+        
+        # Generate API key
+        api_key = generate_api_key()
+        
+        # Create user document
+        user_doc: UserDict = {
+            "name": name,
+            "email": email,
+            "company": company if company else None,
+            "password_hash": password_hash,
+            "api_key": api_key,
+            "role": role,
+            "created_at": datetime.now(),
+            "last_login": None,
+            "is_verified": True,
+            "login_attempts": 0,
+            "locked_until": datetime.now() + timedelta(days=365) if locked else None,
+            "terms_accepted_at": datetime.now()
+        }
+        
+        # Insert user
+        result = db.users.insert_one(user_doc)
+        
+        # Create site entry
+        site_doc: Dict[str, Any] = {
+            "user_id": str(result.inserted_id),
+            "api_key": api_key,
+            "site_name": f"{name}'s Site",
+            "domain": email.split('@')[1],
+            "created_at": datetime.now(),
+            "status": "active"
+        }
+        db.sites.insert_one(site_doc)
+        
+        logger.info(f"User created by admin: {email}")
+        
+        response_data = {
+            "id": str(result.inserted_id),
+            "name": name,
+            "email": email,
+            "company": company,
+            "role": role,
+            "api_key": api_key,
+            "status": "locked" if locked else "active"
+        }
+        
+        return create_success_response(response_data, "User created successfully")
+        
+    except Exception as e:
+        logger.error(f"Create user error: {e}")
+        return create_error_response("Failed to create user", 500)
+
+@app.route("/auth/users/<user_id>", methods=["PUT"])
+@require_admin_auth()
+def update_user(user_id: str) -> ResponseTuple:
+    """Update a user (admin only)"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Validate user_id
+        try:
+            user_object_id = ObjectId(user_id)
+        except:
+            return create_error_response("Invalid user ID", 400)
+        
+        # Check if user exists
+        existing_user = db.users.find_one({"_id": user_object_id})
+        if not existing_user:
+            return create_error_response("User not found", 404)
+        
+        data = request.get_json()
+        if not data:
+            return create_error_response("No data provided", 400)
+        
+        # Build update document
+        update_doc = {}
+        
+        # Update name
+        if 'name' in data:
+            name = (data['name'] or '').strip()
+            if name and len(name) >= 2:
+                update_doc['name'] = name
+            else:
+                return create_error_response("Valid name is required")
+        
+        # Update email
+        if 'email' in data:
+            email = (data['email'] or '').strip().lower()
+            if email and validate_email(email):
+                # Check if email is already taken by another user
+                email_check = db.users.find_one({"email": email, "_id": {"$ne": user_object_id}})
+                if email_check:
+                    return create_error_response("Email already in use by another user")
+                update_doc['email'] = email
+            else:
+                return create_error_response("Valid email is required")
+        
+        # Update company
+        if 'company' in data:
+            company = (data['company'] or '').strip()
+            update_doc['company'] = company if company else None
+        
+        # Update role
+        if 'role' in data:
+            role = (data['role'] or '').strip()
+            if role in ['user', 'admin']:
+                update_doc['role'] = role
+            else:
+                return create_error_response("Role must be 'user' or 'admin'")
+        
+        # Update password if provided
+        if 'password' in data and data['password']:
+            password = data['password']
+            if len(password) >= 8:
+                update_doc['password_hash'] = hash_password(password)
+                update_doc['login_attempts'] = 0  # Reset login attempts
+            else:
+                return create_error_response("Password must be at least 8 characters")
+        
+        # Update locked status
+        if 'locked' in data:
+            locked = data['locked']
+            if locked:
+                update_doc['locked_until'] = datetime.now() + timedelta(days=365)
+            else:
+                update_doc['locked_until'] = None
+                update_doc['login_attempts'] = 0
+        
+        # Regenerate API key if requested
+        if data.get('regenerate_api_key'):
+            new_api_key = generate_api_key()
+            update_doc['api_key'] = new_api_key
+        
+        if not update_doc:
+            return create_error_response("No valid updates provided", 400)
+        
+        # Perform update
+        result = db.users.update_one(
+            {"_id": user_object_id},
+            {"$set": update_doc}
+        )
+        
+        if result.modified_count == 0:
+            return create_error_response("No changes made", 400)
+        
+        # Get updated user
+        updated_user = db.users.find_one({"_id": user_object_id}, {'password_hash': 0})
+        if not updated_user:
+            return create_error_response("Failed to retrieve updated user", 500)
+        
+        response_data = {
+            'id': str(updated_user['_id']),
+            'name': updated_user.get('name', ''),
+            'email': updated_user.get('email', ''),
+            'company': updated_user.get('company', ''),
+            'role': updated_user.get('role', 'user'),
+            'api_key': updated_user.get('api_key', ''),
+            'status': 'locked' if updated_user.get('locked_until') and updated_user.get('locked_until') > datetime.now() else 'active'
+        }
+        
+        logger.info(f"User updated by admin: {updated_user.get('email')}")
+        return create_success_response(response_data, "User updated successfully")
+        
+    except Exception as e:
+        logger.error(f"Update user error: {e}")
+        return create_error_response("Failed to update user", 500)
+
+@app.route("/auth/users/<user_id>", methods=["DELETE"])
+@require_admin_auth()
+def delete_user(user_id: str) -> ResponseTuple:
+    """Delete a user (admin only)"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Validate user_id
+        try:
+            user_object_id = ObjectId(user_id)
+        except:
+            return create_error_response("Invalid user ID", 400)
+        
+        # Check if user exists
+        user_to_delete = db.users.find_one({"_id": user_object_id})
+        if not user_to_delete:
+            return create_error_response("User not found", 404)
+        
+        # Prevent admin from deleting themselves
+        from flask import g
+        current_user_id = str(g.current_user['_id'])
+        if user_id == current_user_id:
+            return create_error_response("Cannot delete your own account", 400)
+        
+        # Prevent deleting the last admin
+        if user_to_delete.get('role') == 'admin':
+            admin_count = db.users.count_documents({"role": "admin"})
+            if admin_count <= 1:
+                return create_error_response("Cannot delete the last admin account", 400)
+        
+        # Delete user
+        result = db.users.delete_one({"_id": user_object_id})
+        
+        if result.deleted_count == 0:
+            return create_error_response("Failed to delete user", 500)
+        
+        # Clean up related data
+        db.sites.delete_many({"user_id": user_id})
+        db.sessions.delete_many({"user_id": user_id})
+        
+        logger.info(f"User deleted by admin: {user_to_delete.get('email')}")
+        return create_success_response(None, "User deleted successfully")
+        
+    except Exception as e:
+        logger.error(f"Delete user error: {e}")
+        return create_error_response("Failed to delete user", 500)
+
+@app.route("/auth/admin/stats", methods=["GET"])
+@require_admin_auth()
+def get_admin_stats() -> ResponseTuple:
+    """Get detailed admin statistics"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Calculate various statistics
+        now = datetime.now()
+        today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
+        week_start = today_start - timedelta(days=7)
+        month_start = today_start - timedelta(days=30)
+        
+        stats: Dict[str, Any] = {
+            # User counts
+            "total_users": db.users.count_documents({}),
+            "admin_users": db.users.count_documents({"role": "admin"}),
+            "regular_users": db.users.count_documents({"role": "user"}),
+            "verified_users": db.users.count_documents({"is_verified": True}),
+            
+            # Activity stats
+            "active_today": db.users.count_documents({
+                "last_login": {"$gte": today_start}
+            }),
+            "active_this_week": db.users.count_documents({
+                "last_login": {"$gte": week_start}
+            }),
+            "active_this_month": db.users.count_documents({
+                "last_login": {"$gte": month_start}
+            }),
+            
+            # Registration stats
+            "new_today": db.users.count_documents({
+                "created_at": {"$gte": today_start}
+            }),
+            "new_this_week": db.users.count_documents({
+                "created_at": {"$gte": week_start}
+            }),
+            "new_this_month": db.users.count_documents({
+                "created_at": {"$gte": month_start}
+            }),
+            
+            # Security stats
+            "locked_accounts": db.users.count_documents({
+                "locked_until": {"$gt": now}
+            }),
+            "never_logged_in": db.users.count_documents({
+                "last_login": None
+            }),
+            
+            # System stats
+            "total_sites": db.sites.count_documents({}),
+            "active_sessions": db.sessions.count_documents({
+                "expires_at": {"$gt": now}
+            })
+        }
+        
+        # Recent activity
+        recent_users = list(db.users.find(
+            {},
+            {"name": 1, "email": 1, "created_at": 1, "last_login": 1, "role": 1}
+        ).sort("created_at", -1).limit(10))
+        
+        for user in recent_users:
+            user['id'] = str(user.pop('_id'))
+            if user.get('created_at'):
+                user['created_at'] = user['created_at'].isoformat()
+            if user.get('last_login'):
+                user['last_login'] = user['last_login'].isoformat()
+        
+        stats['recent_users'] = recent_users
+        
+        return create_success_response(stats, "Admin statistics retrieved")
+        
+    except Exception as e:
+        logger.error(f"Get admin stats error: {e}")
+        return create_error_response("Failed to get statistics", 500)
 
 # ============================================================================
 # ERROR HANDLERS
