@@ -54,7 +54,35 @@
     return digits.length >= 6 ? digits.substring(0, 6) : null;
   }
 
-  // ========== 4. Collect Data ==========
+  // ========== 4. API Key Management ==========
+  function getApiKey() {
+    // Check if user is authenticated and has API key
+    const userData = sessionStorage.getItem('fraudshield_user');
+    const apiKey = sessionStorage.getItem('fraudshield_api_key');
+    
+    if (userData && apiKey) {
+      return apiKey;
+    }
+    
+    // For demo purposes, you can also allow a hardcoded API key
+    // Remove this in production
+    return "fsk_demo_checkout_key_2024";
+  }
+
+  function getUserEmail() {
+    const userData = sessionStorage.getItem('fraudshield_user');
+    if (userData) {
+      try {
+        const parsed = JSON.parse(userData);
+        return parsed.user?.email || null;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // ========== 5. Collect Data ==========
   function collectFraudData() {
     const now = Date.now();
     eventTimeline.formSubmit = now;
@@ -64,8 +92,14 @@
     const cardBIN = extractBIN(cardNumber);
     const unitPrice = getNumber("expectedPrice");
     const quantity = parseInt(get("quantity") || "1");
+    const userEmail = getUserEmail();
 
     return {
+      // Authentication
+      api_key: getApiKey(),
+      user_email: userEmail,
+      
+      // Transaction data
       timestamp: new Date().toISOString(),
       checkout_time: checkoutTime,
       typing_speed: (keyPresses / checkoutTime).toFixed(2),
@@ -98,11 +132,15 @@
 
       // Payment - ⚠️ Use token in production!
       card_bin: cardBIN,
-      card_token: "simulate_or_use_token_here"
+      card_token: "simulate_or_use_token_here",
+      
+      // Additional tracking
+      ip: "auto_detect", // Server will detect real IP
+      price: unitPrice * quantity
     };
   }
 
-  // ========== 5. Send to Backend ==========
+  // ========== 6. Send to Backend ==========
   async function sendToBackend(payload) {
     const button = document.querySelector(".submit-btn");
     if (button) button.disabled = true;
@@ -110,24 +148,40 @@
     try {
       const response = await fetch("http://localhost:5000/fraud-check", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${payload.api_key}` // Send API key in header too
+        },
         body: JSON.stringify(payload),
       });
 
       const result = await response.json();
-      displayResult(result);
+      
+      if (response.ok) {
+        displayResult(result);
+        localStorage.removeItem("unsent_fraud_data");
+      } else {
+        throw new Error(result.error || "API request failed");
+      }
 
-      localStorage.removeItem("unsent_fraud_data");
     } catch (error) {
       console.error("FraudShield error:", error);
-      alert("⚠️ Error contacting fraud detection system.");
+      
+      let errorMessage = "⚠️ Error contacting fraud detection system.";
+      if (error.message.includes("Invalid API key")) {
+        errorMessage = "🔐 Authentication failed. Please check your API key.";
+      } else if (error.message.includes("API key not found")) {
+        errorMessage = "🔑 API key not found. Please contact support.";
+      }
+      
+      alert(errorMessage);
       localStorage.setItem("unsent_fraud_data", JSON.stringify(payload));
     }
 
     if (button) button.disabled = false;
   }
 
-  // ========== 6. Display Result ==========
+  // ========== 7. Display Result ==========
   function displayResult(data) {
     let resultBox = document.getElementById("fraudResult");
     if (!resultBox) {
@@ -137,45 +191,94 @@
       if (container) container.appendChild(resultBox);
     }
 
-    // FIXED: Access nested data correctly
-    const responseData = data.data || data;  // Handle nested response
-    const fraudScore = responseData.fraud_score || data.fraud_score || 0;
-    const isFraud = responseData.is_fraud === true || data.is_fraud === true;
-    const reasons = responseData.reasons || data.reasons || [];
-
-    console.log("Debug - fraudScore:", fraudScore, "reasons:", reasons); // Debug line
-
-    let statusText, statusColor;
+    // Handle both direct response and wrapped response formats
+    const fraudData = data.data || data;
     
-    if (isFraud) {
-        statusText = "❌ FRAUD";
-        statusColor = "#dc2626";
-    } else if (fraudScore >= 0.4) {
-        statusText = "🟡 Suspicious";  
-        statusColor = "#d97706";
-    } else {
-        statusText = "✅ Legit";
-        statusColor = "#059669";
-    }
+    const status = fraudData.is_fraud === true ? "❌ FRAUD" : 
+                  fraudData.is_fraud === "chance" ? "🟡 Suspicious" : "✅ Legit";
 
     resultBox.innerHTML = `
       <h3>🛡️ FraudShield Result</h3>
-      <p><strong>Status:</strong> <span style="color: ${statusColor}">${statusText}</span></p>
-      <p><strong>Fraud Score:</strong> ${fraudScore}</p>
-      <p><strong>Reasons:</strong></p>
-      <ul>${reasons.length > 0 ? reasons.map(r => `<li>${r.replace('_', ' ')}</li>`).join("") : '<li>No fraud indicators detected</li>'}</ul>
+      <p><strong>Status:</strong> ${status}</p>
+      <p><strong>Fraud Score:</strong> ${fraudData.fraud_score || 0}</p>
+      <p><strong>Decision:</strong> ${fraudData.decision || 'unknown'}</p>
+      <p><strong>Triggered Rules:</strong></p>
+      <ul>${(fraudData.reasons || []).map(r => `<li>${r}</li>`).join("")}</ul>
+      <p><strong>Analysis Time:</strong> ${fraudData.analysis_timestamp || 'N/A'}</p>
     `;
-}
+  }
 
-  // ========== 7. Submit Hook ==========
+  // ========== 8. Submit Hook ==========
   const form = document.getElementById("checkoutForm");
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      
+      const apiKey = getApiKey();
+      if (!apiKey) {
+        alert("🔑 No API key found. Please authenticate first.");
+        return;
+      }
+      
       const data = collectFraudData();
-      console.log("📦 Collected Fraud Data:", data);
+      console.log("📦 Collected Fraud Data with API Key:", {
+        ...data,
+        api_key: data.api_key.substring(0, 10) + "..." // Log partial key for security
+      });
       console.table(data);
       sendToBackend(data);
     });
   }
+
+  // ========== 9. API Key Status Display ==========
+  function displayApiKeyStatus() {
+    const apiKey = getApiKey();
+    const userEmail = getUserEmail();
+    
+    // Create status display
+    let statusDiv = document.getElementById("apiKeyStatus");
+    if (!statusDiv) {
+      statusDiv = document.createElement("div");
+      statusDiv.id = "apiKeyStatus";
+      statusDiv.style.cssText = `
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 12px;
+        z-index: 1000;
+        max-width: 300px;
+      `;
+      document.body.appendChild(statusDiv);
+    }
+    
+    if (userEmail && apiKey) {
+      statusDiv.innerHTML = `
+        <div style="color: #059669; font-weight: 600;">🔐 Authenticated</div>
+        <div style="color: #6b7280; margin-top: 4px;">User: ${userEmail}</div>
+        <div style="color: #6b7280; font-family: monospace;">Key: ${apiKey.substring(0, 15)}...</div>
+      `;
+    } else if (apiKey) {
+      statusDiv.innerHTML = `
+        <div style="color: #d97706; font-weight: 600;">🔑 Demo Mode</div>
+        <div style="color: #6b7280; margin-top: 4px;">Using demo API key</div>
+        <div style="color: #6b7280; font-family: monospace;">Key: ${apiKey.substring(0, 15)}...</div>
+      `;
+    } else {
+      statusDiv.innerHTML = `
+        <div style="color: #dc2626; font-weight: 600;">❌ No Authentication</div>
+        <div style="color: #6b7280; margin-top: 4px;">Please sign in or use demo mode</div>
+      `;
+    }
+  }
+  
+  // Show API key status on page load
+  displayApiKeyStatus();
+  
+  // Update status when session changes
+  window.addEventListener('storage', displayApiKeyStatus);
+  
 })();

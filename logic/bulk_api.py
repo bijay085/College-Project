@@ -1,4 +1,4 @@
-# logic/bulk_api.py - FIXED to work with synchronous fraud checker
+# logic/bulk_api.py - UPDATED with API Key Authentication and User-specific Logs
 import sys
 import os
 import time
@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 from functools import wraps
 import traceback
+import pymongo
 
 sys.path.append(os.path.dirname(__file__))
 
@@ -28,7 +29,7 @@ class Config:
 
 app = Flask(__name__)
 
-# Enhanced CORS configuration
+# CORS configuration
 CORS(app, 
      origins=[
          "http://127.0.0.1:5500",
@@ -45,15 +46,6 @@ CORS(app,
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
      supports_credentials=True
 )
-
-# Add OPTIONS handler for preflight requests
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
-    return response
 
 # Set up logging
 logging.basicConfig(
@@ -72,6 +64,97 @@ try:
 except Exception as e:
     app.logger.error(f"❌ Failed to initialize FraudChecker: {e}")
     checker = None
+
+# Initialize MongoDB for user authentication
+try:
+    mongo_client = pymongo.MongoClient("mongodb://localhost:27017")
+    auth_db = mongo_client.fraudshield
+    users_collection = auth_db.users
+    logs_collection = auth_db.logs
+    app.logger.info("✅ Authentication database connected")
+except Exception as e:
+    app.logger.error(f"❌ Failed to connect to auth database: {e}")
+    mongo_client = None
+    auth_db = None
+    users_collection = None
+    logs_collection = None
+
+# ============================================================================
+# AUTHENTICATION FUNCTIONS
+# ============================================================================
+
+def validate_api_key(api_key):
+    """Validate API key against database and return user info"""
+    if users_collection is None or not api_key:
+        return None
+    
+    try:
+        # Find user by API key
+        user = users_collection.find_one({"api_key": api_key})
+        if user:
+            app.logger.info(f"✅ Valid API key for user: {user.get('email')}")
+            return {
+                "email": user.get("email"),
+                "name": user.get("name"),
+                "role": user.get("role"),
+                "company": user.get("company"),
+                "user_id": str(user.get("_id"))
+            }
+        else:
+            app.logger.warning(f"❌ Invalid API key: {api_key[:10]}...")
+            return None
+    except Exception as e:
+        app.logger.error(f"Error validating API key: {e}")
+        return None
+
+def get_api_key_from_request():
+    """Extract API key from request headers or body"""
+    # Check Authorization header first
+    auth_header = request.headers.get('Authorization')
+    if auth_header and auth_header.startswith('Bearer '):
+        return auth_header[7:]  # Remove 'Bearer ' prefix
+
+    # Check request body for API key
+    if request.is_json:
+        data = request.get_json(silent=True)  # Use silent=True to avoid exceptions
+        if data and 'api_key' in data:
+            return data['api_key']
+
+    # Check query parameters
+    return request.args.get('api_key')
+
+def log_activity(user_info, action, details, fraud_result=None):
+    """Log user activity to database"""
+    if logs_collection is None or not user_info:
+        return
+    
+    try:
+        log_entry = {
+            "user_email": user_info.get("email"),
+            "user_id": user_info.get("user_id"),
+            "api_key": request.headers.get('Authorization', '').replace('Bearer ', '')[:20] + "...",
+            "action": action,
+            "details": details,
+            "timestamp": datetime.now(),
+            "ip_address": request.remote_addr,
+            "user_agent": request.headers.get('User-Agent', ''),
+            "endpoint": request.endpoint,
+            "method": request.method
+        }
+        
+        # Add fraud detection results if available
+        if fraud_result:
+            log_entry.update({
+                "fraud_score": fraud_result.get("fraud_score"),
+                "decision": fraud_result.get("decision"),
+                "triggered_rules": fraud_result.get("triggered_rules", [])
+            })
+        
+        logs_collection.insert_one(log_entry)
+        app.logger.info(f"📝 Activity logged for {user_info.get('email')}: {action}")
+        
+    except Exception as e:
+        app.logger.error(f"Failed to log activity: {e}")
 
 # ============================================================================
 # UTILITY FUNCTIONS
@@ -105,6 +188,25 @@ def validate_file(file):
         return False, "File is empty"
     
     return True, "Valid"
+
+def require_api_key(f):
+    """Decorator to require valid API key"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        api_key = get_api_key_from_request()
+        
+        if not api_key:
+            return create_error_response("API key required", 401, "Include API key in Authorization header or request body")
+        
+        user_info = validate_api_key(api_key)
+        if not user_info:
+            return create_error_response("Invalid API key", 403, "API key not found or inactive")
+        
+        # Add user info to request context (suppress type warning)
+        setattr(request, 'user_info', user_info)  # type: ignore
+        return f(*args, **kwargs)
+    
+    return decorated_function
 
 def log_request(f):
     """Decorator to log API requests"""
@@ -161,6 +263,7 @@ def health_check():
             "status": "healthy",
             "timestamp": datetime.now().isoformat(),
             "fraud_checker": "initialized" if checker else "failed",
+            "auth_database": "connected" if users_collection is not None else "failed",
             "version": "1.0.0"
         }
         return jsonify(status)
@@ -168,12 +271,173 @@ def health_check():
         app.logger.error(f"Health check failed: {e}")
         return create_error_response("Health check failed", 503)
 
+@app.route("/fraud-check", methods=["POST", "OPTIONS"])
+@log_request
+def fraud_check():
+    """Single transaction fraud check with API key authentication"""
+    
+    # Handle preflight OPTIONS request FIRST (before API key check)
+    if request.method == "OPTIONS":
+        return "", 200
+    
+    # NOW apply API key validation only for POST requests
+    api_key = get_api_key_from_request()
+    if not api_key:
+        return create_error_response("API key required", 401, "Include API key in Authorization header or request body")
+    
+    user_info = validate_api_key(api_key)
+    if not user_info:
+        return create_error_response("Invalid API key", 403, "API key not found or inactive")
+    
+    # Check if fraud checker is available
+    if not checker:
+        return create_error_response(
+            "Fraud checking service unavailable", 
+            503,
+            "FraudChecker failed to initialize"
+        )
+    
+    # Increment API request metric
+    try:
+        if hasattr(checker.metrics, 'increment_metric'):
+            checker.metrics.increment_metric("api_requests")
+    except Exception as e:
+        app.logger.warning(f"Failed to increment api_requests metric: {e}")
+    
+    try:
+        # Get JSON data from request
+        data = request.get_json()
+        
+        if not data:
+            return create_error_response("No data provided", 400)
+        
+        app.logger.info(f"Processing fraud check for user: {user_info['email']}")
+        
+        # Add user context to transaction data
+        transaction_data = data.copy()
+        transaction_data.update({
+            "user_email": user_info["email"],
+            "user_id": user_info["user_id"],
+            "ip": request.remote_addr  # Auto-detect real IP
+        })
+        
+        # Analyze the transaction
+        result = checker.analyze_transaction(transaction_data)
+        
+        # Determine if it's fraud based on the decision
+        is_fraud = result.get('decision') == 'fraud'
+        is_suspicious = result.get('decision') == 'suspicious'
+        
+        # Format response for frontend
+        response_data = {
+            "is_fraud": "chance" if is_suspicious else is_fraud,
+            "fraud_score": result.get('fraud_score', 0),
+            "reasons": result.get('triggered_rules', []),
+            "decision": result.get('decision', 'unknown'),
+            "analysis_timestamp": result.get('analysis_timestamp', datetime.now().isoformat()),
+            "user_email": user_info["email"]  # Include user context in response
+        }
+        
+        # Log this activity
+        log_activity(
+            user_info,
+            "fraud_check",
+            {
+                "transaction_email": data.get("email"),
+                "card_bin": data.get("card_number", "")[:6] if data.get("card_number") else None,
+                "amount": data.get("price")
+            },
+            result
+        )
+        
+        app.logger.info(f"Fraud check completed - User: {user_info['email']}, Decision: {result.get('decision')}, Score: {result.get('fraud_score')}")
+        
+        return jsonify(response_data)  # Return raw data for checkout page
+        
+    except Exception as e:
+        app.logger.error(f"Fraud check failed: {traceback.format_exc()}")
+        return create_error_response(
+            "Fraud check failed", 
+            500,
+            str(e) if app.debug else None
+        )
+
+@app.route("/user-logs", methods=["GET"])
+@require_api_key
+def get_user_logs():
+    """Get activity logs for authenticated user only"""
+    
+    try:
+        # Check if logs collection is available
+        if logs_collection is None:
+            return create_error_response("Logs database unavailable", 503)
+        
+        # Get user info from the decorator
+        user_info = getattr(request, 'user_info', None)
+        if not user_info:
+            return create_error_response("User information not available", 500)
+        
+        user_email = user_info.get("email")
+        if not user_email:
+            return create_error_response("User email not available", 500)
+        
+        # Get query parameters
+        limit = min(int(request.args.get('limit', 50)), 100)  # Max 100 logs
+        skip = int(request.args.get('skip', 0))
+        log_level = request.args.get('level', 'all')
+        
+        # Build query filter
+        query_filter = {"user_email": user_email}
+        
+        # Add log level filter if specified
+        if log_level != 'all':
+            if log_level == 'fraud':
+                query_filter["decision"] = {"$in": ["fraud", "suspicious"]}
+            elif log_level == 'error':
+                query_filter["details.error"] = {"$exists": True}
+        
+        # Get logs for this user only
+        logs_cursor = logs_collection.find(query_filter).sort("timestamp", -1).skip(skip).limit(limit)
+        logs = list(logs_cursor)
+        
+        # Convert ObjectId to string and format timestamps
+        formatted_logs = []
+        for log in logs:
+            log["_id"] = str(log["_id"])
+            if "timestamp" in log:
+                log["timestamp"] = log["timestamp"].isoformat() if hasattr(log["timestamp"], "isoformat") else str(log["timestamp"])
+            formatted_logs.append(log)
+        
+        # Get total count for pagination
+        total_count = logs_collection.count_documents(query_filter)
+        
+        response_data = {
+            "logs": formatted_logs,
+            "total_count": total_count,
+            "user_email": user_email,
+            "limit": limit,
+            "skip": skip,
+            "has_more": total_count > (skip + limit)
+        }
+        
+        app.logger.info(f"Retrieved {len(formatted_logs)} logs for user: {user_email}")
+        
+        return create_success_response(response_data, f"Retrieved {len(formatted_logs)} logs")
+        
+    except Exception as e:
+        app.logger.error(f"Failed to get user logs: {e}")
+        return create_error_response("Failed to retrieve logs", 500)
+
 @app.route("/real-stats", methods=["GET"])
 def get_real_stats():
-    """Get real metrics - WORKS WITH SYNCHRONOUS FRAUD CHECKER"""
+    """Get real metrics - now supports API key validation for user-specific data"""
     try:
         if not checker:
             return create_error_response("FraudChecker not available", 503)
+        
+        # Check if user is authenticated for personalized stats
+        api_key = get_api_key_from_request()
+        user_info = validate_api_key(api_key) if api_key else None
         
         # Get metrics using synchronous method
         if hasattr(checker.metrics, 'get_metric_count'):
@@ -215,7 +479,8 @@ def get_real_stats():
                 "active_rules": len(getattr(checker, 'rules', {})),
                 "database_status": "online",
                 "fraud_checker_status": "active"
-            }
+            },
+            "user_context": user_info  # Include user info if authenticated
         }
         
         return jsonify({
@@ -248,8 +513,9 @@ def get_real_stats():
 
 @app.route("/bulk-check", methods=["POST"])
 @log_request
+@require_api_key
 def bulk_check():
-    """FIXED bulk fraud checking endpoint - now works with synchronous fraud checker"""
+    """Bulk fraud checking with API key authentication"""
     
     # Check if fraud checker is available
     if not checker:
@@ -258,6 +524,11 @@ def bulk_check():
             503,
             "FraudChecker failed to initialize"
         )
+    
+    # user_info = g.user_info
+    user_info = getattr(request, 'user_info', None)  # Set by @require_api_key decorator
+    if not user_info or 'email' not in user_info:
+        return create_error_response("User information not available", 500)
     
     # Increment API request metric
     try:
@@ -272,24 +543,24 @@ def bulk_check():
     # Validate file
     is_valid, message = validate_file(file)
     if not is_valid:
-        app.logger.warning(f"File validation failed: {message}")
+        app.logger.warning(f"File validation failed for user {user_info['email']}: {message}")
         return create_error_response(message, 400)
     
     if file:
-        app.logger.info(f"Processing file: {file.filename}, Size: {file.tell()} bytes")
+        app.logger.info(f"Processing file: {file.filename} for user: {user_info['email']}")
         file.seek(0)  # Reset file pointer after size check
     else:
-        app.logger.warning("No file provided for processing")
+        app.logger.warning(f"No file provided by user: {user_info['email']}")
         return create_error_response("No file provided", 400)
     
     try:
         # Record start time
         start_time = time.time()
         
-        # Process the file (SYNCHRONOUSLY - no await needed)
-        app.logger.info("Starting fraud analysis...")
+        # Process the file
+        app.logger.info(f"Starting bulk fraud analysis for user: {user_info['email']}")
         results = checker.analyze_bulk(file)
-        app.logger.info(f"Fraud analysis completed, got {len(results)} results")
+        app.logger.info(f"Bulk fraud analysis completed for user: {user_info['email']}, got {len(results)} results")
         
         # Calculate processing time
         processing_time = time.time() - start_time
@@ -300,7 +571,7 @@ def bulk_check():
         
         # Check if results exceed limit
         if len(results) > Config.MAX_RECORDS:
-            app.logger.warning(f"Too many records: {len(results)}")
+            app.logger.warning(f"Too many records for user {user_info['email']}: {len(results)}")
             return create_error_response(
                 f"Too many records. Maximum allowed: {Config.MAX_RECORDS}",
                 400
@@ -312,6 +583,18 @@ def bulk_check():
             decision = result.get('decision', 'unknown')
             decision_counts[decision] = decision_counts.get(decision, 0) + 1
         
+        # Log bulk analysis activity
+        log_activity(
+            user_info,
+            "bulk_analysis",
+            {
+                "filename": file.filename,
+                "total_records": len(results),
+                "processing_time": processing_time,
+                "decision_breakdown": decision_counts
+            }
+        )
+        
         # Prepare response data
         response_data = {
             "results": results,
@@ -319,177 +602,36 @@ def bulk_check():
                 "total_records": len(results),
                 "processing_time_seconds": round(processing_time, 2),
                 "filename": file.filename if file else None,
-                "decision_breakdown": decision_counts
+                "decision_breakdown": decision_counts,
+                "user_email": user_info["email"]
             }
         }
         
-        app.logger.info(f"Successfully processed {len(results)} records in {processing_time:.2f}s")
-        app.logger.info(f"Decision breakdown: {decision_counts}")
-        
-        # Log current metrics for verification
-        if hasattr(checker.metrics, 'get_metric_count'):
-            total_checks = checker.metrics.get_metric_count("total_checks")
-            fraud_blocked = checker.metrics.get_metric_count("fraud_blocked")
-            app.logger.info(f"📊 Current metrics - Total: {total_checks}, Fraud: {fraud_blocked}")
+        app.logger.info(f"Successfully processed {len(results)} records for user: {user_info['email']} in {processing_time:.2f}s")
         
         return create_success_response(
             response_data, 
             f"Successfully analyzed {len(results)} records"
         )
         
-    except FileNotFoundError as e:
-        app.logger.error(f"File not found error: {e}")
-        return create_error_response("File processing failed - file not found", 400)
-    
-    except ValueError as e:
-        app.logger.error(f"Invalid file format: {e}")
-        return create_error_response(
-            "Invalid file format or corrupted data", 
-            400, 
-            str(e)
-        )
-    
-    except MemoryError:
-        app.logger.error("Memory error during processing")
-        return create_error_response(
-            "File too large to process", 
-            413,
-            "Try uploading a smaller file"
-        )
-    
     except Exception as e:
-        # Log full traceback for debugging
-        app.logger.error(f"Unexpected error during bulk check: {traceback.format_exc()}")
+        # Log bulk analysis error
+        log_activity(
+            user_info,
+            "bulk_analysis_error",
+            {
+                "filename": file.filename if file else "unknown",
+                "error": str(e)
+            }
+        )
+        
+        app.logger.error(f"Bulk check failed for user {user_info['email']}: {traceback.format_exc()}")
         
         return create_error_response(
             "An unexpected error occurred during processing", 
             500,
             str(e) if app.debug else None
         )
-# single check endpoint
-
-@app.route("/fraud-check", methods=["POST"])
-@log_request
-def fraud_check():
-    """Single transaction fraud check endpoint"""
-    
-    if not checker:
-        return create_error_response("Fraud checking service unavailable", 503)
-    
-    # Increment API request metric
-    try:
-        if hasattr(checker.metrics, 'increment_metric'):
-            checker.metrics.increment_metric("api_requests")
-    except Exception as e:
-        app.logger.warning(f"Failed to increment api_requests metric: {e}")
-    
-    try:
-        # Get JSON data from request
-        transaction_data = request.get_json()
-        
-        if not transaction_data:
-            return create_error_response("No transaction data provided", 400)
-        
-        app.logger.info(f"Processing single transaction fraud check")
-        
-        # Analyze the transaction
-        result = checker.analyze_transaction(transaction_data)
-        
-        # Add some additional response data
-        response_data = {
-            "transaction": result,
-            "is_fraud": result["decision"] == "fraud",
-            "fraud_score": result["fraud_score"],
-            "reasons": result.get("triggered_rules", []),
-            "timestamp": datetime.now().isoformat()
-        }
-        
-        app.logger.info(f"Single transaction analysis complete: {result['decision']}")
-        
-        return create_success_response(
-            response_data,
-            f"Transaction analyzed: {result['decision']}"
-        )
-        
-    except Exception as e:
-        app.logger.error(f"Single fraud check failed: {traceback.format_exc()}")
-        return create_error_response(
-            "Failed to analyze transaction",
-            500,
-            str(e) if app.debug else None
-        )
-    
-@app.route("/metrics", methods=["GET"])
-def get_metrics():
-    """Get detailed metrics for dashboard - SYNCHRONOUS VERSION"""
-    try:
-        if not checker:
-            return create_error_response("Database unavailable", 503)
-        
-        # Get metrics synchronously
-        if hasattr(checker.metrics, 'get_metric_count'):
-            all_metrics = {
-                "total_checks": checker.metrics.get_metric_count("total_checks"),
-                "fraud_blocked": checker.metrics.get_metric_count("fraud_blocked"),
-                "suspicious_flagged": checker.metrics.get_metric_count("suspicious_flagged"),
-                "clean_approved": checker.metrics.get_metric_count("clean_approved"),
-                "bulk_analyses": checker.metrics.get_metric_count("bulk_analyses"),
-                "api_requests": checker.metrics.get_metric_count("api_requests")
-            }
-        else:
-            all_metrics = {}
-        
-        return create_success_response({
-            "metrics": all_metrics,
-            "timestamp": datetime.now().isoformat()
-        }, "Metrics retrieved successfully")
-        
-    except Exception as e:
-        app.logger.error(f"Metrics endpoint failed: {e}")
-        return create_error_response("Failed to get metrics", 500)
-
-@app.route("/stats", methods=["GET"])
-def get_stats():
-    """Get API statistics - SYNCHRONOUS VERSION"""
-    try:
-        if not checker:
-            return create_error_response("Database unavailable", 503)
-        
-        # Get stats synchronously (no await)
-        import asyncio
-        
-        try:
-            # Run the async get_stats method
-            loop = asyncio.new_event_loop()
-            asyncio.set_event_loop(loop)
-            stats = loop.run_until_complete(checker.get_stats())
-            loop.close()
-        except Exception as e:
-            app.logger.warning(f"Failed to get async stats: {e}")
-            # Fallback to basic stats
-            stats = {
-                "cache_stats": {
-                    "disposable_domains": len(getattr(checker, 'disposable_domains', [])),
-                    "flagged_ips": len(getattr(checker, 'flagged_ips', [])),
-                    "suspicious_bins": len(getattr(checker, 'suspicious_bins', [])),
-                    "reused_fingerprints": len(getattr(checker, 'reused_fingerprints', [])),
-                    "tampered_prices": len(getattr(checker, 'tampered_prices', [])),
-                    "active_rules": len(getattr(checker, 'rules', {}))
-                }
-            }
-        
-        # Add API configuration
-        stats["config"] = {
-            "max_file_size_mb": Config.MAX_FILE_SIZE // (1024*1024),
-            "allowed_extensions": list(Config.ALLOWED_EXTENSIONS),
-            "max_records": Config.MAX_RECORDS
-        }
-        
-        return create_success_response(stats, "Statistics retrieved successfully")
-        
-    except Exception as e:
-        app.logger.error(f"Stats endpoint failed: {e}")
-        return create_error_response("Failed to get stats", 500)
 
 # ============================================================================
 # ERROR HANDLERS
@@ -517,21 +659,21 @@ def internal_server_error(error):
 # ============================================================================
 
 if __name__ == "__main__":
-    app.logger.info("Starting FIXED Bulk Fraud Check API...")
+    app.logger.info("Starting FraudShield API with API Key Authentication...")
     app.logger.info(f"Max file size: {Config.MAX_FILE_SIZE // (1024*1024)}MB")
     app.logger.info(f"Allowed extensions: {Config.ALLOWED_EXTENSIONS}")
     app.logger.info(f"Max records: {Config.MAX_RECORDS}")
     
     if checker:
-        app.logger.info("✅ FraudChecker with working metrics initialized")
-        # Test that metrics are working
-        if hasattr(checker.metrics, 'get_metric_count'):
-            total_checks = checker.metrics.get_metric_count("total_checks")
-            app.logger.info(f"📊 Current total_checks in database: {total_checks}")
-        else:
-            app.logger.warning("⚠️ Metrics methods not available")
+        app.logger.info("✅ FraudChecker initialized")
     else:
         app.logger.warning("⚠️ FraudChecker failed to initialize")
+    
+    if users_collection is not None:
+        user_count = users_collection.count_documents({})
+        app.logger.info(f"✅ Auth database connected - {user_count} users found")
+    else:
+        app.logger.warning("⚠️ Auth database connection failed")
     
     app.run(
         debug=True,

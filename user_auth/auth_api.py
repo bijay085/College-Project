@@ -21,8 +21,9 @@ import bcrypt
 import pymongo
 from pymongo import database
 from bson import ObjectId
-from flask import Flask, jsonify, request, g
+from flask import Flask, jsonify, request, g, make_response
 from flask_cors import CORS
+from collections import defaultdict
 
 app: Flask = Flask(__name__)
 
@@ -37,6 +38,10 @@ UserDict = Dict[str, Any]
 ResponseTuple = Tuple[Any, int]
 SessionDict = Dict[str, Any]
 DatabaseResponse = Optional[Dict[str, Any]]
+
+# Simple in-memory rate limiter for admin stats endpoint
+admin_stats_last_access = defaultdict(float)
+ADMIN_STATS_RATE_LIMIT_SECONDS = 60
 
 # ============================================================================
 # ============================================================================
@@ -266,10 +271,6 @@ class DatabaseManager:
 
 # Initialize database manager
 db_manager: DatabaseManager = DatabaseManager()
-
-# ============================================================================
-# UTILITY FUNCTIONS
-# ============================================================================
 
 # ============================================================================
 # SESSION MANAGEMENT FUNCTIONS
@@ -1315,6 +1316,18 @@ def delete_user(user_id: str) -> ResponseTuple:
 @require_admin_auth()
 def get_admin_stats() -> ResponseTuple:
     """Get detailed admin statistics"""
+    # Rate limit: one request per ADMIN_STATS_RATE_LIMIT_SECONDS per user
+    api_key = request.headers.get('Authorization', '').replace('Bearer ', '')
+    now = time.time()
+    last_access = admin_stats_last_access.get(api_key, 0)
+    if now - last_access < ADMIN_STATS_RATE_LIMIT_SECONDS:
+        return jsonify({
+            "success": False,
+            "error": f"Too many requests. Please wait {ADMIN_STATS_RATE_LIMIT_SECONDS} seconds between requests.",
+            "timestamp": datetime.now().isoformat()
+        }), 429
+    admin_stats_last_access[api_key] = now
+
     try:
         db = db_manager.get_database()
         if db is None:

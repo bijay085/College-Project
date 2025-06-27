@@ -216,3 +216,1988 @@
 2025-06-27 17:22:24,517 - INFO - 127.0.0.1 - - [27/Jun/2025 17:22:24] "GET /auth/admin/stats HTTP/1.1" 200 -
 2025-06-27 17:23:45,897 - INFO - 127.0.0.1 - - [27/Jun/2025 17:23:45] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
 2025-06-27 17:23:45,914 - INFO - 127.0.0.1 - - [27/Jun/2025 17:23:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:17,985 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:17] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:18,001 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:18,741 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:19,268 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:19,693 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:20,051 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:20,437 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:20,854 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:21,334 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:21,631 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:22,081 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:22,505 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:22,842 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:23,286 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:23] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:23,302 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:23,682 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:24,076 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:24,487 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:24,889 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:25,353 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:25,779 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:26,238 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:26,667 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:27,040 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:27,480 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:27,839 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:28,257 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:28,652 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:28] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:28,666 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:29,059 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:29,462 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:29,856 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:30,529 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:30,810 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:31,260 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:31,661 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:32,079 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:32,496 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:32,856 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:33,266 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:33,668 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:33] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:33,685 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:34,039 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:34,371 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:34,805 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:35,173 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:35,616 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:35,981 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:36,419 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:36,784 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:37,249 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:37,620 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:38,033 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:38,451 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:38,882 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:38] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:38,899 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:39,219 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:39,631 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:40,047 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:40,424 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:40,868 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:41,260 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:41,680 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:42,063 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:42,469 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:42,862 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:43,329 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:43,753 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:44,157 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:44] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:44,175 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:44,654 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:45,038 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:45,416 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:45,816 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:46,109 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:46,525 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:46,992 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:47,385 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:47,770 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:48,160 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:48,576 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:48,957 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:49,371 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:49,385 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:49,762 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:50,155 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:50,605 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:51,028 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:51,437 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:51,941 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:52,214 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:52,638 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:53,028 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:53,512 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:24:54,179 - INFO - 127.0.0.1 - - [27/Jun/2025 17:24:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:48:03,074 - INFO - 127.0.0.1 - - [27/Jun/2025 17:48:03] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:48:03,120 - INFO - 127.0.0.1 - - [27/Jun/2025 17:48:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:03,039 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:03] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:03,055 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:03,315 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:03,753 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:04,160 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:04,568 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:04,924 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:05,352 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:05,769 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:06,192 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:06,603 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:06,958 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:07,358 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:07,782 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:08,251 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:08] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:08,265 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:08,575 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:08,973 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:09,390 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:09,784 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:10,173 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:10,606 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:11,085 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:11,452 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:11,835 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:12,228 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:12,618 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:13,032 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:13,417 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:13] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:13,438 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:13,787 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:14,230 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:14,636 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:15,041 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 17:57:15,568 - INFO - 127.0.0.1 - - [27/Jun/2025 17:57:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:21,646 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:21] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:21,664 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:22,030 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:22,535 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:22,942 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:23,400 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:23,799 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:24,193 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:24,615 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:25,019 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:25,411 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:25,817 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:26,240 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:26,598 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:27,024 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:27] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:27,037 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:27,426 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:27,835 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:28,236 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:28,632 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:29,101 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:29,418 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:29,914 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:30,367 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:30,658 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:31,063 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:31,433 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:32,078 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:32] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:05:32,097 - INFO - 127.0.0.1 - - [27/Jun/2025 18:05:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:53,544 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:53] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:53,558 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:53,854 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:54,021 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:13:54,222 - INFO -  * Restarting with stat
+2025-06-27 18:13:54,777 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:13:54,790 - INFO - MongoDB connection established successfully
+2025-06-27 18:13:54,794 - INFO - Database indexes created/verified
+2025-06-27 18:13:54,800 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:13:54,800 - INFO - Max login attempts: 5
+2025-06-27 18:13:54,801 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:13:54,801 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:13:54,801 - INFO - Authentication API is ready!
+2025-06-27 18:13:54,801 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:13:54,826 - WARNING -  * Debugger is active!
+2025-06-27 18:13:54,829 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:13:54,839 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:54] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:54,855 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:54,863 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:55,146 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:55,585 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:55,988 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:56,378 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:56,838 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:57,164 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:57,494 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:57,914 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:58,297 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:58,707 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:59,128 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:59,524 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:59,955 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:59] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:13:59,974 - INFO - 127.0.0.1 - - [27/Jun/2025 18:13:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:00,330 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:00,715 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:01,109 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:01,524 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:02,175 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:04,913 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:14:05,366 - INFO -  * Restarting with stat
+2025-06-27 18:14:05,913 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:14:05,957 - INFO - MongoDB connection established successfully
+2025-06-27 18:14:05,958 - INFO - Database indexes created/verified
+2025-06-27 18:14:05,964 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:14:05,964 - INFO - Max login attempts: 5
+2025-06-27 18:14:05,964 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:14:05,965 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:14:05,965 - INFO - Authentication API is ready!
+2025-06-27 18:14:05,965 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:14:05,992 - WARNING -  * Debugger is active!
+2025-06-27 18:14:05,994 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:14:06,004 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:06] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:06,005 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:06] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:06,007 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:06] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:06,028 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:06,340 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:06,758 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:07,146 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:07,584 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:07,984 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:08,667 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:55,277 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:14:55,711 - INFO -  * Restarting with stat
+2025-06-27 18:14:56,252 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:14:56,269 - INFO - MongoDB connection established successfully
+2025-06-27 18:14:56,271 - INFO - Database indexes created/verified
+2025-06-27 18:14:56,276 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:14:56,276 - INFO - Max login attempts: 5
+2025-06-27 18:14:56,276 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:14:56,277 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:14:56,277 - INFO - Authentication API is ready!
+2025-06-27 18:14:56,277 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:14:56,299 - WARNING -  * Debugger is active!
+2025-06-27 18:14:56,302 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:14:56,311 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:56] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:56,311 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:56] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:56,327 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:56] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:56,349 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:56,688 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:57,085 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:57,443 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:57,883 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:58,253 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:58,668 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:59,040 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:59,391 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:14:59,845 - INFO - 127.0.0.1 - - [27/Jun/2025 18:14:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:00,201 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:00,637 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:01,006 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:01,466 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:01] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:01,491 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:01,889 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:02,279 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:02,689 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:03,089 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:03,456 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:03,864 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:04,251 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:04,685 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:05,075 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:05,507 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:05,968 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:06,397 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:06,742 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:06] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:06,766 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:07,184 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:07,542 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:07,940 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:08,381 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:08,780 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:09,190 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:09,595 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:09,990 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:10,414 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:10,798 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:11,226 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:11,618 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:11,981 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:11] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:11,999 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:12,266 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:12] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:12,287 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:12,760 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:13,197 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:13,511 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:13,938 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:14,396 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:14,750 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:15,149 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:15,568 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:15,948 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:16,463 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:16,732 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:17,182 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:17,622 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:17] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:17,645 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:17,999 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:18,448 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:18,881 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:19,227 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:19,570 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:19,974 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:20,362 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:20,759 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:21,141 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:21,634 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:21,973 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:22,395 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:22,806 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:22] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:22,829 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:23,241 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:23,644 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:24,001 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:24,451 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:24,838 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:25,257 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:15:25,818 - INFO - 127.0.0.1 - - [27/Jun/2025 18:15:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:17:09,232 - INFO - Maintenance tasks completed
+2025-06-27 18:17:47,604 - INFO - 127.0.0.1 - - [27/Jun/2025 18:17:47] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:17:47,617 - INFO - 127.0.0.1 - - [27/Jun/2025 18:17:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:17:47,914 - INFO - 127.0.0.1 - - [27/Jun/2025 18:17:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:17:59,298 - INFO - 127.0.0.1 - - [27/Jun/2025 18:17:59] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:17:59,316 - INFO - 127.0.0.1 - - [27/Jun/2025 18:17:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:17:59,489 - INFO - 127.0.0.1 - - [27/Jun/2025 18:17:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:02,490 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:53,798 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:53] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:53,814 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:54,211 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:54,700 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:55,047 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:55,501 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:55,833 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:56,220 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:56,612 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:57,035 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:57,416 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:57,865 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:58,213 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:58,660 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:59,089 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:59] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:59,104 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:59,301 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:18:59,845 - INFO - 127.0.0.1 - - [27/Jun/2025 18:18:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:00,264 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:00,669 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:01,052 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:01,447 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:01,920 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:02,377 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:02,668 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:03,060 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:03,502 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:03,972 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:04,326 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:04] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:04,341 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:04,711 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:05,140 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:05,668 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:05,976 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:06,570 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:08,187 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:12,029 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:12] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:12,046 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:40,037 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:40] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:19:40,054 - INFO - 127.0.0.1 - - [27/Jun/2025 18:19:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:20:03,948 - INFO - 127.0.0.1 - - [27/Jun/2025 18:20:03] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:20:03,964 - INFO - 127.0.0.1 - - [27/Jun/2025 18:20:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:20:04,244 - INFO - 127.0.0.1 - - [27/Jun/2025 18:20:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:23:48,328 - INFO - 127.0.0.1 - - [27/Jun/2025 18:23:48] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:23:48,351 - INFO - 127.0.0.1 - - [27/Jun/2025 18:23:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:25,994 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:25] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:26,006 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:26,314 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:26,699 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:27,201 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:27,534 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:27,954 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:28,324 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:28,712 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:29,131 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:29,553 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:29,948 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:30,354 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:30,760 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:31,188 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:31] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:31,201 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:31,556 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:32,012 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:32,399 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:32,862 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:33,236 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:33,636 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:34,074 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:34,438 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:34,875 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:35,256 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:35,656 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:36,119 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:36,464 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:36] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:36,484 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:36,909 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:37,265 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:37,712 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:38,085 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:38,471 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:38,860 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:39,346 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:39,683 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:40,104 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:40,509 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:40,924 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:41,311 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:41,679 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:41] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:41,696 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:42,124 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:42,465 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:42,912 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:43,284 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:43,677 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:44,063 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:44,485 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:44,911 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:45,305 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:45,724 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:46,100 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:46,516 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:46,951 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:46] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:46,969 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:47,357 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:47,734 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:48,204 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:48,532 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:48,970 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:49,532 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:49,902 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:50,126 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:50,398 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:50,996 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:51,379 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:51,798 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:52,208 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:52] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:52,223 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:24:52,755 - INFO - 127.0.0.1 - - [27/Jun/2025 18:24:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:46,114 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:25:46,374 - INFO -  * Restarting with stat
+2025-06-27 18:25:46,793 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:25:46,815 - INFO - MongoDB connection established successfully
+2025-06-27 18:25:46,817 - INFO - Database indexes created/verified
+2025-06-27 18:25:46,821 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:25:46,821 - INFO - Max login attempts: 5
+2025-06-27 18:25:46,821 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:25:46,822 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:25:46,822 - INFO - Authentication API is ready!
+2025-06-27 18:25:46,822 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:25:46,842 - WARNING -  * Debugger is active!
+2025-06-27 18:25:46,845 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:25:46,857 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:46] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:46,859 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:46] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:46,972 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:46] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:46,984 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:47,362 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:47,793 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:48,472 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:48,777 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:48,863 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:25:49,402 - INFO -  * Restarting with stat
+2025-06-27 18:25:49,802 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:25:49,813 - INFO - MongoDB connection established successfully
+2025-06-27 18:25:49,814 - INFO - Database indexes created/verified
+2025-06-27 18:25:49,818 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:25:49,818 - INFO - Max login attempts: 5
+2025-06-27 18:25:49,818 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:25:49,819 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:25:49,819 - INFO - Authentication API is ready!
+2025-06-27 18:25:49,819 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:25:49,835 - WARNING -  * Debugger is active!
+2025-06-27 18:25:49,838 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:25:49,846 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:49,858 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:49,884 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:49,995 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:50,007 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:50,570 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:50,855 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:25:51,390 - INFO -  * Restarting with stat
+2025-06-27 18:25:51,770 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:25:51,780 - INFO - MongoDB connection established successfully
+2025-06-27 18:25:51,781 - INFO - Database indexes created/verified
+2025-06-27 18:25:51,786 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:25:51,787 - INFO - Max login attempts: 5
+2025-06-27 18:25:51,787 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:25:51,787 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:25:51,787 - INFO - Authentication API is ready!
+2025-06-27 18:25:51,787 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:25:51,806 - WARNING -  * Debugger is active!
+2025-06-27 18:25:51,807 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:25:51,815 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:51] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:51,831 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:51,842 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:51,988 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:52,408 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:52,911 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:53,207 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:53,595 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:54,023 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:54,487 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:54,835 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:55,226 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:55,628 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:56,029 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:56,500 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:56,879 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:56] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:56,894 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:57,315 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:57,649 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:58,049 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:58,451 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:58,920 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:59,291 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:59,695 - INFO - 127.0.0.1 - - [27/Jun/2025 18:25:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:25:59,862 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:26:00,328 - INFO -  * Restarting with stat
+2025-06-27 18:26:00,734 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:26:00,745 - INFO - MongoDB connection established successfully
+2025-06-27 18:26:00,746 - INFO - Database indexes created/verified
+2025-06-27 18:26:00,751 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:26:00,751 - INFO - Max login attempts: 5
+2025-06-27 18:26:00,751 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:26:00,751 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:26:00,751 - INFO - Authentication API is ready!
+2025-06-27 18:26:00,751 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:26:00,774 - WARNING -  * Debugger is active!
+2025-06-27 18:26:00,776 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:26:00,790 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:00] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:00,801 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:00,840 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:00] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:00,852 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:01,286 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:01,656 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:02,156 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:02,516 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:02,859 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:03,365 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:03,631 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:04,138 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:04,476 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:04,942 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:05,391 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:05,786 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:06,181 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:06] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:06,201 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:06,559 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:07,005 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:26:07,746 - INFO - 127.0.0.1 - - [27/Jun/2025 18:26:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:27:18,934 - INFO - 127.0.0.1 - - [27/Jun/2025 18:27:18] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:27:18,950 - INFO - 127.0.0.1 - - [27/Jun/2025 18:27:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:27:19,145 - INFO - 127.0.0.1 - - [27/Jun/2025 18:27:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:28:03,161 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:28:03,196 - INFO - MongoDB connection established successfully
+2025-06-27 18:28:03,198 - INFO - Database indexes created/verified
+2025-06-27 18:28:03,207 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:28:03,207 - INFO - Max login attempts: 5
+2025-06-27 18:28:03,207 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:28:03,207 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:28:03,207 - INFO - Authentication API is ready!
+2025-06-27 18:28:03,208 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:28:03,298 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 18:28:03,298 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 18:28:03,301 - INFO -  * Restarting with stat
+2025-06-27 18:28:03,753 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:28:03,765 - INFO - MongoDB connection established successfully
+2025-06-27 18:28:03,767 - INFO - Database indexes created/verified
+2025-06-27 18:28:03,772 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:28:03,772 - INFO - Max login attempts: 5
+2025-06-27 18:28:03,772 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:28:03,772 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:28:03,773 - INFO - Authentication API is ready!
+2025-06-27 18:28:03,773 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:28:03,793 - WARNING -  * Debugger is active!
+2025-06-27 18:28:03,796 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:31:15,537 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:15] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:15,554 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:16,019 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:31:16,564 - INFO -  * Restarting with stat
+2025-06-27 18:31:17,082 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:31:17,130 - INFO - MongoDB connection established successfully
+2025-06-27 18:31:17,134 - INFO - Database indexes created/verified
+2025-06-27 18:31:17,145 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:31:17,146 - INFO - Max login attempts: 5
+2025-06-27 18:31:17,146 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:31:17,146 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:31:17,147 - INFO - Authentication API is ready!
+2025-06-27 18:31:17,147 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:31:17,171 - WARNING -  * Debugger is active!
+2025-06-27 18:31:17,174 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:31:17,184 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:17] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:17,198 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:17,221 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:17,519 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:17,939 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:18,390 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:18,851 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:19,124 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:19,527 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:19,956 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:20,360 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:20,725 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:21,153 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:21,553 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:21,954 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:22,362 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:22] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:22,378 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:22,764 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:23,174 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:23,540 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:23,936 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:24,310 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:24,698 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:25,229 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:25,529 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:25,965 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:26,331 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:26,734 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:27,177 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:27,619 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:27] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:27,647 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:28,000 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:28,383 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:28,727 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:29,158 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:29,594 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:30,019 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:30,427 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:30,766 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:31,201 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:31,634 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:31,978 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:32,428 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:32,816 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:32] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:32,828 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:33,241 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:33,597 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:34,002 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:34,516 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:34,817 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:35,264 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:35,649 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:36,030 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:36,498 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:36,851 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:37,263 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:37,648 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:38,022 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:38] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:38,042 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:38,470 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:39,149 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:49,741 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:49,759 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:56,856 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:56] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:56,875 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:57,232 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:57,614 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:58,061 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:58,408 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:58,810 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:59,218 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:31:59,618 - INFO - 127.0.0.1 - - [27/Jun/2025 18:31:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:00,018 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:00,385 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:00,826 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:01,229 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:01,619 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:02,020 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:02] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:02,042 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:02,443 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:02,850 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:03,243 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:03,631 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:04,001 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:04,469 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:04,832 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:05,365 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:05,779 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:06,191 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:06,584 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:06,967 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:07,401 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:07] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:07,423 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:07,809 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:08,212 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:08,660 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:09,005 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:09,371 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:09,794 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:10,225 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:10,614 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:11,029 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:11,470 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:11,818 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:12,248 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:12,625 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:12] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:12,643 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:13,174 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:13,436 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:32:13,815 - INFO -  * Restarting with stat
+2025-06-27 18:32:14,331 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:32:14,343 - INFO - MongoDB connection established successfully
+2025-06-27 18:32:14,345 - INFO - Database indexes created/verified
+2025-06-27 18:32:14,351 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:32:14,351 - INFO - Max login attempts: 5
+2025-06-27 18:32:14,351 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:32:14,352 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:32:14,352 - INFO - Authentication API is ready!
+2025-06-27 18:32:14,352 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:32:14,372 - WARNING -  * Debugger is active!
+2025-06-27 18:32:14,375 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:32:14,386 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:14] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:14,387 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:14] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:14,401 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:14,436 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:14,793 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:15,221 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:15,616 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:16,062 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:16,423 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:32:16,801 - INFO - 127.0.0.1 - - [27/Jun/2025 18:32:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:03,890 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:35:03,903 - INFO - MongoDB connection established successfully
+2025-06-27 18:35:03,905 - INFO - Database indexes created/verified
+2025-06-27 18:35:03,910 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:35:03,910 - INFO - Max login attempts: 5
+2025-06-27 18:35:03,910 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:35:03,910 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:35:03,910 - INFO - Authentication API is ready!
+2025-06-27 18:35:03,910 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:35:03,941 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 18:35:03,941 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 18:35:03,943 - INFO -  * Restarting with stat
+2025-06-27 18:35:04,392 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:35:04,404 - INFO - MongoDB connection established successfully
+2025-06-27 18:35:04,405 - INFO - Database indexes created/verified
+2025-06-27 18:35:04,413 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:35:04,413 - INFO - Max login attempts: 5
+2025-06-27 18:35:04,413 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:35:04,413 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:35:04,413 - INFO - Authentication API is ready!
+2025-06-27 18:35:04,414 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:35:04,441 - WARNING -  * Debugger is active!
+2025-06-27 18:35:04,444 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:35:11,100 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:11] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:11,125 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:29,485 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:29] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:29,508 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:43,527 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:43] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:43,532 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:43] "OPTIONS /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 18:35:43,548 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:43,567 - INFO - Retrieved 3 users (page 1, total: 3)
+2025-06-27 18:35:43,567 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:43] "GET /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 18:35:49,357 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:35:49,381 - INFO - 127.0.0.1 - - [27/Jun/2025 18:35:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:37:18,423 - INFO - 127.0.0.1 - - [27/Jun/2025 18:37:18] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:37:18,440 - INFO - 127.0.0.1 - - [27/Jun/2025 18:37:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:37:18,762 - INFO - 127.0.0.1 - - [27/Jun/2025 18:37:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:37:28,464 - INFO - 127.0.0.1 - - [27/Jun/2025 18:37:28] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:37:28,482 - INFO - 127.0.0.1 - - [27/Jun/2025 18:37:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:38:27,382 - INFO - 127.0.0.1 - - [27/Jun/2025 18:38:27] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:38:27,416 - INFO - 127.0.0.1 - - [27/Jun/2025 18:38:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:38:27,717 - INFO - 127.0.0.1 - - [27/Jun/2025 18:38:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:38:37,473 - INFO - 127.0.0.1 - - [27/Jun/2025 18:38:37] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:38:37,496 - INFO - 127.0.0.1 - - [27/Jun/2025 18:38:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:38:45,386 - INFO - 127.0.0.1 - - [27/Jun/2025 18:38:45] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:38:45,404 - INFO - 127.0.0.1 - - [27/Jun/2025 18:38:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:39:02,929 - INFO - 127.0.0.1 - - [27/Jun/2025 18:39:02] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:39:02,944 - INFO - 127.0.0.1 - - [27/Jun/2025 18:39:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:39:04,661 - INFO - 127.0.0.1 - - [27/Jun/2025 18:39:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:18,909 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:18] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:18,927 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:18,962 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:42:19,434 - INFO -  * Restarting with stat
+2025-06-27 18:42:19,939 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:42:19,953 - INFO - MongoDB connection established successfully
+2025-06-27 18:42:19,955 - INFO - Database indexes created/verified
+2025-06-27 18:42:19,961 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:42:19,961 - INFO - Max login attempts: 5
+2025-06-27 18:42:19,962 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:42:19,962 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:42:19,962 - INFO - Authentication API is ready!
+2025-06-27 18:42:19,962 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:42:19,986 - WARNING -  * Debugger is active!
+2025-06-27 18:42:19,989 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:42:20,012 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:20,055 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:20] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:20,069 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:20,467 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:20,930 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:21,330 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:21,748 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:22,077 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:22,494 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:22,911 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:23,315 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:23,716 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:24,117 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:24,564 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:24,990 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:25,364 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:25] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:25,376 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:25,731 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:26,087 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:26,574 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:42:27,130 - INFO - 127.0.0.1 - - [27/Jun/2025 18:42:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:19,687 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:19] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:19,705 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:20,357 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:43:20,619 - INFO -  * Restarting with stat
+2025-06-27 18:43:21,136 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:43:21,146 - INFO - MongoDB connection established successfully
+2025-06-27 18:43:21,149 - INFO - Database indexes created/verified
+2025-06-27 18:43:21,155 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:43:21,155 - INFO - Max login attempts: 5
+2025-06-27 18:43:21,156 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:43:21,156 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:43:21,156 - INFO - Authentication API is ready!
+2025-06-27 18:43:21,156 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:43:21,177 - WARNING -  * Debugger is active!
+2025-06-27 18:43:21,180 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:43:21,203 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:21,206 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:21] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:21,223 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:21,578 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:21,970 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:22,389 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:22,792 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:23,269 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:23,600 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:24,071 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:24,451 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:24,851 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:25,224 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:25,641 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:26,039 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:26,452 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:26] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:26,467 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:26,854 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:27,335 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:27,616 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:28,091 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:28,669 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:39,250 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:39] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:39,262 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:39,285 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:43:39,832 - INFO -  * Restarting with stat
+2025-06-27 18:43:40,275 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:43:40,287 - INFO - MongoDB connection established successfully
+2025-06-27 18:43:40,287 - INFO - Database indexes created/verified
+2025-06-27 18:43:40,291 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:43:40,292 - INFO - Max login attempts: 5
+2025-06-27 18:43:40,292 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:43:40,292 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:43:40,292 - INFO - Authentication API is ready!
+2025-06-27 18:43:40,293 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:43:40,311 - WARNING -  * Debugger is active!
+2025-06-27 18:43:40,314 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:43:40,323 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:40] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:40,336 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:40,455 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:40] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:40,471 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:40,857 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:41,248 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:41,656 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:43:42,279 - INFO - 127.0.0.1 - - [27/Jun/2025 18:43:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:49,268 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:49,283 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:49,749 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:44:49,991 - INFO -  * Restarting with stat
+2025-06-27 18:44:50,435 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:44:50,446 - INFO - MongoDB connection established successfully
+2025-06-27 18:44:50,448 - INFO - Database indexes created/verified
+2025-06-27 18:44:50,452 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:44:50,452 - INFO - Max login attempts: 5
+2025-06-27 18:44:50,453 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:44:50,453 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:44:50,453 - INFO - Authentication API is ready!
+2025-06-27 18:44:50,453 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:44:50,475 - WARNING -  * Debugger is active!
+2025-06-27 18:44:50,477 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:44:50,497 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:50,552 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:50] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:50,564 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:50,931 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:51,338 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:51,742 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:52,144 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:52,500 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:44:53,043 - INFO -  * Restarting with stat
+2025-06-27 18:44:53,462 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:44:53,489 - INFO - MongoDB connection established successfully
+2025-06-27 18:44:53,490 - INFO - Database indexes created/verified
+2025-06-27 18:44:53,495 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:44:53,495 - INFO - Max login attempts: 5
+2025-06-27 18:44:53,495 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:44:53,495 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:44:53,496 - INFO - Authentication API is ready!
+2025-06-27 18:44:53,496 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:44:53,515 - WARNING -  * Debugger is active!
+2025-06-27 18:44:53,517 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:44:53,526 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:53] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:53,527 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:53] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:53,538 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:53,545 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:53,729 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:54,251 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:54,536 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:44:55,071 - INFO -  * Restarting with stat
+2025-06-27 18:44:55,449 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:44:55,484 - INFO - MongoDB connection established successfully
+2025-06-27 18:44:55,485 - INFO - Database indexes created/verified
+2025-06-27 18:44:55,490 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:44:55,491 - INFO - Max login attempts: 5
+2025-06-27 18:44:55,491 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:44:55,491 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:44:55,491 - INFO - Authentication API is ready!
+2025-06-27 18:44:55,491 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:44:55,509 - WARNING -  * Debugger is active!
+2025-06-27 18:44:55,511 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:44:55,519 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:55] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:55,531 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:55,534 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:55,681 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:56,080 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:56,512 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:56,907 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:57,408 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:57,875 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:58,268 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:58,723 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:59,057 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:59,122 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:59,473 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:59,514 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:59,831 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:44:59,931 - INFO - 127.0.0.1 - - [27/Jun/2025 18:44:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:00,274 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:00,371 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:00,742 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:00] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:00,775 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:00,795 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:01,057 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:01,180 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:01,462 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:01,687 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:01,807 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:02,260 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:02,726 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:03,061 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:03,492 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:03,894 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:04,326 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:04,702 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:05,107 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:05,512 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:05,902 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:05] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:05,938 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:06,341 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:06,783 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:45:07,264 - INFO - 127.0.0.1 - - [27/Jun/2025 18:45:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:26,936 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:26] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:26,954 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:27,043 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:46:27,182 - INFO -  * Restarting with stat
+2025-06-27 18:46:27,685 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:46:27,700 - INFO - MongoDB connection established successfully
+2025-06-27 18:46:27,702 - INFO - Database indexes created/verified
+2025-06-27 18:46:27,708 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:46:27,709 - INFO - Max login attempts: 5
+2025-06-27 18:46:27,710 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:46:27,710 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:46:27,710 - INFO - Authentication API is ready!
+2025-06-27 18:46:27,711 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:46:27,735 - WARNING -  * Debugger is active!
+2025-06-27 18:46:27,737 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:46:27,760 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:27,822 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:27] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:27,839 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:28,171 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:28,630 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:28,983 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:29,361 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:29,845 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:30,183 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:30,586 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:30,972 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:31,451 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:31,760 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:32,207 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:32,603 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:33,041 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:33] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:33,069 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:33,404 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:33,891 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:34,225 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:34,609 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:35,157 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:39,807 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:46:40,320 - INFO -  * Restarting with stat
+2025-06-27 18:46:40,807 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:46:40,822 - INFO - MongoDB connection established successfully
+2025-06-27 18:46:40,824 - INFO - Database indexes created/verified
+2025-06-27 18:46:40,829 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:46:40,830 - INFO - Max login attempts: 5
+2025-06-27 18:46:40,830 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:46:40,830 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:46:40,830 - INFO - Authentication API is ready!
+2025-06-27 18:46:40,831 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:46:40,854 - WARNING -  * Debugger is active!
+2025-06-27 18:46:40,858 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:46:40,867 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:40] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:40,870 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:40] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:40,927 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:40] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:40,949 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:41,337 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:41,726 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:42,134 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:42,533 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:42,985 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:43,363 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:46:43,997 - INFO - 127.0.0.1 - - [27/Jun/2025 18:46:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:19,810 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:19] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:19,826 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:20,067 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:47:20,589 - INFO -  * Restarting with stat
+2025-06-27 18:47:21,167 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:47:21,178 - INFO - MongoDB connection established successfully
+2025-06-27 18:47:21,179 - INFO - Database indexes created/verified
+2025-06-27 18:47:21,185 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:47:21,185 - INFO - Max login attempts: 5
+2025-06-27 18:47:21,185 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:47:21,185 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:47:21,185 - INFO - Authentication API is ready!
+2025-06-27 18:47:21,185 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:47:21,206 - WARNING -  * Debugger is active!
+2025-06-27 18:47:21,209 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:47:21,219 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:21] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:21,232 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:21,254 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:21,636 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:22,053 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:22,412 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:22,830 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:23,273 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:23,744 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:24,084 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:24,462 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:24,893 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:25,269 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:25,752 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:26,113 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:26,536 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:26] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:26,552 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:26,939 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:27,330 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:27,738 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:28,145 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:28,551 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:28,921 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:29,311 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:29,720 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:30,137 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:30,508 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:31,029 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:31,351 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:31,698 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:31] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:31,728 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:32,270 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:38,933 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:38] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:38,950 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:39,299 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:47:39,750 - INFO -  * Restarting with stat
+2025-06-27 18:47:40,268 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:47:40,299 - INFO - MongoDB connection established successfully
+2025-06-27 18:47:40,300 - INFO - Database indexes created/verified
+2025-06-27 18:47:40,305 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:47:40,306 - INFO - Max login attempts: 5
+2025-06-27 18:47:40,306 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:47:40,306 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:47:40,306 - INFO - Authentication API is ready!
+2025-06-27 18:47:40,306 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:47:40,329 - WARNING -  * Debugger is active!
+2025-06-27 18:47:40,331 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:47:40,342 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:40] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:40,356 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:40,366 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:40,741 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:41,137 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:41,542 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:41,938 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:42,360 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:42,748 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:43,133 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:43,552 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:43,980 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:44,397 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:44,733 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:45,143 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:45,724 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:45] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:47:45,745 - INFO - 127.0.0.1 - - [27/Jun/2025 18:47:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:48:58,854 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:48:59,018 - INFO -  * Restarting with stat
+2025-06-27 18:48:59,521 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:48:59,557 - INFO - MongoDB connection established successfully
+2025-06-27 18:48:59,559 - INFO - Database indexes created/verified
+2025-06-27 18:48:59,564 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:48:59,564 - INFO - Max login attempts: 5
+2025-06-27 18:48:59,565 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:48:59,565 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:48:59,566 - INFO - Authentication API is ready!
+2025-06-27 18:48:59,566 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:48:59,590 - WARNING -  * Debugger is active!
+2025-06-27 18:48:59,593 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:48:59,604 - INFO - 127.0.0.1 - - [27/Jun/2025 18:48:59] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:48:59,605 - INFO - 127.0.0.1 - - [27/Jun/2025 18:48:59] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:48:59,663 - INFO - 127.0.0.1 - - [27/Jun/2025 18:48:59] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:48:59,680 - INFO - 127.0.0.1 - - [27/Jun/2025 18:48:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:00,045 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:00,486 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:00,896 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:01,286 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:01,728 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:02,000 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:02,466 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:02,857 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:03,282 - INFO - 127.0.0.1 - - [27/Jun/2025 18:49:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:49:29,274 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:49:29,286 - INFO - MongoDB connection established successfully
+2025-06-27 18:49:29,287 - INFO - Database indexes created/verified
+2025-06-27 18:49:29,292 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:49:29,292 - INFO - Max login attempts: 5
+2025-06-27 18:49:29,292 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:49:29,292 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:49:29,292 - INFO - Authentication API is ready!
+2025-06-27 18:49:29,293 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:49:29,318 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 18:49:29,319 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 18:49:29,321 - INFO -  * Restarting with stat
+2025-06-27 18:49:29,757 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:49:29,768 - INFO - MongoDB connection established successfully
+2025-06-27 18:49:29,769 - INFO - Database indexes created/verified
+2025-06-27 18:49:29,776 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:49:29,777 - INFO - Max login attempts: 5
+2025-06-27 18:49:29,777 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:49:29,777 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:49:29,777 - INFO - Authentication API is ready!
+2025-06-27 18:49:29,777 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:49:29,799 - WARNING -  * Debugger is active!
+2025-06-27 18:49:29,801 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:50:38,142 - INFO - 127.0.0.1 - - [27/Jun/2025 18:50:38] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:50:38,168 - INFO - 127.0.0.1 - - [27/Jun/2025 18:50:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:51:48,106 - INFO - 127.0.0.1 - - [27/Jun/2025 18:51:48] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:51:48,129 - INFO - 127.0.0.1 - - [27/Jun/2025 18:51:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:51:55,450 - INFO - 127.0.0.1 - - [27/Jun/2025 18:51:55] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:51:55,484 - INFO - 127.0.0.1 - - [27/Jun/2025 18:51:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:03,181 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:03] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:03,199 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:05,061 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:05,463 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:13,177 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:13] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:13,192 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:13,453 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:13,854 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:14,286 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:14,704 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:15,095 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:15,511 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:15,896 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:16,288 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:16,738 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:17,169 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:17,534 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:57:18,082 - INFO - 127.0.0.1 - - [27/Jun/2025 18:57:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:38,079 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:38] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:38,092 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:38,222 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:58:38,721 - INFO -  * Restarting with stat
+2025-06-27 18:58:39,208 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:58:39,226 - INFO - MongoDB connection established successfully
+2025-06-27 18:58:39,227 - INFO - Database indexes created/verified
+2025-06-27 18:58:39,233 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:58:39,233 - INFO - Max login attempts: 5
+2025-06-27 18:58:39,234 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:58:39,234 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:58:39,234 - INFO - Authentication API is ready!
+2025-06-27 18:58:39,234 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:58:39,258 - WARNING -  * Debugger is active!
+2025-06-27 18:58:39,261 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:58:39,272 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:39] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:39,287 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:39,357 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:39] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:39,375 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:39,754 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:40,169 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:40,575 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:40,965 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:41,370 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:41,790 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:42,166 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:42,572 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:42,987 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:43,389 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:43,768 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:44,175 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:44,588 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:44] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:44,602 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:45,001 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:45,380 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:45,770 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:46,235 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:46,624 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:47,025 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:47,402 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:47,869 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:48,255 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:48,613 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:49,048 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:49,610 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:49,649 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:49,947 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:50,360 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:50,773 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:51,032 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:51,450 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:51,840 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:52,264 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:52,669 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:53,060 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:53,522 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:53,862 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:54,287 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:54,675 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:54] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:54,691 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:55,066 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:55,470 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:55,873 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:56,270 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:56,665 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:57,043 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:57,490 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:57,871 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:58,332 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:58,682 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:59,130 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:59,476 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:59,848 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:59] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:58:59,862 - INFO - 127.0.0.1 - - [27/Jun/2025 18:58:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:00,290 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:00,691 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:01,096 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:01,492 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:01,890 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:02,309 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:02,717 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:03,083 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:03,550 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:03,887 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:04,292 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:04,696 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:05,112 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:05] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:05,125 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:05,503 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:05,898 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:06,340 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:06,680 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:07,085 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:07,492 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:07,928 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:08,310 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:08,699 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:09,235 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:09,593 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:09,972 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:10,366 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:10] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:10,384 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:10,870 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:17,882 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:17] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:17,898 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:18,465 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:59:18,949 - INFO -  * Restarting with stat
+2025-06-27 18:59:19,367 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:59:19,377 - INFO - MongoDB connection established successfully
+2025-06-27 18:59:19,379 - INFO - Database indexes created/verified
+2025-06-27 18:59:19,383 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:59:19,383 - INFO - Max login attempts: 5
+2025-06-27 18:59:19,384 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:59:19,384 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:59:19,384 - INFO - Authentication API is ready!
+2025-06-27 18:59:19,388 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:59:19,487 - WARNING -  * Debugger is active!
+2025-06-27 18:59:19,490 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:59:19,510 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:19,601 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:19] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:19,613 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:19,979 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:20,410 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:20,790 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:21,205 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:21,613 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:22,050 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:22,427 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:22,842 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:23,277 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:23,610 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:24,018 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:24,419 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:24,848 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:24] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:24,862 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:25,258 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:25,812 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:28,212 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:28,548 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:59:29,061 - INFO -  * Restarting with stat
+2025-06-27 18:59:29,612 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:59:29,625 - INFO - MongoDB connection established successfully
+2025-06-27 18:59:29,626 - INFO - Database indexes created/verified
+2025-06-27 18:59:29,631 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:59:29,631 - INFO - Max login attempts: 5
+2025-06-27 18:59:29,631 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:59:29,631 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:59:29,632 - INFO - Authentication API is ready!
+2025-06-27 18:59:29,632 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:59:29,656 - WARNING -  * Debugger is active!
+2025-06-27 18:59:29,658 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:59:29,668 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:29] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:29,682 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:29,687 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:30,013 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:30,418 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:30,839 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:31,245 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:31,637 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:32,069 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:32,407 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:32,838 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:33,192 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:33,609 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:34,006 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:34,470 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:34,835 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:34] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:34,852 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:35,228 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:35,648 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:36,037 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:36,440 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:36,710 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 18:59:37,192 - INFO -  * Restarting with stat
+2025-06-27 18:59:37,681 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 18:59:37,695 - INFO - MongoDB connection established successfully
+2025-06-27 18:59:37,698 - INFO - Database indexes created/verified
+2025-06-27 18:59:37,703 - INFO - Starting FraudShield Authentication API...
+2025-06-27 18:59:37,704 - INFO - Max login attempts: 5
+2025-06-27 18:59:37,704 - INFO - Lockout duration: 30 minutes
+2025-06-27 18:59:37,704 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 18:59:37,705 - INFO - Authentication API is ready!
+2025-06-27 18:59:37,705 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 18:59:37,730 - WARNING -  * Debugger is active!
+2025-06-27 18:59:37,733 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 18:59:37,744 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:37] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:37,758 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:37,833 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:37] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:37,851 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:38,246 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:38,636 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:39,017 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:39,424 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:39,816 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:40,202 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:40,622 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:41,034 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:41,432 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:41,821 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:42,303 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:42,678 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:43,006 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:43] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:43,036 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:43,435 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:43,816 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:44,213 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:44,649 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:45,013 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:45,445 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:45,827 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:46,149 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:46,577 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:47,037 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:48,479 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:48] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 18:59:48,501 - INFO - 127.0.0.1 - - [27/Jun/2025 18:59:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:07,837 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:07] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:07,856 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:07,890 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 19:00:08,318 - INFO -  * Restarting with stat
+2025-06-27 19:00:08,868 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 19:00:08,892 - INFO - MongoDB connection established successfully
+2025-06-27 19:00:08,894 - INFO - Database indexes created/verified
+2025-06-27 19:00:08,899 - INFO - Starting FraudShield Authentication API...
+2025-06-27 19:00:08,900 - INFO - Max login attempts: 5
+2025-06-27 19:00:08,900 - INFO - Lockout duration: 30 minutes
+2025-06-27 19:00:08,901 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 19:00:08,901 - INFO - Authentication API is ready!
+2025-06-27 19:00:08,901 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 19:00:08,926 - WARNING -  * Debugger is active!
+2025-06-27 19:00:08,928 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 19:00:08,947 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:09,026 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:09] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:09,039 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:09,383 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:09,808 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:10,167 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:10,674 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:52,833 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:52] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:52,856 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:53,183 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:53,562 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:53,907 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:54,388 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:54,726 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:55,116 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:55,490 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:55,868 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:56,317 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:56,710 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:57,119 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:57,607 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:57,937 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:57] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:57,955 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:58,330 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:58,660 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:59,065 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:59,433 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:00:59,900 - INFO - 127.0.0.1 - - [27/Jun/2025 19:00:59] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:00,279 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:00,694 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:00] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:01,040 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:01,492 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:01,882 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:02,255 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:02,692 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:03,083 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:03] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:03,104 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:03,481 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:03,899 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:04,327 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:04,729 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:05,173 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:05,576 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:05,924 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:06,353 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:06,743 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:06] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:07,159 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:07,550 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:07,976 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:07] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:08,336 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:08] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:08,348 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:08,795 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:09,208 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:09,687 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:10,026 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:10,406 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:10,812 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:11,190 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:11,603 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:12,008 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:12,412 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:12,797 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:13,222 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:13,638 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:13] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:13,656 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:14,042 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:14,428 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:14,859 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:15,263 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:15,646 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:16,056 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:16,444 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:01:17,003 - INFO - 127.0.0.1 - - [27/Jun/2025 19:01:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:05:34,385 - INFO - 127.0.0.1 - - [27/Jun/2025 19:05:34] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:05:34,402 - INFO - 127.0.0.1 - - [27/Jun/2025 19:05:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:05:35,788 - INFO - 127.0.0.1 - - [27/Jun/2025 19:05:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:05:36,145 - INFO - 127.0.0.1 - - [27/Jun/2025 19:05:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:05:36,522 - INFO - 127.0.0.1 - - [27/Jun/2025 19:05:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:05:37,073 - INFO - 127.0.0.1 - - [27/Jun/2025 19:05:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:06:22,412 - INFO - 127.0.0.1 - - [27/Jun/2025 19:06:22] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:06:22,426 - INFO - 127.0.0.1 - - [27/Jun/2025 19:06:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 19:49:29,297 - INFO - Maintenance tasks completed
+2025-06-27 20:00:08,906 - INFO - Maintenance tasks completed
+2025-06-27 20:26:31,891 - INFO - 127.0.0.1 - - [27/Jun/2025 20:26:31] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:26:31,912 - INFO - 127.0.0.1 - - [27/Jun/2025 20:26:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:26:50,194 - INFO - 127.0.0.1 - - [27/Jun/2025 20:26:50] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:26:50,219 - INFO - 127.0.0.1 - - [27/Jun/2025 20:26:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:36,447 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:36] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:36,460 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:46,601 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:46] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:46,636 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:48,483 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:48] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:48,526 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:50,069 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:50] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:27:50,102 - INFO - 127.0.0.1 - - [27/Jun/2025 20:27:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 20:28:06,369 - INFO - 127.0.0.1 - - [27/Jun/2025 20:28:06] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 20:28:06,376 - INFO - 127.0.0.1 - - [27/Jun/2025 20:28:06] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 20:28:12,796 - INFO - 127.0.0.1 - - [27/Jun/2025 20:28:12] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 20:28:13,136 - ERROR - [ERROR] Failed to create session: E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }', 'keyPattern': {'token': 1}, 'keyValue': {'token': None}} | Extra: None
+2025-06-27 20:28:13,138 - INFO - Auth attempt - Email: bijaykoirala003@gmail.com, Success: True, IP: 127.0.0.1
+2025-06-27 20:28:13,138 - INFO - User logged in successfully: bijaykoirala003@gmail.com
+2025-06-27 20:28:13,138 - INFO - 127.0.0.1 - - [27/Jun/2025 20:28:13] "POST /auth/login HTTP/1.1" 200 -
+2025-06-27 20:49:29,301 - INFO - Maintenance tasks completed
+2025-06-27 21:00:08,913 - INFO - Maintenance tasks completed
+2025-06-27 21:27:01,970 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 21:27:02,486 - INFO -  * Restarting with stat
+2025-06-27 21:27:03,201 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 21:27:03,281 - INFO - MongoDB connection established successfully
+2025-06-27 21:27:03,282 - INFO - Database indexes created/verified
+2025-06-27 21:27:03,287 - INFO - Starting FraudShield Authentication API...
+2025-06-27 21:27:03,287 - INFO - Max login attempts: 5
+2025-06-27 21:27:03,287 - INFO - Lockout duration: 30 minutes
+2025-06-27 21:27:03,288 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 21:27:03,288 - INFO - Authentication API is ready!
+2025-06-27 21:27:03,288 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 21:27:03,311 - WARNING -  * Debugger is active!
+2025-06-27 21:27:03,314 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 21:28:36,843 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 21:28:36,988 - INFO -  * Restarting with stat
+2025-06-27 21:28:37,430 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 21:28:37,443 - INFO - MongoDB connection established successfully
+2025-06-27 21:28:37,444 - INFO - Database indexes created/verified
+2025-06-27 21:28:37,449 - INFO - Starting FraudShield Authentication API...
+2025-06-27 21:28:37,449 - INFO - Max login attempts: 5
+2025-06-27 21:28:37,449 - INFO - Lockout duration: 30 minutes
+2025-06-27 21:28:37,449 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 21:28:37,449 - INFO - Authentication API is ready!
+2025-06-27 21:28:37,449 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 21:28:37,467 - WARNING -  * Debugger is active!
+2025-06-27 21:28:37,469 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 21:29:00,609 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 21:29:01,066 - INFO -  * Restarting with stat
+2025-06-27 21:29:01,455 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 21:29:01,466 - INFO - MongoDB connection established successfully
+2025-06-27 21:29:01,467 - INFO - Database indexes created/verified
+2025-06-27 21:29:01,472 - INFO - Starting FraudShield Authentication API...
+2025-06-27 21:29:01,472 - INFO - Max login attempts: 5
+2025-06-27 21:29:01,473 - INFO - Lockout duration: 30 minutes
+2025-06-27 21:29:01,473 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 21:29:01,473 - INFO - Authentication API is ready!
+2025-06-27 21:29:01,473 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 21:29:01,492 - WARNING -  * Debugger is active!
+2025-06-27 21:29:01,494 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:23:25,814 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:23:25,844 - INFO - MongoDB connection established successfully
+2025-06-27 22:23:25,846 - INFO - Database indexes created/verified
+2025-06-27 22:23:25,851 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:23:25,852 - INFO - Max login attempts: 5
+2025-06-27 22:23:25,852 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:23:25,852 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:23:25,852 - INFO - Authentication API is ready!
+2025-06-27 22:23:25,852 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:23:25,885 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 22:23:25,885 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 22:23:25,887 - INFO -  * Restarting with stat
+2025-06-27 22:23:26,354 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:23:26,385 - INFO - MongoDB connection established successfully
+2025-06-27 22:23:26,387 - INFO - Database indexes created/verified
+2025-06-27 22:23:26,393 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:23:26,393 - INFO - Max login attempts: 5
+2025-06-27 22:23:26,393 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:23:26,394 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:23:26,394 - INFO - Authentication API is ready!
+2025-06-27 22:23:26,395 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:23:26,415 - WARNING -  * Debugger is active!
+2025-06-27 22:23:26,417 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:23:36,923 - INFO - 127.0.0.1 - - [27/Jun/2025 22:23:36] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 22:23:36,934 - INFO - 127.0.0.1 - - [27/Jun/2025 22:23:36] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 22:23:42,292 - INFO - 127.0.0.1 - - [27/Jun/2025 22:23:42] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 22:23:42,689 - ERROR - [ERROR] Failed to create session: E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }', 'keyPattern': {'token': 1}, 'keyValue': {'token': None}} | Extra: None
+2025-06-27 22:23:42,691 - INFO - Auth attempt - Email: admin@fraudshield.com, Success: True, IP: 127.0.0.1
+2025-06-27 22:23:42,692 - INFO - User logged in successfully: admin@fraudshield.com
+2025-06-27 22:23:42,692 - INFO - 127.0.0.1 - - [27/Jun/2025 22:23:42] "POST /auth/login HTTP/1.1" 200 -
+2025-06-27 22:23:45,349 - INFO - 127.0.0.1 - - [27/Jun/2025 22:23:45] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:23:45,370 - INFO - 127.0.0.1 - - [27/Jun/2025 22:23:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:17,971 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:17] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:17,992 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:18,329 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:18,726 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:19,121 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:19,542 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:19,939 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:20,342 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:20,741 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:21,147 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:21,577 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:21,959 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:22,363 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:22,751 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:23,156 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:23] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:23,177 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:23,564 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:23,997 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:24,409 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:24,777 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:25,193 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:25,631 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:26,026 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:26,425 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:26,843 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:27,247 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:27,666 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:28,082 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:28,464 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:28] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:28,480 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:28,880 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:29,301 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:29,712 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:30,102 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:30,511 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:30,918 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:31,320 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:31,747 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:32,154 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:32,601 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:32,995 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:33,398 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:33,872 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:33] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:33,896 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:34,243 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:34,662 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:35,089 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:35,457 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:35,877 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:36,267 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:36,671 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:37,078 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:37,489 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:37,900 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:38,298 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:38,689 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:39,085 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:39] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:39,104 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:39,505 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:39,897 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:40,317 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:40,714 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:41,139 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:41,728 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:41,962 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:42,363 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:42,770 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:43,174 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:43,566 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:43,989 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:44,378 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:44] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:44,397 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:44,803 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:45,244 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:45,612 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:46,012 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:46,430 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:46,850 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:47,231 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:47,681 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:48,038 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:48,441 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:48,846 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:49,275 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:49,666 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:49,689 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:50,063 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:50,463 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:50,886 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:51,290 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:51,652 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:51] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:51,667 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:52,079 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:52,566 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:52,967 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:53,391 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:53,755 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:54,152 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:54,646 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:55,168 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:56,081 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:24:56,427 - INFO - 127.0.0.1 - - [27/Jun/2025 22:24:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:25:27,951 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:27] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:25:27,979 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:25:28,582 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 22:25:29,051 - INFO -  * Restarting with stat
+2025-06-27 22:25:29,689 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:25:29,712 - INFO - MongoDB connection established successfully
+2025-06-27 22:25:29,718 - INFO - Database indexes created/verified
+2025-06-27 22:25:29,727 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:25:29,729 - INFO - Max login attempts: 5
+2025-06-27 22:25:29,730 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:25:29,731 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:25:29,731 - INFO - Authentication API is ready!
+2025-06-27 22:25:29,731 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:25:29,762 - WARNING -  * Debugger is active!
+2025-06-27 22:25:29,766 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:25:29,895 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:25:30,011 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:30] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:25:30,016 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:30] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:25:30,599 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:30] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:25:31,031 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:31] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:25:31,413 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:31] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:25:31,852 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:31] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:25:32,220 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:32] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:25:32,969 - INFO - 127.0.0.1 - - [27/Jun/2025 22:25:32] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:01,203 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:01] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:01,228 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:01] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:01,897 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 22:26:02,382 - INFO -  * Restarting with stat
+2025-06-27 22:26:02,938 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:26:03,042 - INFO - MongoDB connection established successfully
+2025-06-27 22:26:03,045 - INFO - Database indexes created/verified
+2025-06-27 22:26:03,053 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:26:03,053 - INFO - Max login attempts: 5
+2025-06-27 22:26:03,053 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:26:03,053 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:26:03,053 - INFO - Authentication API is ready!
+2025-06-27 22:26:03,054 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:26:03,078 - WARNING -  * Debugger is active!
+2025-06-27 22:26:03,082 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:26:03,095 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:03] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:03,103 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:03] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:03,110 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:03] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:03,260 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:03] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:03,661 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:03] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:04,113 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:04] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:04,476 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:04] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:04,862 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:04] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:05,311 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:05] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:05,669 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:05] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:06,073 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:06] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:06,527 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:06] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:06,903 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:06] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:07,323 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:07] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:07,711 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:07] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:08,135 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:08] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:08,151 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:08,541 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:08] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:09,038 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:09] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:09,349 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:09] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:10,048 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:10] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:10,400 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:10] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:11,040 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:11] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:11,489 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:11] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:11,881 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:11] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:12,289 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:12] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:12,699 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:12] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:13,125 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:13] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:13,783 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:13] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:13,798 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:18,612 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:18] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:19,173 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 22:26:19,719 - INFO -  * Restarting with stat
+2025-06-27 22:26:20,268 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:26:20,299 - INFO - MongoDB connection established successfully
+2025-06-27 22:26:20,300 - INFO - Database indexes created/verified
+2025-06-27 22:26:20,306 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:26:20,306 - INFO - Max login attempts: 5
+2025-06-27 22:26:20,306 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:26:20,307 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:26:20,307 - INFO - Authentication API is ready!
+2025-06-27 22:26:20,307 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:26:20,329 - WARNING -  * Debugger is active!
+2025-06-27 22:26:20,332 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:26:20,341 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:20] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:20,342 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:20] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:20,357 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:20,792 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:20] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:20,798 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:20] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:21,027 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:21] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:21,558 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:21] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:21,835 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:21] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:22,340 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:22] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:22,732 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:22] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:23,103 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:23] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:23,491 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:23] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:24,112 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:24] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:25,282 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:25] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:25,370 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 22:26:25,931 - INFO -  * Restarting with stat
+2025-06-27 22:26:26,473 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:26:26,522 - INFO - MongoDB connection established successfully
+2025-06-27 22:26:26,524 - INFO - Database indexes created/verified
+2025-06-27 22:26:26,529 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:26:26,529 - INFO - Max login attempts: 5
+2025-06-27 22:26:26,530 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:26:26,530 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:26:26,530 - INFO - Authentication API is ready!
+2025-06-27 22:26:26,530 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:26:26,549 - WARNING -  * Debugger is active!
+2025-06-27 22:26:26,552 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:26:26,562 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:26] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:26,563 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:26] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:26,580 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:26,868 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:26] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:27,276 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:27] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:27,573 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 22:26:28,085 - INFO -  * Restarting with stat
+2025-06-27 22:26:28,581 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:26:28,594 - INFO - MongoDB connection established successfully
+2025-06-27 22:26:28,597 - INFO - Database indexes created/verified
+2025-06-27 22:26:28,601 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:26:28,602 - INFO - Max login attempts: 5
+2025-06-27 22:26:28,602 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:26:28,602 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:26:28,602 - INFO - Authentication API is ready!
+2025-06-27 22:26:28,603 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:26:28,626 - WARNING -  * Debugger is active!
+2025-06-27 22:26:28,629 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:26:28,640 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:28] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:28,653 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:28,682 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:28] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:28,691 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:28] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:29,063 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:29] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:29,469 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:29] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:29,893 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:29] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:30,288 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:30] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:30,704 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:30] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:31,183 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:31] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:31,509 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:31] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:31,897 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:31] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:32,319 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:32] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:32,711 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:32] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:33,180 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:33] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:33,557 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:33] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:33,965 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:33] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:33,969 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:33] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:34,376 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:34] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:34,801 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:34] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:35,297 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:35] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:35,588 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:35] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:36,021 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:36] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:36,454 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:36] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:36,963 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:36] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:37,199 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:37] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:37,588 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:37] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:38,477 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:38] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:39,301 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:39] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:39,308 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:39] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:39,693 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:39] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:39,994 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:39] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:40,576 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:40] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:40,705 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 22:26:41,200 - INFO -  * Restarting with stat
+2025-06-27 22:26:41,755 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:26:41,787 - INFO - MongoDB connection established successfully
+2025-06-27 22:26:41,790 - INFO - Database indexes created/verified
+2025-06-27 22:26:41,796 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:26:41,796 - INFO - Max login attempts: 5
+2025-06-27 22:26:41,796 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:26:41,797 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:26:41,797 - INFO - Authentication API is ready!
+2025-06-27 22:26:41,797 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:26:41,819 - WARNING -  * Debugger is active!
+2025-06-27 22:26:41,823 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:26:41,833 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:41] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:41,834 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:41] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:41,846 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:41,864 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:41] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:42,184 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:42] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:42,605 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:42] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:42,992 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:42] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:43,370 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:43] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:43,795 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:43] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:44,223 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:44] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:44,627 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:44] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:44,992 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:44] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:45,397 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:45] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:46,002 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:46] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:26:47,402 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:47] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:26:47,408 - INFO - 127.0.0.1 - - [27/Jun/2025 22:26:47] "[31m[1mGET /auth/admin/stats HTTP/1.1[0m" 429 -
+2025-06-27 22:28:54,337 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:28:54,349 - INFO - MongoDB connection established successfully
+2025-06-27 22:28:54,351 - INFO - Database indexes created/verified
+2025-06-27 22:28:54,358 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:28:54,358 - INFO - Max login attempts: 5
+2025-06-27 22:28:54,358 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:28:54,358 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:28:54,358 - INFO - Authentication API is ready!
+2025-06-27 22:28:54,358 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:28:54,387 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 22:28:54,387 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 22:28:54,389 - INFO -  * Restarting with stat
+2025-06-27 22:28:54,831 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:28:54,853 - INFO - MongoDB connection established successfully
+2025-06-27 22:28:54,855 - INFO - Database indexes created/verified
+2025-06-27 22:28:54,862 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:28:54,862 - INFO - Max login attempts: 5
+2025-06-27 22:28:54,863 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:28:54,863 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:28:54,863 - INFO - Authentication API is ready!
+2025-06-27 22:28:54,863 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:28:54,889 - WARNING -  * Debugger is active!
+2025-06-27 22:28:54,892 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:29:08,197 - INFO - 127.0.0.1 - - [27/Jun/2025 22:29:08] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:29:08,215 - INFO - 127.0.0.1 - - [27/Jun/2025 22:29:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 22:29:34,664 - INFO - 127.0.0.1 - - [27/Jun/2025 22:29:34] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 22:29:34,672 - INFO - 127.0.0.1 - - [27/Jun/2025 22:29:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 22:29:39,506 - INFO - 127.0.0.1 - - [27/Jun/2025 22:29:39] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 22:29:39,830 - ERROR - [ERROR] Failed to create session: E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }', 'keyPattern': {'token': 1}, 'keyValue': {'token': None}} | Extra: None
+2025-06-27 22:29:39,832 - INFO - Auth attempt - Email: bijaykoirala003@gmail.com, Success: True, IP: 127.0.0.1
+2025-06-27 22:29:39,832 - INFO - User logged in successfully: bijaykoirala003@gmail.com
+2025-06-27 22:29:39,833 - INFO - 127.0.0.1 - - [27/Jun/2025 22:29:39] "POST /auth/login HTTP/1.1" 200 -
+2025-06-27 22:30:58,727 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 22:30:59,115 - INFO -  * Restarting with stat
+2025-06-27 22:30:59,652 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:30:59,696 - INFO - MongoDB connection established successfully
+2025-06-27 22:30:59,705 - INFO - Database indexes created/verified
+2025-06-27 22:30:59,711 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:30:59,712 - INFO - Max login attempts: 5
+2025-06-27 22:30:59,712 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:30:59,712 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:30:59,713 - INFO - Authentication API is ready!
+2025-06-27 22:30:59,713 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:30:59,734 - WARNING -  * Debugger is active!
+2025-06-27 22:30:59,737 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:34:48,195 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 22:34:48,674 - INFO -  * Restarting with stat
+2025-06-27 22:34:49,202 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:34:49,214 - INFO - MongoDB connection established successfully
+2025-06-27 22:34:49,216 - INFO - Database indexes created/verified
+2025-06-27 22:34:49,222 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:34:49,222 - INFO - Max login attempts: 5
+2025-06-27 22:34:49,222 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:34:49,223 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:34:49,223 - INFO - Authentication API is ready!
+2025-06-27 22:34:49,223 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:34:49,244 - WARNING -  * Debugger is active!
+2025-06-27 22:34:49,247 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:37:25,175 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 22:37:25,506 - INFO -  * Restarting with stat
+2025-06-27 22:37:26,050 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:37:26,081 - INFO - MongoDB connection established successfully
+2025-06-27 22:37:26,083 - INFO - Database indexes created/verified
+2025-06-27 22:37:26,088 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:37:26,088 - INFO - Max login attempts: 5
+2025-06-27 22:37:26,088 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:37:26,089 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:37:26,089 - INFO - Authentication API is ready!
+2025-06-27 22:37:26,089 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:37:26,112 - WARNING -  * Debugger is active!
+2025-06-27 22:37:26,114 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:37:37,192 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 22:37:37,656 - INFO -  * Restarting with stat
+2025-06-27 22:37:38,193 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:37:38,207 - INFO - MongoDB connection established successfully
+2025-06-27 22:37:38,209 - INFO - Database indexes created/verified
+2025-06-27 22:37:38,214 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:37:38,214 - INFO - Max login attempts: 5
+2025-06-27 22:37:38,214 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:37:38,215 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:37:38,215 - INFO - Authentication API is ready!
+2025-06-27 22:37:38,215 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:37:38,237 - WARNING -  * Debugger is active!
+2025-06-27 22:37:38,240 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 22:37:55,352 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 22:37:55,874 - INFO -  * Restarting with stat
+2025-06-27 22:37:56,444 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 22:37:56,479 - INFO - MongoDB connection established successfully
+2025-06-27 22:37:56,481 - INFO - Database indexes created/verified
+2025-06-27 22:37:56,485 - INFO - Starting FraudShield Authentication API...
+2025-06-27 22:37:56,486 - INFO - Max login attempts: 5
+2025-06-27 22:37:56,486 - INFO - Lockout duration: 30 minutes
+2025-06-27 22:37:56,486 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 22:37:56,486 - INFO - Authentication API is ready!
+2025-06-27 22:37:56,486 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 22:37:56,508 - WARNING -  * Debugger is active!
+2025-06-27 22:37:56,511 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 23:28:54,362 - INFO - Maintenance tasks completed
+2025-06-27 23:37:56,492 - INFO - Maintenance tasks completed
+2025-06-28 00:28:54,368 - INFO - Maintenance tasks completed
+2025-06-28 00:37:56,497 - INFO - Maintenance tasks completed
+2025-06-28 01:28:55,828 - INFO - Maintenance tasks completed
+2025-06-28 01:37:57,959 - INFO - Maintenance tasks completed

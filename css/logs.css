@@ -363,3 +363,135 @@
     font-size: 3rem;
   }
 }
+
+/* Activity Logs CSS - Add to css/logs.css */
+
+.log-entry {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border-left: 4px solid;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.log-entry.log-success {
+    border-left-color: #10b981;
+    background: linear-gradient(to right, #ecfdf5, #ffffff);
+}
+
+.log-entry.log-error {
+    border-left-color: #ef4444;
+    background: linear-gradient(to right, #fef2f2, #ffffff);
+}
+
+.log-entry.log-warning {
+    border-left-color: #f59e0b;
+    background: linear-gradient(to right, #fffbeb, #ffffff);
+}
+
+.log-entry.log-info {
+    border-left-color: #3b82f6;
+    background: linear-gradient(to right, #eff6ff, #ffffff);
+}
+
+.log-icon {
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.log-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.log-header-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.log-action {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.log-timestamp {
+    font-size: 12px;
+    color: #6b7280;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+.log-details {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.log-meta {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.log-meta span {
+    background: #f3f4f6;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+.log-rules {
+    margin-top: 8px;
+    padding: 8px;
+    background: #f9fafb;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 16px;
+}
+
+.log-stats {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.log-count {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.last-updated {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.log-entries {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.log-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+}
+
+.placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}

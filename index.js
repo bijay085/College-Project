@@ -310,12 +310,17 @@ class AuthManager {
             if (logControls) logControls.classList.add('hidden');
             if (logContainer) logContainer.classList.add('hidden');
         } else {
-            // Authenticated user (admin or not) - show logs
+            // Authenticated - show logs (both admin and regular users can see their own logs)
             if (logsAuthRequired) logsAuthRequired.style.display = 'none';
             if (logsAdminOnly) logsAdminOnly.classList.add('hidden');
             if (logControls) logControls.classList.remove('hidden');
             if (logContainer) logContainer.classList.remove('hidden');
-            this.setupLogControls();
+            
+            // Initialize activity logs manager for authenticated users
+            if (window.activityLogsManager) {
+                window.activityLogsManager.destroy();
+            }
+            window.activityLogsManager = ActivityLogsManager.init();
         }
     }
 
@@ -551,25 +556,6 @@ class AuthManager {
                 statusText.textContent = 'API Offline';
                 statusDot.style.backgroundColor = '#ef4444';
             }
-        }
-    }
-
-    static setupLogControls() {
-        const clearLogsBtn = document.getElementById('clearLogs');
-        const exportLogsBtn = document.getElementById('exportLogs');
-
-        if (clearLogsBtn) {
-            clearLogsBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to clear all logs?')) {
-                    showToast('Cleared', 'Activity logs have been cleared.', 'info');
-                }
-            });
-        }
-
-        if (exportLogsBtn) {
-            exportLogsBtn.addEventListener('click', () => {
-                showToast('Export', 'Logs exported successfully.', 'success');
-            });
         }
     }
 
@@ -1086,6 +1072,346 @@ class AuthManager {
     }
 }
 
+// ============================================================================
+// ACTIVITY LOGS MANAGEMENT (USER-SPECIFIC)
+// ============================================================================
+
+class ActivityLogsManager {
+    constructor() {
+        this.logsContainer = document.getElementById('logOutput');
+        this.logControls = document.getElementById('logControls');
+        this.isLoading = false;
+        this.currentLogs = [];
+        this.autoRefreshInterval = null;
+    }
+
+    static init() {
+        const manager = new ActivityLogsManager();
+        manager.setupEventListeners();
+        manager.loadUserLogs();
+        return manager;
+    }
+
+    setupEventListeners() {
+        // Clear logs button
+        const clearLogsBtn = document.getElementById('clearLogs');
+        if (clearLogsBtn) {
+            clearLogsBtn.addEventListener('click', () => {
+                this.clearLogs();
+            });
+        }
+
+        // Export logs button
+        const exportLogsBtn = document.getElementById('exportLogs');
+        if (exportLogsBtn) {
+            exportLogsBtn.addEventListener('click', () => {
+                this.exportLogs();
+            });
+        }
+
+        // Log level filter
+        const logLevelSelect = document.getElementById('logLevel');
+        if (logLevelSelect) {
+            logLevelSelect.addEventListener('change', () => {
+                this.loadUserLogs();
+            });
+        }
+
+        // Auto-refresh toggle
+        this.setupAutoRefresh();
+    }
+
+    setupAutoRefresh() {
+        // Auto-refresh logs every 10 seconds if user is on logs tab
+        this.autoRefreshInterval = setInterval(() => {
+            const logsTab = document.getElementById('logs');
+            if (logsTab && logsTab.classList.contains('active')) {
+                this.loadUserLogs(false); // Silent refresh
+            }
+        }, 10000);
+    }
+
+    async loadUserLogs(showLoading = true) {
+        // Check if user is authenticated
+        if (!AuthManager.isAuthenticated()) {
+            this.showAuthRequired();
+            return;
+        }
+
+        if (this.isLoading) return;
+
+        try {
+            this.isLoading = true;
+            
+            if (showLoading) {
+                this.showLoadingState();
+            }
+
+            const apiKey = AuthManager.getApiKey();
+            if (!apiKey) {
+                throw new Error('No API key found');
+            }
+
+            // Get log level filter
+            const logLevel = document.getElementById('logLevel')?.value || 'all';
+
+            const response = await fetch('http://127.0.0.1:5000/user-logs?' + new URLSearchParams({
+                limit: '50',
+                skip: '0',
+                level: logLevel
+            }), {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `API error: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success) {
+                this.currentLogs = result.data.logs || [];
+                this.displayLogs(this.currentLogs);
+                
+                if (showLoading) {
+                    showToast('Logs Updated', `Retrieved ${this.currentLogs.length} activity logs`, 'success');
+                }
+            } else {
+                throw new Error(result.error || 'Failed to load logs');
+            }
+
+        } catch (error) {
+            console.error('Failed to load user logs:', error);
+            this.showErrorState(error.message);
+            
+            if (showLoading) {
+                if (error.message.includes('Invalid API key') || error.message.includes('API key required')) {
+                    showToast('Authentication Error', 'Please sign in again to view logs', 'error');
+                } else {
+                    showToast('Error', 'Failed to load activity logs', 'error');
+                }
+            }
+        } finally {
+            this.isLoading = false;
+        }
+    }
+
+    showAuthRequired() {
+        if (!this.logsContainer) return;
+
+        this.logsContainer.innerHTML = `
+            <div class="log-placeholder">
+                <div class="placeholder-icon">🔒</div>
+                <h3>Authentication Required</h3>
+                <p>Please sign in to view your activity logs</p>
+                <div style="margin-top: 1rem;">
+                    <a href="/user_auth/pages/login.html" class="btn btn-primary">
+                        <span>🚪</span> Sign In
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
+    showLoadingState() {
+        if (!this.logsContainer) return;
+
+        this.logsContainer.innerHTML = `
+            <div class="log-placeholder">
+                <div class="placeholder-icon">⏳</div>
+                <h3>Loading Activity Logs</h3>
+                <p>Fetching your recent activity...</p>
+            </div>
+        `;
+    }
+
+    showErrorState(errorMessage) {
+        if (!this.logsContainer) return;
+
+        this.logsContainer.innerHTML = `
+            <div class="log-placeholder">
+                <div class="placeholder-icon">❌</div>
+                <h3>Error Loading Logs</h3>
+                <p>${errorMessage}</p>
+                <button onclick="activityLogsManager.loadUserLogs()" class="btn btn-secondary">
+                    🔄 Retry
+                </button>
+            </div>
+        `;
+    }
+
+    displayLogs(logs) {
+        if (!this.logsContainer) return;
+
+        if (!logs || logs.length === 0) {
+            this.logsContainer.innerHTML = `
+                <div class="log-placeholder">
+                    <div class="placeholder-icon">📋</div>
+                    <h3>No Activity Yet</h3>
+                    <p>Your fraud detection activity will appear here</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Generate log entries HTML
+        const logEntriesHTML = logs.map(log => this.createLogEntry(log)).join('');
+
+        this.logsContainer.innerHTML = `
+            <div class="log-header">
+                <div class="log-stats">
+                    <span class="log-count">${logs.length} entries</span>
+                    <span class="last-updated">Updated: ${new Date().toLocaleTimeString()}</span>
+                </div>
+            </div>
+            <div class="log-entries">
+                ${logEntriesHTML}
+            </div>
+        `;
+    }
+
+    createLogEntry(log) {
+        const timestamp = new Date(log.timestamp).toLocaleString();
+        const action = log.action || 'unknown';
+        const details = log.details || {};
+        
+        // Determine log type and icon
+        let logType = 'info';
+        let icon = 'ℹ️';
+        
+        if (log.decision === 'fraud') {
+            logType = 'error';
+            icon = '❌';
+        } else if (log.decision === 'suspicious') {
+            logType = 'warning';
+            icon = '⚠️';
+        } else if (action === 'fraud_check') {
+            logType = 'success';
+            icon = '✅';
+        } else if (action === 'bulk_analysis') {
+            logType = 'info';
+            icon = '📊';
+        }
+
+        // Create action description
+        let actionDescription = '';
+        if (action === 'fraud_check') {
+            actionDescription = `Fraud check for ${details.transaction_email || 'transaction'}`;
+            if (log.fraud_score !== undefined) {
+                actionDescription += ` - Score: ${log.fraud_score}`;
+            }
+        } else if (action === 'bulk_analysis') {
+            actionDescription = `Bulk analysis of ${details.filename || 'file'}`;
+            if (details.total_records) {
+                actionDescription += ` (${details.total_records} records)`;
+            }
+        } else {
+            actionDescription = action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        // Create triggered rules display
+        let rulesDisplay = '';
+        if (log.triggered_rules && log.triggered_rules.length > 0) {
+            rulesDisplay = `
+                <div class="log-rules">
+                    <strong>Triggered Rules:</strong> ${log.triggered_rules.join(', ')}
+                </div>
+            `;
+        }
+
+        return `
+            <div class="log-entry log-${logType}">
+                <div class="log-icon">${icon}</div>
+                <div class="log-content">
+                    <div class="log-header-line">
+                        <span class="log-action">${actionDescription}</span>
+                        <span class="log-timestamp">${timestamp}</span>
+                    </div>
+                    <div class="log-details">
+                        <div class="log-meta">
+                            <span>IP: ${log.ip_address || 'Unknown'}</span>
+                            <span>Endpoint: ${log.endpoint || 'Unknown'}</span>
+                            ${log.decision ? `<span>Decision: ${log.decision}</span>` : ''}
+                        </div>
+                        ${rulesDisplay}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    async clearLogs() {
+        if (!confirm('Are you sure you want to clear your activity logs? This action cannot be undone.')) {
+            return;
+        }
+
+        try {
+            showToast('Info', 'Log clearing is not implemented yet', 'info');
+        } catch (error) {
+            console.error('Failed to clear logs:', error);
+            showToast('Error', 'Failed to clear logs', 'error');
+        }
+    }
+
+    exportLogs() {
+        if (!this.currentLogs || this.currentLogs.length === 0) {
+            showToast('No Data', 'No logs to export', 'warning');
+            return;
+        }
+
+        try {
+            // Convert logs to CSV
+            const headers = ['Timestamp', 'Action', 'Decision', 'Fraud Score', 'IP Address', 'Details'];
+            const csvData = [
+                headers.join(','),
+                ...this.currentLogs.map(log => {
+                    const row = [
+                        `"${new Date(log.timestamp).toISOString()}"`,
+                        `"${log.action || ''}"`,
+                        `"${log.decision || ''}"`,
+                        log.fraud_score || '',
+                        `"${log.ip_address || ''}"`,
+                        `"${JSON.stringify(log.details || {}).replace(/"/g, '""')}"`
+                    ];
+                    return row.join(',');
+                })
+            ].join('\n');
+
+            // Create and download file
+            const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `fraudshield_activity_logs_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            URL.revokeObjectURL(url);
+            
+            showToast('Success', 'Activity logs exported successfully!', 'success');
+            
+        } catch (error) {
+            console.error('Export failed:', error);
+            showToast('Error', 'Failed to export logs', 'error');
+        }
+    }
+
+    destroy() {
+        if (this.autoRefreshInterval) {
+            clearInterval(this.autoRefreshInterval);
+        }
+    }
+}
+
 // FIXED: Check tab accessibility based on user authentication and role
 function isTabAccessible(tabName) {
     // Home and bulk are always accessible (public)
@@ -1543,6 +1869,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
+    // Check authentication for bulk analysis
+    const apiKey = AuthManager.getApiKey();
+    if (!apiKey) {
+      alert('🔑 API key required for bulk analysis. Please sign in first.');
+      return;
+    }
+    
     // Reset UI
     bulkResultsBox.innerHTML = '';
     if (progressOuter) progressOuter.classList.remove('hidden');
@@ -1563,8 +1896,11 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const response = await fetch('http://127.0.0.1:5000/bulk-check', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`
+        },
         body: formData,
-        mode: 'cors'  // Add this line
+        mode: 'cors'
       });
 
       if (progressInner) progressInner.style.width = '50%';
@@ -1657,6 +1993,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (isAuth && AuthManager.isAdmin()) {
     console.log('👑 Admin user detected - all features available');
+  }
+
+  // Initialize activity logs if user is authenticated
+  if (isAuth) {
+    setTimeout(() => {
+      if (window.activityLogsManager) {
+        window.activityLogsManager.destroy();
+      }
+      window.activityLogsManager = ActivityLogsManager.init();
+    }, 1000);
   }
 });
 
