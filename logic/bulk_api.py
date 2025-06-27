@@ -1,4 +1,4 @@
-# logic/bulk_api.py - Enhanced with Real Metrics
+# logic/bulk_api.py - FIXED to work with synchronous fraud checker
 import sys
 import os
 import time
@@ -68,9 +68,9 @@ logging.basicConfig(
 # Initialize fraud checker
 try:
     checker = FraudChecker()
-    app.logger.info("FraudChecker initialized successfully")
+    app.logger.info("✅ FraudChecker initialized successfully")
 except Exception as e:
-    app.logger.error(f"Failed to initialize FraudChecker: {e}")
+    app.logger.error(f"❌ Failed to initialize FraudChecker: {e}")
     checker = None
 
 # ============================================================================
@@ -170,47 +170,49 @@ def health_check():
 
 @app.route("/real-stats", methods=["GET"])
 def get_real_stats():
-    """Get real metrics - SIMPLE VERSION THAT WORKS"""
+    """Get real metrics - WORKS WITH SYNCHRONOUS FRAUD CHECKER"""
     try:
-        # Run async code in sync context
-        import asyncio
-        from motor.motor_asyncio import AsyncIOMotorClient
+        if not checker:
+            return create_error_response("FraudChecker not available", 503)
         
-        async def fetch_metrics():
-            client = AsyncIOMotorClient("mongodb://localhost:27017")
-            db = client.fraudshield
-            metrics_collection = db.metrics
-            
-            # Get all metrics
-            metrics = {}
-            async for doc in metrics_collection.find():
-                metrics[doc["_id"]] = doc.get("count", 0)
-            
-            return metrics
+        # Get metrics using synchronous method
+        if hasattr(checker.metrics, 'get_metric_count'):
+            metrics = {
+                "total_checks": checker.metrics.get_metric_count("total_checks"),
+                "fraud_blocked": checker.metrics.get_metric_count("fraud_blocked"),
+                "suspicious_flagged": checker.metrics.get_metric_count("suspicious_flagged"),
+                "clean_approved": checker.metrics.get_metric_count("clean_approved"),
+                "bulk_analyses": checker.metrics.get_metric_count("bulk_analyses"),
+                "api_requests": checker.metrics.get_metric_count("api_requests")
+            }
+        else:
+            # Fallback if metrics not available
+            metrics = {
+                "total_checks": 0,
+                "fraud_blocked": 0,
+                "suspicious_flagged": 0,
+                "clean_approved": 0,
+                "bulk_analyses": 0,
+                "api_requests": 0
+            }
         
-        # Run the async function
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        metrics = loop.run_until_complete(fetch_metrics())
-        loop.close()
-        
-        # Build response - KEEP IT SIMPLE
+        # Build response
         response_data = {
             "hero_stats": {
-                "total_checks": metrics.get("total_checks", 15),  # Default to 15 if not found
-                "fraud_blocked": metrics.get("fraud_blocked", 6) + metrics.get("suspicious_flagged", 0),
+                "total_checks": metrics.get("total_checks", 0),
+                "fraud_blocked": metrics.get("fraud_blocked", 0) + metrics.get("suspicious_flagged", 0),
                 "accuracy": "99.2%"
             },
-            "detailed_metrics": metrics,  # Just send all metrics
+            "detailed_metrics": metrics,
             "blacklist_counts": {
-                "disposable_domains": 3,
-                "flagged_ips": 3,
-                "suspicious_bins": 3,
-                "reused_fingerprints": 3,
-                "tampered_prices": 3
+                "disposable_domains": len(getattr(checker, 'disposable_domains', [])),
+                "flagged_ips": len(getattr(checker, 'flagged_ips', [])),
+                "suspicious_bins": len(getattr(checker, 'suspicious_bins', [])),
+                "reused_fingerprints": len(getattr(checker, 'reused_fingerprints', [])),
+                "tampered_prices": len(getattr(checker, 'tampered_prices', []))
             },
             "system_stats": {
-                "active_rules": 6,
+                "active_rules": len(getattr(checker, 'rules', {})),
                 "database_status": "online",
                 "fraud_checker_status": "active"
             }
@@ -219,7 +221,7 @@ def get_real_stats():
         return jsonify({
             "success": True,
             "data": response_data,
-            "message": f"Found {len(metrics)} metrics in database"
+            "message": f"Retrieved metrics successfully"
         })
         
     except Exception as e:
@@ -229,15 +231,15 @@ def get_real_stats():
             "success": True,
             "data": {
                 "hero_stats": {
-                    "total_checks": 15,
-                    "fraud_blocked": 6,
+                    "total_checks": 0,
+                    "fraud_blocked": 0,
                     "accuracy": "99.2%"
                 },
                 "detailed_metrics": {
-                    "total_checks": 15,
-                    "fraud_blocked": 6,
+                    "total_checks": 0,
+                    "fraud_blocked": 0,
                     "suspicious_flagged": 0,
-                    "clean_approved": 9,
+                    "clean_approved": 0,
                     "bulk_analyses": 0,
                     "api_requests": 0
                 }
@@ -246,8 +248,8 @@ def get_real_stats():
 
 @app.route("/bulk-check", methods=["POST"])
 @log_request
-async def bulk_check():
-    """Enhanced bulk fraud checking endpoint with metrics tracking"""
+def bulk_check():
+    """FIXED bulk fraud checking endpoint - now works with synchronous fraud checker"""
     
     # Check if fraud checker is available
     if not checker:
@@ -259,7 +261,8 @@ async def bulk_check():
     
     # Increment API request metric
     try:
-        checker.metrics.increment_metric("api_requests")
+        if hasattr(checker.metrics, 'increment_metric'):
+            checker.metrics.increment_metric("api_requests")
     except Exception as e:
         app.logger.warning(f"Failed to increment api_requests metric: {e}")
     
@@ -274,15 +277,19 @@ async def bulk_check():
     
     if file:
         app.logger.info(f"Processing file: {file.filename}, Size: {file.tell()} bytes")
+        file.seek(0)  # Reset file pointer after size check
     else:
         app.logger.warning("No file provided for processing")
+        return create_error_response("No file provided", 400)
     
     try:
         # Record start time
         start_time = time.time()
         
-        # Process the file (now with metrics tracking)
+        # Process the file (SYNCHRONOUSLY - no await needed)
+        app.logger.info("Starting fraud analysis...")
         results = checker.analyze_bulk(file)
+        app.logger.info(f"Fraud analysis completed, got {len(results)} results")
         
         # Calculate processing time
         processing_time = time.time() - start_time
@@ -318,6 +325,12 @@ async def bulk_check():
         
         app.logger.info(f"Successfully processed {len(results)} records in {processing_time:.2f}s")
         app.logger.info(f"Decision breakdown: {decision_counts}")
+        
+        # Log current metrics for verification
+        if hasattr(checker.metrics, 'get_metric_count'):
+            total_checks = checker.metrics.get_metric_count("total_checks")
+            fraud_blocked = checker.metrics.get_metric_count("fraud_blocked")
+            app.logger.info(f"📊 Current metrics - Total: {total_checks}, Fraud: {fraud_blocked}")
         
         return create_success_response(
             response_data, 
@@ -355,15 +368,22 @@ async def bulk_check():
         )
 
 @app.route("/metrics", methods=["GET"])
-async def get_metrics():
-    """Get detailed metrics for dashboard"""
+def get_metrics():
+    """Get detailed metrics for dashboard - SYNCHRONOUS VERSION"""
     try:
         if not checker:
             return create_error_response("Database unavailable", 503)
         
-        # Get all metrics from database
-        if hasattr(checker.metrics, "__dict__"):
-            all_metrics = dict(checker.metrics.__dict__)
+        # Get metrics synchronously
+        if hasattr(checker.metrics, 'get_metric_count'):
+            all_metrics = {
+                "total_checks": checker.metrics.get_metric_count("total_checks"),
+                "fraud_blocked": checker.metrics.get_metric_count("fraud_blocked"),
+                "suspicious_flagged": checker.metrics.get_metric_count("suspicious_flagged"),
+                "clean_approved": checker.metrics.get_metric_count("clean_approved"),
+                "bulk_analyses": checker.metrics.get_metric_count("bulk_analyses"),
+                "api_requests": checker.metrics.get_metric_count("api_requests")
+            }
         else:
             all_metrics = {}
         
@@ -377,14 +397,34 @@ async def get_metrics():
         return create_error_response("Failed to get metrics", 500)
 
 @app.route("/stats", methods=["GET"])
-async def get_stats():
-    """Get API statistics"""
+def get_stats():
+    """Get API statistics - SYNCHRONOUS VERSION"""
     try:
         if not checker:
             return create_error_response("Database unavailable", 503)
         
-        # Get comprehensive stats
-        stats = await checker.get_stats()
+        # Get stats synchronously (no await)
+        import asyncio
+        
+        try:
+            # Run the async get_stats method
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            stats = loop.run_until_complete(checker.get_stats())
+            loop.close()
+        except Exception as e:
+            app.logger.warning(f"Failed to get async stats: {e}")
+            # Fallback to basic stats
+            stats = {
+                "cache_stats": {
+                    "disposable_domains": len(getattr(checker, 'disposable_domains', [])),
+                    "flagged_ips": len(getattr(checker, 'flagged_ips', [])),
+                    "suspicious_bins": len(getattr(checker, 'suspicious_bins', [])),
+                    "reused_fingerprints": len(getattr(checker, 'reused_fingerprints', [])),
+                    "tampered_prices": len(getattr(checker, 'tampered_prices', [])),
+                    "active_rules": len(getattr(checker, 'rules', {}))
+                }
+            }
         
         # Add API configuration
         stats["config"] = {
@@ -425,13 +465,19 @@ def internal_server_error(error):
 # ============================================================================
 
 if __name__ == "__main__":
-    app.logger.info("Starting Enhanced Bulk Fraud Check API with Metrics...")
+    app.logger.info("Starting FIXED Bulk Fraud Check API...")
     app.logger.info(f"Max file size: {Config.MAX_FILE_SIZE // (1024*1024)}MB")
     app.logger.info(f"Allowed extensions: {Config.ALLOWED_EXTENSIONS}")
     app.logger.info(f"Max records: {Config.MAX_RECORDS}")
     
     if checker:
-        app.logger.info("✅ FraudChecker with metrics tracking initialized")
+        app.logger.info("✅ FraudChecker with working metrics initialized")
+        # Test that metrics are working
+        if hasattr(checker.metrics, 'get_metric_count'):
+            total_checks = checker.metrics.get_metric_count("total_checks")
+            app.logger.info(f"📊 Current total_checks in database: {total_checks}")
+        else:
+            app.logger.warning("⚠️ Metrics methods not available")
     else:
         app.logger.warning("⚠️ FraudChecker failed to initialize")
     
