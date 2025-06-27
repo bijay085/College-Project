@@ -27,21 +27,47 @@ tabs.forEach(btn => {
 class AuthManager {
     static getCurrentUser() {
         try {
-            const userData = sessionStorage.getItem('fraudshield_user');
+            // Check sessionStorage first
+            let userData = sessionStorage.getItem('fraudshield_user');
+            
+            // If not in sessionStorage, check localStorage for persistent session
+            if (!userData) {
+                userData = localStorage.getItem('fraudshield_persistent_user');
+                
+                // If found in localStorage, restore to sessionStorage
+                if (userData) {
+                    sessionStorage.setItem('fraudshield_user', userData);
+                    
+                    // Also restore API key and session ID
+                    const apiKey = localStorage.getItem('fraudshield_persistent_api_key');
+                    const sessionId = localStorage.getItem('fraudshield_persistent_session_id');
+                    
+                    if (apiKey) sessionStorage.setItem('fraudshield_api_key', apiKey);
+                    if (sessionId) sessionStorage.setItem('fraudshield_session_id', sessionId);
+                }
+            }
+            
             return userData ? JSON.parse(userData) : null;
         } catch (error) {
             console.error('Failed to parse user data:', error);
-            // Clear corrupted session data
-            sessionStorage.removeItem('fraudshield_user');
-            sessionStorage.removeItem('fraudshield_api_key');
+            // Clear corrupted session data from both storages
+            this.clearCorruptedSession();
             return null;
         }
     }
 
     static isAuthenticated() {
-        const userData = sessionStorage.getItem('fraudshield_user');
-        const apiKey = sessionStorage.getItem('fraudshield_api_key');
-        return !!(userData && apiKey);
+        // Check both sessionStorage and localStorage
+        const sessionUser = sessionStorage.getItem('fraudshield_user');
+        const sessionApiKey = sessionStorage.getItem('fraudshield_api_key');
+        
+        const persistentUser = localStorage.getItem('fraudshield_persistent_user');
+        const persistentApiKey = localStorage.getItem('fraudshield_persistent_api_key');
+        
+        return !!(
+            (sessionUser && sessionApiKey) || 
+            (persistentUser && persistentApiKey)
+        );
     }
 
     static hasRole(role) {
@@ -54,21 +80,40 @@ class AuthManager {
     }
 
     static getApiKey() {
-        return sessionStorage.getItem('fraudshield_api_key');
+        // Check sessionStorage first
+        let apiKey = sessionStorage.getItem('fraudshield_api_key');
+        
+        // If not in sessionStorage, check localStorage
+        if (!apiKey) {
+            apiKey = localStorage.getItem('fraudshield_persistent_api_key');
+            
+            // If found in localStorage, restore to sessionStorage
+            if (apiKey) {
+                sessionStorage.setItem('fraudshield_api_key', apiKey);
+            }
+        }
+        
+        return apiKey;
     }
 
     static logout() {
-        // Clear all session data
+        // Clear all session data from both storages
         sessionStorage.removeItem('fraudshield_user');
         sessionStorage.removeItem('fraudshield_api_key');
+        sessionStorage.removeItem('fraudshield_session_id');
+        
+        localStorage.removeItem('fraudshield_persistent_user');
+        localStorage.removeItem('fraudshield_persistent_api_key');
+        localStorage.removeItem('fraudshield_persistent_session_id');
         localStorage.removeItem('fraudshield_remember');
         localStorage.removeItem('fraudshield_email');
+        localStorage.removeItem('fraudshield_login_timestamp');
         
         // Reset global variables
         window.currentUser = null;
         window.apiKey = null;
         
-        showToast('Logged out', 'You have been successfully logged out.', 'info');
+        console.log('👋 Complete logout - all session data cleared');
         
         // Refresh the page to reset UI state
         setTimeout(() => {
@@ -76,12 +121,66 @@ class AuthManager {
         }, 1500);
     }
 
+    static clearCorruptedSession() {
+        // Clear corrupted data from both storages
+        sessionStorage.removeItem('fraudshield_user');
+        sessionStorage.removeItem('fraudshield_api_key');
+        sessionStorage.removeItem('fraudshield_session_id');
+        
+        localStorage.removeItem('fraudshield_persistent_user');
+        localStorage.removeItem('fraudshield_persistent_api_key');
+        localStorage.removeItem('fraudshield_persistent_session_id');
+        
+        console.warn('🧹 Cleared corrupted session data');
+    }
+
     static init() {
+        // Check for persistent session on page load
+        this.restorePersistentSession();
         this.setupUserInterface();
         this.setupRoleBasedAccess();
         this.setupUserMenu();
         this.loadUserProfile();
         this.checkApiConnection();
+    }
+
+    static restorePersistentSession() {
+        // Check if user has a persistent session
+        const persistentUser = localStorage.getItem('fraudshield_persistent_user');
+        const persistentApiKey = localStorage.getItem('fraudshield_persistent_api_key');
+        const loginTimestamp = localStorage.getItem('fraudshield_login_timestamp');
+        
+        if (persistentUser && persistentApiKey) {
+            // Check if session is still valid (not older than 30 days)
+            if (loginTimestamp) {
+                const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                if (parseInt(loginTimestamp) < thirtyDaysAgo) {
+                    console.log('🕐 Persistent session expired, clearing...');
+                    this.clearExpiredSession();
+                    return;
+                }
+            }
+            
+            // Restore to sessionStorage for current session
+            sessionStorage.setItem('fraudshield_user', persistentUser);
+            sessionStorage.setItem('fraudshield_api_key', persistentApiKey);
+            
+            const persistentSessionId = localStorage.getItem('fraudshield_persistent_session_id');
+            if (persistentSessionId) {
+                sessionStorage.setItem('fraudshield_session_id', persistentSessionId);
+            }
+            
+            console.log('🔄 Restored persistent session');
+        }
+    }
+
+    static clearExpiredSession() {
+        localStorage.removeItem('fraudshield_persistent_user');
+        localStorage.removeItem('fraudshield_persistent_api_key');
+        localStorage.removeItem('fraudshield_persistent_session_id');
+        localStorage.removeItem('fraudshield_remember');
+        localStorage.removeItem('fraudshield_email');
+        localStorage.removeItem('fraudshield_login_timestamp');
     }
 
     static setupUserInterface() {
@@ -208,14 +307,8 @@ class AuthManager {
             if (logsAdminOnly) logsAdminOnly.classList.add('hidden');
             if (logControls) logControls.classList.add('hidden');
             if (logContainer) logContainer.classList.add('hidden');
-        } else if (!isAdmin) {
-            // Authenticated but not admin - show admin required message
-            if (logsAuthRequired) logsAuthRequired.style.display = 'none';
-            if (logsAdminOnly) logsAdminOnly.classList.remove('hidden');
-            if (logControls) logControls.classList.add('hidden');
-            if (logContainer) logContainer.classList.add('hidden');
         } else {
-            // Admin user - show full interface
+            // Authenticated user (admin or not) - show logs
             if (logsAuthRequired) logsAuthRequired.style.display = 'none';
             if (logsAdminOnly) logsAdminOnly.classList.add('hidden');
             if (logControls) logControls.classList.remove('hidden');
@@ -1254,3 +1347,75 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('👑 Admin user detected - all features available');
   }
 });
+
+/**
+ * FIXED: Enhanced initialization script for index.html
+ */
+(function() {
+    // Check for persistent session first
+    let userData = sessionStorage.getItem('fraudshield_user');
+    let apiKey = sessionStorage.getItem('fraudshield_api_key');
+    
+    // If not in sessionStorage, check localStorage for persistent session
+    if (!userData || !apiKey) {
+        const persistentUser = localStorage.getItem('fraudshield_persistent_user');
+        const persistentApiKey = localStorage.getItem('fraudshield_persistent_api_key');
+        const loginTimestamp = localStorage.getItem('fraudshield_login_timestamp');
+        
+        if (persistentUser && persistentApiKey) {
+            // Check if session is still valid (not older than 30 days)
+            if (loginTimestamp) {
+                const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                if (parseInt(loginTimestamp) < thirtyDaysAgo) {
+                    console.log('🕐 Persistent session expired during load');
+                    // Clear expired data
+                    localStorage.removeItem('fraudshield_persistent_user');
+                    localStorage.removeItem('fraudshield_persistent_api_key');
+                    localStorage.removeItem('fraudshield_persistent_session_id');
+                    localStorage.removeItem('fraudshield_remember');
+                    localStorage.removeItem('fraudshield_email');
+                    localStorage.removeItem('fraudshield_login_timestamp');
+                } else {
+                    // Use persistent data
+                    userData = persistentUser;
+                    apiKey = persistentApiKey;
+                    
+                    // Restore to sessionStorage
+                    sessionStorage.setItem('fraudshield_user', userData);
+                    sessionStorage.setItem('fraudshield_api_key', apiKey);
+                    
+                    const persistentSessionId = localStorage.getItem('fraudshield_persistent_session_id');
+                    if (persistentSessionId) {
+                        sessionStorage.setItem('fraudshield_session_id', persistentSessionId);
+                    }
+                    
+                    console.log('🔄 Persistent session restored on page load');
+                }
+            }
+        }
+    }
+    
+    if (userData && apiKey) {
+        try {
+            window.currentUser = JSON.parse(userData);
+            window.apiKey = apiKey;
+            console.log('🔐 Authenticated user:', window.currentUser.user.email, 'Role:', window.currentUser.user.role);
+        } catch (error) {
+            console.error('Failed to parse user data:', error);
+            // Clear invalid session data from both storages
+            sessionStorage.removeItem('fraudshield_user');
+            sessionStorage.removeItem('fraudshield_api_key');
+            sessionStorage.removeItem('fraudshield_session_id');
+            localStorage.removeItem('fraudshield_persistent_user');
+            localStorage.removeItem('fraudshield_persistent_api_key');
+            localStorage.removeItem('fraudshield_persistent_session_id');
+            
+            window.currentUser = null;
+            window.apiKey = null;
+        }
+    } else {
+        console.log('👤 Anonymous user - public access enabled');
+        window.currentUser = null;
+        window.apiKey = null;
+    }
+})();

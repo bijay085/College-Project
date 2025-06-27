@@ -47,10 +47,33 @@ class LoginForm {
         this.checkExistingSession();
     }
 
+    /**
+     * FIXED: Enhanced session checking that looks in both storages
+     */
     async checkExistingSession() {
         try {
-            const userData = sessionStorage.getItem('fraudshield_user');
-            const sessionId = sessionStorage.getItem('fraudshield_session_id');
+            // First check sessionStorage for current session
+            let userData = sessionStorage.getItem('fraudshield_user');
+            let sessionId = sessionStorage.getItem('fraudshield_session_id');
+            let apiKey = sessionStorage.getItem('fraudshield_api_key');
+            
+            // If not found in sessionStorage, check localStorage for persistent session
+            if (!userData || !sessionId) {
+                userData = localStorage.getItem('fraudshield_persistent_user');
+                sessionId = localStorage.getItem('fraudshield_persistent_session_id');
+                apiKey = localStorage.getItem('fraudshield_persistent_api_key');
+                
+                // Check if persistent session is still valid (e.g., not older than 30 days)
+                const loginTimestamp = localStorage.getItem('fraudshield_login_timestamp');
+                if (loginTimestamp) {
+                    const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+                    if (parseInt(loginTimestamp) < thirtyDaysAgo) {
+                        console.log('🕐 Persistent session expired, clearing...');
+                        this.clearPersistentSession();
+                        return;
+                    }
+                }
+            }
             
             if (userData && sessionId) {
                 // Validate existing session
@@ -64,13 +87,20 @@ class LoginForm {
                     const result = await response.json();
                     if (result.success) {
                         console.log('✅ Valid existing session found, redirecting...');
+                        
+                        // Restore session to sessionStorage for current session
+                        sessionStorage.setItem('fraudshield_user', userData);
+                        sessionStorage.setItem('fraudshield_session_id', sessionId);
+                        if (apiKey) sessionStorage.setItem('fraudshield_api_key', apiKey);
+                        
                         this.redirectUser(JSON.parse(userData).user);
                         return;
                     }
                 }
                 
-                // Invalid session, clear storage
+                // Invalid session, clear all storage
                 this.clearSession();
+                this.clearPersistentSession();
             }
         } catch (error) {
             console.warn('Session validation failed:', error);
@@ -78,10 +108,16 @@ class LoginForm {
         }
     }
 
-    clearSession() {
-        sessionStorage.removeItem('fraudshield_user');
-        sessionStorage.removeItem('fraudshield_api_key');
-        sessionStorage.removeItem('fraudshield_session_id');
+    /**
+     * NEW: Clear persistent session data
+     */
+    clearPersistentSession() {
+        localStorage.removeItem('fraudshield_persistent_user');
+        localStorage.removeItem('fraudshield_persistent_api_key');
+        localStorage.removeItem('fraudshield_persistent_session_id');
+        localStorage.removeItem('fraudshield_remember');
+        localStorage.removeItem('fraudshield_email');
+        localStorage.removeItem('fraudshield_login_timestamp');
     }
 
     async checkApiConnection() {
@@ -383,29 +419,47 @@ class LoginForm {
         }
     }
 
+    /**
+     * FIXED: Enhanced Login Success with Persistent Login
+     */
     handleLoginSuccess(userData, remember) {
         console.log('👤 User data:', userData);
         
-        // Store user data in sessionStorage
-        sessionStorage.setItem('fraudshield_user', JSON.stringify(userData));
+        // Choose storage type based on "Remember Me" option
+        const storage = remember ? localStorage : sessionStorage;
+        const storagePrefix = remember ? 'fraudshield_persistent_' : 'fraudshield_';
+        
+        // Store user data in appropriate storage
+        storage.setItem(storagePrefix + 'user', JSON.stringify(userData));
         
         // Store API key securely
         if (userData.api_key) {
-            sessionStorage.setItem('fraudshield_api_key', userData.api_key);
+            storage.setItem(storagePrefix + 'api_key', userData.api_key);
         }
         
         // Store session ID for validation
         if (userData.session_id) {
-            sessionStorage.setItem('fraudshield_session_id', userData.session_id);
+            storage.setItem(storagePrefix + 'session_id', userData.session_id);
         }
         
-        // Handle remember me functionality
+        // Store remember preference and timestamp
         if (remember) {
             localStorage.setItem('fraudshield_remember', 'true');
             localStorage.setItem('fraudshield_email', userData.user.email);
+            localStorage.setItem('fraudshield_login_timestamp', Date.now().toString());
         } else {
+            // Clear any persistent data if not remembering
             localStorage.removeItem('fraudshield_remember');
             localStorage.removeItem('fraudshield_email');
+            localStorage.removeItem('fraudshield_login_timestamp');
+            this.clearPersistentSession();
+        }
+        
+        // Also set in sessionStorage for current session (for compatibility)
+        sessionStorage.setItem('fraudshield_user', JSON.stringify(userData));
+        sessionStorage.setItem('fraudshield_api_key', userData.api_key);
+        if (userData.session_id) {
+            sessionStorage.setItem('fraudshield_session_id', userData.session_id);
         }
         
         this.showSuccess('Login successful! Redirecting...');
@@ -561,30 +615,75 @@ class LoginForm {
 
     // Utility method to check if user is already logged in
     static isLoggedIn() {
-        const userData = sessionStorage.getItem('fraudshield_user');
-        const apiKey = sessionStorage.getItem('fraudshield_api_key');
-        return userData && apiKey;
+        // Check sessionStorage first
+        let userData = sessionStorage.getItem('fraudshield_user');
+        let apiKey = sessionStorage.getItem('fraudshield_api_key');
+        
+        // If not in sessionStorage, check localStorage
+        if (!userData || !apiKey) {
+            userData = localStorage.getItem('fraudshield_persistent_user');
+            apiKey = localStorage.getItem('fraudshield_persistent_api_key');
+        }
+        
+        return !!(userData && apiKey);
     }
 
     // Utility method to logout user
     static logout() {
+        // Clear session storage
         sessionStorage.removeItem('fraudshield_user');
         sessionStorage.removeItem('fraudshield_api_key');
         sessionStorage.removeItem('fraudshield_session_id');
+        
+        // Clear persistent storage
+        localStorage.removeItem('fraudshield_persistent_user');
+        localStorage.removeItem('fraudshield_persistent_api_key');
+        localStorage.removeItem('fraudshield_persistent_session_id');
         localStorage.removeItem('fraudshield_remember');
         localStorage.removeItem('fraudshield_email');
-        console.log('👋 User logged out');
+        localStorage.removeItem('fraudshield_login_timestamp');
+        
+        // Reset global variables
+        window.currentUser = null;
+        window.apiKey = null;
+        
+        console.log('👋 User logged out - all session data cleared');
     }
 
     // Utility method to get current user
     static getCurrentUser() {
-        const userData = sessionStorage.getItem('fraudshield_user');
+        // Check sessionStorage first
+        let userData = sessionStorage.getItem('fraudshield_user');
+        
+        // If not in sessionStorage, check localStorage
+        if (!userData) {
+            userData = localStorage.getItem('fraudshield_persistent_user');
+            
+            // If found in localStorage, restore to sessionStorage
+            if (userData) {
+                sessionStorage.setItem('fraudshield_user', userData);
+            }
+        }
+        
         return userData ? JSON.parse(userData) : null;
     }
 
     // Utility method to get API key
     static getApiKey() {
-        return sessionStorage.getItem('fraudshield_api_key');
+        // Check sessionStorage first
+        let apiKey = sessionStorage.getItem('fraudshield_api_key');
+        
+        // If not in sessionStorage, check localStorage
+        if (!apiKey) {
+            apiKey = localStorage.getItem('fraudshield_persistent_api_key');
+            
+            // If found in localStorage, restore to sessionStorage
+            if (apiKey) {
+                sessionStorage.setItem('fraudshield_api_key', apiKey);
+            }
+        }
+        
+        return apiKey;
     }
 }
 
