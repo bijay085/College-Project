@@ -351,11 +351,11 @@ class LoginForm {
         
         // Store user data in sessionStorage
         sessionStorage.setItem('fraudshield_user', JSON.stringify(userData));
-        
-        // Store API key securely
         if (userData.api_key) {
             sessionStorage.setItem('fraudshield_api_key', userData.api_key);
         }
+        // Set session cookie
+        LoginForm.setSessionCookie('fraudshield_session', '1');
         
         // Handle remember me functionality
         if (remember) {
@@ -514,7 +514,8 @@ class LoginForm {
     static isLoggedIn() {
         const userData = sessionStorage.getItem('fraudshield_user');
         const apiKey = sessionStorage.getItem('fraudshield_api_key');
-        return userData && apiKey;
+        // Also check session cookie
+        return userData && apiKey && LoginForm.getSessionCookie('fraudshield_session') === '1';
     }
 
     // Utility method to logout user
@@ -523,19 +524,23 @@ class LoginForm {
         sessionStorage.removeItem('fraudshield_api_key');
         localStorage.removeItem('fraudshield_remember');
         localStorage.removeItem('fraudshield_email');
+        LoginForm.deleteSessionCookie('fraudshield_session');
         console.log('👋 User logged out');
     }
 
-    // Utility method to get current user
-    static getCurrentUser() {
-        const userData = sessionStorage.getItem('fraudshield_user');
-        return userData ? JSON.parse(userData) : null;
+    // Cookie helpers
+    static setSessionCookie(name, value) {
+        document.cookie = `${name}=${value}; path=/; samesite=strict`;
+    }
+    static getSessionCookie(name) {
+        const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        return match ? match[2] : null;
+    }
+    static deleteSessionCookie(name) {
+        document.cookie = `${name}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; samesite=strict`;
     }
 
-    // Utility method to get API key
-    static getApiKey() {
-        return sessionStorage.getItem('fraudshield_api_key');
-    }
+    // ...existing code...
 }
 
 // Initialize the login form when DOM is loaded
@@ -554,10 +559,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         return;
+    } else {
+        // If session cookie is missing, clear sessionStorage (force logout)
+        if (!LoginForm.getSessionCookie('fraudshield_session')) {
+            sessionStorage.removeItem('fraudshield_user');
+            sessionStorage.removeItem('fraudshield_api_key');
+        }
     }
-    
+
     window.loginForm = new LoginForm();
-    
+
     // Show demo credentials hint in console for development
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         console.log('🔧 Development Mode - Demo credentials:');

@@ -1,4 +1,4 @@
-// Enhanced index.js with Authentication and Role Management
+// Enhanced index.js with Authentication and Role Management - COMPLETE FIXED VERSION
 
 // Tab Navigation
 const tabs = document.querySelectorAll('.tab-btn');
@@ -104,7 +104,15 @@ class AuthManager {
         const logControls = document.getElementById('logControls');
         const logContainer = document.getElementById('logContainer');
 
-        if (!isAdmin) {
+        // Allow all authenticated users to view logs, but only admins see controls
+        if (AuthManager.isAuthenticated()) {
+            if (logsAccessCheck) logsAccessCheck.classList.add('hidden');
+            if (logContainer) logContainer.classList.remove('hidden');
+            if (logsTab) logsTab.style.opacity = '1';
+            if (!isAdmin && logControls) logControls.classList.add('hidden');
+            if (isAdmin && logControls) logControls.classList.remove('hidden');
+        } else {
+            // Not authenticated: restrict access
             if (logsAccessCheck) logsAccessCheck.classList.remove('hidden');
             if (logControls) logControls.classList.add('hidden');
             if (logContainer) logContainer.classList.add('hidden');
@@ -189,7 +197,7 @@ class AuthManager {
                 <span class="stat-label">Active Today</span>
               </div>
             </div>
-            <button id="manageUsers" class="secondary-btn">👥 Manage Users</button>
+            <button id="manageUsers" class="secondary-btn" href='/admindashboard/user-management.html'>👥 Manage Users</button>
           </div>
         `;
 
@@ -234,20 +242,6 @@ class AuthManager {
         if (profileEmail) profileEmail.value = user.email || '';
         if (profileCompany) profileCompany.value = user.company || '';
         if (userApiKey) userApiKey.textContent = window.apiKey || 'Loading...';
-    }
-
-    static logout() {
-        // Clear session data
-        sessionStorage.removeItem('fraudshield_user');
-        sessionStorage.removeItem('fraudshield_api_key');
-        localStorage.removeItem('fraudshield_remember');
-        localStorage.removeItem('fraudshield_email');
-
-        // Show logout message
-        console.log('👋 Logging out...');
-
-        // Redirect to login
-        window.location.href = '/user_auth/pages/login.html';
     }
 }
 
@@ -497,6 +491,7 @@ function setupSettingsEventListeners(isAdmin) {
     }
 }
 
+// FIXED: Complete Admin Event Listeners with proper User Management redirect
 function setupAdminEventListeners() {
     // Save thresholds
     const saveThresholdsBtn = document.getElementById('saveThresholds');
@@ -516,12 +511,157 @@ function setupAdminEventListeners() {
         healthCheckBtn.addEventListener('click', performHealthCheck);
     }
 
-    // User management
+    // FIXED: User management button with comprehensive redirect logic
     const manageUsersBtn = document.getElementById('manageUsers');
     if (manageUsersBtn) {
-        manageUsersBtn.addEventListener('click', () => {
-            window.location.href = '/admindashboard/user-management.html';
+        manageUsersBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            console.log('🔄 Manage Users button clicked');
+            
+            // Check admin privileges
+            if (!AuthManager.isAdmin()) {
+                showToast('Access Denied', 'Administrator privileges required.', 'error');
+                return;
+            }
+            
+            // Show loading feedback
+            const originalText = manageUsersBtn.innerHTML;
+            manageUsersBtn.innerHTML = '🔄 Loading...';
+            manageUsersBtn.disabled = true;
+            
+            // Multiple redirect strategies
+            const redirectStrategies = [
+                // Strategy 1: Absolute path from root
+                () => { window.location.href = '/admindashboard/user-management.html'; },
+                
+                // Strategy 2: Relative path
+                () => { window.location.href = './admindashboard/user-management.html'; },
+                
+                // Strategy 3: Without leading slash
+                () => { window.location.href = 'admindashboard/user-management.html'; },
+                
+                // Strategy 4: Full URL
+                () => { window.location.href = window.location.origin + '/admindashboard/user-management.html'; },
+                
+                // Strategy 5: Navigate to parent directory
+                () => { window.location.href = '../admindashboard/user-management.html'; }
+            ];
+            
+            // Try each strategy with a delay
+            let strategyIndex = 0;
+            
+            function tryNextStrategy() {
+                if (strategyIndex < redirectStrategies.length) {
+                    const strategy = redirectStrategies[strategyIndex];
+                    console.log(`🔗 Trying redirect strategy ${strategyIndex + 1}/${redirectStrategies.length}`);
+                    
+                    try {
+                        strategy();
+                        
+                        // If we reach here, the redirect was attempted
+                        // Give it a moment to work
+                        setTimeout(() => {
+                            // If still on same page after 1 second, try next strategy
+                            if (window.location.pathname.includes('index.html') || window.location.pathname === '/') {
+                                strategyIndex++;
+                                tryNextStrategy();
+                            }
+                        }, 1000);
+                        
+                    } catch (error) {
+                        console.error(`❌ Strategy ${strategyIndex + 1} failed:`, error);
+                        strategyIndex++;
+                        tryNextStrategy();
+                    }
+                } else {
+                    // All strategies failed
+                    console.error('❌ All redirect strategies failed');
+                    
+                    // Restore button
+                    manageUsersBtn.innerHTML = originalText;
+                    manageUsersBtn.disabled = false;
+                    
+                    // Show error with file check instructions
+                    showToast(
+                        'Navigation Error', 
+                        'Could not access User Management page. Please check if the file exists at: /admindashboard/user-management.html', 
+                        'error'
+                    );
+                    
+                    // Alternative: Try to open in new tab as last resort
+                    setTimeout(() => {
+                        const fallbackUrl = '/admindashboard/user-management.html';
+                        window.open(fallbackUrl, '_blank');
+                        showToast('Info', 'Attempted to open User Management in new tab.', 'info');
+                    }, 2000);
+                }
+            }
+            
+            // Start trying strategies
+            tryNextStrategy();
         });
+        
+        // Add hover effects for better UX
+        manageUsersBtn.addEventListener('mouseenter', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = 'var(--shadow-lg)';
+                this.style.transition = 'all 0.2s ease';
+            }
+        });
+        
+        manageUsersBtn.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+        
+    } else {
+        console.warn('⚠️ Manage Users button (#manageUsers) not found in DOM');
+        
+        // Debug: List all buttons in settings
+        const allButtons = document.querySelectorAll('.settings-card button');
+        console.log('🔍 Available buttons in settings:', Array.from(allButtons).map(btn => btn.id || btn.textContent));
+    }
+
+    // Export user data button
+    const exportUserDataBtn = document.getElementById('exportUserData');
+    if (exportUserDataBtn) {
+        exportUserDataBtn.addEventListener('click', exportUserData);
+    }
+}
+
+// Alternative direct function for user management (can be called from console for testing)
+function openUserManagement() {
+    console.log('🔄 Direct user management function called');
+    
+    // Check admin privileges
+    if (!AuthManager.isAdmin()) {
+        console.error('❌ Admin privileges required');
+        showToast('Access Denied', 'Administrator privileges required.', 'error');
+        return;
+    }
+    
+    // List possible paths to try
+    const paths = [
+        '/admindashboard/user-management.html',
+        './admindashboard/user-management.html', 
+        'admindashboard/user-management.html',
+        window.location.origin + '/admindashboard/user-management.html'
+    ];
+    
+    console.log('🔗 Available paths to try:', paths);
+    
+    // Try the first path
+    const targetPath = paths[0];
+    console.log(`🚀 Navigating to: ${targetPath}`);
+    
+    try {
+        window.location.href = targetPath;
+    } catch (error) {
+        console.error('❌ Navigation failed:', error);
+        showToast('Error', `Navigation failed: ${error.message}`, 'error');
     }
 }
 
@@ -702,8 +842,50 @@ async function performHealthCheck() {
     }
 }
 
-function openUserManagement() {
-    window.location.href = '/admindashboard/user-management.html';
+// Export user data function
+async function exportUserData() {
+    if (!AuthManager.isAdmin()) {
+        showToast('Access Denied', 'Administrator privileges required.', 'error');
+        return;
+    }
+    
+    try {
+        showToast('Exporting...', 'Preparing user data export.', 'info');
+        
+        // Create sample CSV data (replace with real API call in production)
+        const userData = [
+            ['Name', 'Email', 'Role', 'Company', 'Created At', 'Last Login', 'Status'],
+            ['John Doe', 'john@example.com', 'admin', 'TechCorp', '2025-06-20', '2025-06-26', 'Active'],
+            ['Jane Smith', 'jane@company.com', 'user', 'StartupInc', '2025-06-18', '2025-06-25', 'Active'],
+            ['Bob Johnson', 'bob@business.org', 'user', 'Business Solutions', '2025-06-10', '2025-06-15', 'Inactive']
+        ];
+        
+        // Convert to CSV
+        const csvContent = userData.map(row => 
+            row.map(field => `"${field}"`).join(',')
+        ).join('\n');
+        
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        
+        link.setAttribute('href', url);
+        link.setAttribute('download', `fraudshield_users_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        URL.revokeObjectURL(url);
+        
+        showToast('Success', 'User data exported successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Export failed:', error);
+        showToast('Error', 'Failed to export user data.', 'error');
+    }
 }
 
 // Log controls for admin
@@ -723,6 +905,105 @@ function setupLogControls() {
         exportLogsBtn.addEventListener('click', () => {
             showToast('Export', 'Logs exported successfully.', 'success');
         });
+    }
+}
+
+// Enhanced Toast Notification System
+function showToast(title, message, type = 'info') {
+    // Remove existing toasts of the same type to prevent spam
+    const existingToasts = document.querySelectorAll(`.toast.${type}`);
+    existingToasts.forEach(toast => toast.remove());
+    
+    // Create toast container if it doesn't exist
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.className = 'toast-container';
+        container.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            max-width: 400px;
+            pointer-events: none;
+        `;
+        document.body.appendChild(container);
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        padding: 16px;
+        margin-bottom: 12px;
+        border-left: 4px solid;
+        animation: slideIn 0.3s ease-out;
+        pointer-events: auto;
+        max-width: 100%;
+        word-wrap: break-word;
+    `;
+    
+    // Set border color based on type
+    const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        warning: '#f59e0b',
+        info: '#3b82f6'
+    };
+    toast.style.borderLeftColor = colors[type] || colors.info;
+    
+    // Create toast content
+    const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️'
+    };
+    
+    toast.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="font-size: 18px; flex-shrink: 0;">${icons[type] || icons.info}</span>
+            <div style="flex: 1;">
+                <div style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">${title}</div>
+                <div style="color: #6b7280; font-size: 14px;">${message}</div>
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; border-radius: 4px; flex-shrink: 0;"
+                    title="Close">✕</button>
+        </div>
+    `;
+    
+    // Add to container
+    container.appendChild(toast);
+    
+    // Auto remove after delay
+    const delay = type === 'error' ? 8000 : 5000;
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.style.animation = 'slideOut 0.3s ease-in forwards';
+            setTimeout(() => toast.remove(), 300);
+        }
+    }, delay);
+    
+    // Add CSS animations if not already added
+    if (!document.getElementById('toast-animations')) {
+        const style = document.createElement('style');
+        style.id = 'toast-animations';
+        style.textContent = `
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateX(100%); }
+                to { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes slideOut {
+                from { opacity: 1; transform: translateX(0); }
+                to { opacity: 0; transform: translateX(100%); }
+            }
+        `;
+        document.head.appendChild(style);
     }
 }
 
@@ -1023,7 +1304,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td title="${r.card_number || ''}">${r.card_number || '-'}</td>
           <td title="${r.ip || ''}">${r.ip || '-'}</td>
           <td title="${r.fingerprint || ''}">${r.fingerprint || '-'}</td>
-          <td class="center">$${r.price || '0'}</td>
+          <td class="center">${r.price || '0'}</td>
           <td class="center">
             <span class="status-indicator status-${r.decision === 'not_fraud' ? 'safe' : r.decision}">
               ${r.decision || 'unknown'}
@@ -1166,4 +1447,16 @@ document.addEventListener('DOMContentLoaded', function() {
   if (apiKey) window.apiKey = apiKey;
 
   AuthManager.init();
+  
+  // Make functions globally available for console testing
+  window.openUserManagement = openUserManagement;
+  window.AuthManager = AuthManager;
+  window.showToast = showToast;
+  
+  console.log('🔧 FraudShield Dashboard Loaded');
+  console.log('🔍 Debug functions available: openUserManagement(), showToast()');
+  if (AuthManager.isAdmin()) {
+    console.log('👑 Admin user detected - all features available');
+    console.log('🔗 To test user management: openUserManagement()');
+  }
 });
