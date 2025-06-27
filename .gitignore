@@ -1,3 +1,2 @@
-auth_api.log
-bulk_api.log
-db_manager.log
+# Ignore all log files in the project
+*.log
