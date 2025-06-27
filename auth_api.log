@@ -15,3 +15,341 @@
 2025-06-27 07:04:11,821 - INFO - 127.0.0.1 - - [27/Jun/2025 07:04:11] "GET /auth/health HTTP/1.1" 200 -
 2025-06-27 07:04:11,825 - ERROR - Registration error: There is no current event loop in thread 'Thread-3 (process_request_thread)'.
 2025-06-27 07:04:11,826 - INFO - 127.0.0.1 - - [27/Jun/2025 07:04:11] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+2025-06-27 07:08:38,862 - INFO - 127.0.0.1 - - [27/Jun/2025 07:08:38] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:08:38,865 - INFO - 127.0.0.1 - - [27/Jun/2025 07:08:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:08:39,271 - INFO - 127.0.0.1 - - [27/Jun/2025 07:08:39] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:08:40,352 - INFO - 127.0.0.1 - - [27/Jun/2025 07:08:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:08:40,731 - INFO - 127.0.0.1 - - [27/Jun/2025 07:08:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:08:41,134 - INFO - 127.0.0.1 - - [27/Jun/2025 07:08:41] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:08:41,415 - INFO - 127.0.0.1 - - [27/Jun/2025 07:08:41] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:09:15,821 - INFO - 127.0.0.1 - - [27/Jun/2025 07:09:15] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:09:15,825 - INFO - 127.0.0.1 - - [27/Jun/2025 07:09:15] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:09:17,562 - INFO - 127.0.0.1 - - [27/Jun/2025 07:09:17] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:09:17,571 - INFO - 127.0.0.1 - - [27/Jun/2025 07:09:17] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:09:53,938 - INFO - 127.0.0.1 - - [27/Jun/2025 07:09:53] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 07:09:53,945 - ERROR - Login error: There is no current event loop in thread 'Thread-16 (process_request_thread)'.
+2025-06-27 07:09:53,945 - INFO - 127.0.0.1 - - [27/Jun/2025 07:09:53] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+2025-06-27 07:10:15,827 - INFO - 127.0.0.1 - - [27/Jun/2025 07:10:15] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 07:10:15,836 - ERROR - Login error: There is no current event loop in thread 'Thread-18 (process_request_thread)'.
+2025-06-27 07:10:15,836 - INFO - 127.0.0.1 - - [27/Jun/2025 07:10:15] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+2025-06-27 07:10:37,420 - INFO - 127.0.0.1 - - [27/Jun/2025 07:10:37] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:10:37,423 - INFO - 127.0.0.1 - - [27/Jun/2025 07:10:37] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:10:37,671 - INFO - 127.0.0.1 - - [27/Jun/2025 07:10:37] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:10:40,814 - INFO - 127.0.0.1 - - [27/Jun/2025 07:10:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:33,443 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:33] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:33,449 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:33,666 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:34,008 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:34,443 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:34,639 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:34,973 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:39,870 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:39] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:39,874 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:39] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:40,253 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:12:40,538 - INFO - 127.0.0.1 - - [27/Jun/2025 07:12:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:37,705 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:37] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:37,709 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:37] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:38,071 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:38,336 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:38,777 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:39,243 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:39] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:39,603 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:39] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:40,023 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:40,382 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:40,831 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:41,213 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:41] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:41,620 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:41] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:42,032 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:42] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:42,445 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:42] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:42,849 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:42] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:42,854 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:42] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:43,236 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:43] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:43,528 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:43] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:43,863 - INFO -  * Detected change in 'd:\\College-Project\\setup_fraudshield.py', reloading
+2025-06-27 07:13:43,901 - INFO -  * Restarting with stat
+2025-06-27 07:13:44,350 - INFO - MongoDB connection established for authentication
+2025-06-27 07:13:44,351 - INFO - Starting FraudShield Authentication API...
+2025-06-27 07:13:44,352 - INFO - Max login attempts: 5
+2025-06-27 07:13:44,352 - INFO - Lockout duration: 30 minutes
+2025-06-27 07:13:44,361 - WARNING -  * Debugger is active!
+2025-06-27 07:13:44,363 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 07:13:44,372 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:44] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:44,560 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:44] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:44,564 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:44] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:44,898 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:44] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:45,314 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:45] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:45,802 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:45] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:46,178 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:46] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:46,598 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:46] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:46,977 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:46] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:47,366 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:47] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:47,773 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:47] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:48,164 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:48,571 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:48,946 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:49,368 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:49,771 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:49] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:49,778 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:50,290 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:50,685 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:50,998 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:51,404 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:51,408 - INFO -  * Detected change in 'd:\\College-Project\\setup_fraudshield.py', reloading
+2025-06-27 07:13:51,452 - INFO -  * Restarting with stat
+2025-06-27 07:13:51,928 - INFO - MongoDB connection established for authentication
+2025-06-27 07:13:51,930 - INFO - Starting FraudShield Authentication API...
+2025-06-27 07:13:51,930 - INFO - Max login attempts: 5
+2025-06-27 07:13:51,930 - INFO - Lockout duration: 30 minutes
+2025-06-27 07:13:51,945 - WARNING -  * Debugger is active!
+2025-06-27 07:13:51,948 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 07:13:51,958 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:52,057 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:52] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:52,060 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:52,465 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:52,856 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:53,256 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:53,693 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:54,126 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:54,573 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:54,880 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:55,270 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:55] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:55,682 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:55] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:56,112 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:56,514 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:56,912 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:57,351 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:57] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:57,354 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:57,835 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:58,156 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:58] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:58,561 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:58] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:58,930 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:58] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:59,357 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:59] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:13:59,731 - INFO - 127.0.0.1 - - [27/Jun/2025 07:13:59] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:00,195 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:00] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:00,529 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:00] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:00,965 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:00] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:01,342 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:01] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:01,767 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:01] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:02,170 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:02] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:02,567 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:02] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:02,570 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:02] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:03,090 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:03] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:03,330 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:03] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:03,753 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:03] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:04,162 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:04] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:04,549 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:04] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:04,971 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:04] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:05,382 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:05] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:05,746 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:05] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:06,172 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:06] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:06,568 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:06] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:07,010 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:07] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:07,431 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:07] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:07,790 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:07] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:07,794 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:07] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:08,194 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:08] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:08,576 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:08] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:08,984 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:08] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:09,377 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:09] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:09,787 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:09] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:10,194 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:10] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:10,613 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:10] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:10,998 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:10] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:11,521 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:11] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:11,813 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:11] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:12,219 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:12] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:12,630 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:12] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:13,051 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:13] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:13,054 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:13] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:13,457 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:13] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:13,823 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:13] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:14,296 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:14] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:14,679 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:14] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:15,084 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:15] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:15,699 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:15] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:17,058 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:17] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:17,124 - INFO -  * Detected change in 'd:\\College-Project\\setup_fraudshield.py', reloading
+2025-06-27 07:14:17,188 - INFO -  * Restarting with stat
+2025-06-27 07:14:17,724 - INFO - MongoDB connection established for authentication
+2025-06-27 07:14:17,725 - INFO - Starting FraudShield Authentication API...
+2025-06-27 07:14:17,726 - INFO - Max login attempts: 5
+2025-06-27 07:14:17,726 - INFO - Lockout duration: 30 minutes
+2025-06-27 07:14:17,740 - WARNING -  * Debugger is active!
+2025-06-27 07:14:17,743 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 07:14:17,752 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:17] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:17,754 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:17] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:17,758 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:17] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:18,165 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:18] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:18,575 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:18] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:18,954 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:18] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:19,382 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:19] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:19,951 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:19] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:33,178 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:33] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:33,182 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:33,457 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:33,729 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:34,030 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:34,354 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:34,590 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:38,880 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:38] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:38,883 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:14:40,848 - INFO - 127.0.0.1 - - [27/Jun/2025 07:14:40] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:15:21,913 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:21] "OPTIONS /auth/register HTTP/1.1" 200 -
+2025-06-27 07:15:21,917 - ERROR - Registration error: 'NoneType' object has no attribute 'strip'
+2025-06-27 07:15:21,917 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:21] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+2025-06-27 07:15:41,294 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:41] "OPTIONS /auth/register HTTP/1.1" 200 -
+2025-06-27 07:15:41,303 - ERROR - Registration error: 'NoneType' object has no attribute 'strip'
+2025-06-27 07:15:41,303 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:41] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+2025-06-27 07:15:48,614 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:48] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:15:48,617 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:15:49,895 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:49] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:15:49,899 - INFO - 127.0.0.1 - - [27/Jun/2025 07:15:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:16:05,292 - INFO - MongoDB connection established for authentication
+2025-06-27 07:16:05,294 - INFO - Starting FraudShield Authentication API...
+2025-06-27 07:16:05,294 - INFO - Max login attempts: 5
+2025-06-27 07:16:05,294 - INFO - Lockout duration: 30 minutes
+2025-06-27 07:16:05,313 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 07:16:05,313 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 07:16:05,316 - INFO -  * Restarting with stat
+2025-06-27 07:16:05,789 - INFO - MongoDB connection established for authentication
+2025-06-27 07:16:05,791 - INFO - Starting FraudShield Authentication API...
+2025-06-27 07:16:05,791 - INFO - Max login attempts: 5
+2025-06-27 07:16:05,791 - INFO - Lockout duration: 30 minutes
+2025-06-27 07:16:05,803 - WARNING -  * Debugger is active!
+2025-06-27 07:16:05,805 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 07:16:10,351 - INFO - 127.0.0.1 - - [27/Jun/2025 07:16:10] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:16:10,357 - INFO - 127.0.0.1 - - [27/Jun/2025 07:16:10] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:17:03,433 - INFO - 127.0.0.1 - - [27/Jun/2025 07:17:03] "OPTIONS /auth/register HTTP/1.1" 200 -
+2025-06-27 07:17:03,443 - ERROR - Registration error: 'NoneType' object has no attribute 'strip'
+2025-06-27 07:17:03,445 - INFO - 127.0.0.1 - - [27/Jun/2025 07:17:03] "[35m[1mPOST /auth/register HTTP/1.1[0m" 500 -
+2025-06-27 07:17:59,895 - INFO - 127.0.0.1 - - [27/Jun/2025 07:17:59] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:17:59,898 - INFO - 127.0.0.1 - - [27/Jun/2025 07:17:59] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:18:02,994 - INFO - 127.0.0.1 - - [27/Jun/2025 07:18:02] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 07:18:02,997 - ERROR - Login error: There is no current event loop in thread 'Thread-9 (process_request_thread)'.
+2025-06-27 07:18:02,997 - INFO - 127.0.0.1 - - [27/Jun/2025 07:18:02] "[35m[1mPOST /auth/login HTTP/1.1[0m" 500 -
+2025-06-27 07:18:08,681 - INFO - 127.0.0.1 - - [27/Jun/2025 07:18:08] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:18:08,698 - INFO - 127.0.0.1 - - [27/Jun/2025 07:18:08] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:19:18,256 - INFO - 127.0.0.1 - - [27/Jun/2025 07:19:18] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:19:18,306 - INFO - 127.0.0.1 - - [27/Jun/2025 07:19:18] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:09,508 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:09] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:09,519 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:09] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:38,847 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:38] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:38,901 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:41,510 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:41] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:41,521 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:41] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:41,883 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:41] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:41,888 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:41] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:42,342 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:42] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:42,346 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:42] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:42,788 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:42] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:42,793 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:42] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:43,212 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:43] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:43,219 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:43] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:43,694 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:43] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:43,708 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:43] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:44,135 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:44] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:44,143 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:44] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:44,583 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:44] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:44,594 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:44] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:45,015 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:45] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:45,032 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:45] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:45,427 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:45] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:45,432 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:45] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:45,831 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:45] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:45,834 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:45] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:46,237 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:46] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:46,241 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:46] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:46,685 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:46] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:46,701 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:46] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:47,071 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:47] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:47,082 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:47] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:47,482 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:47] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:47,495 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:47] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:47,896 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:47] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:47,914 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:47] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:48,281 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:48] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:48,285 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:48,778 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:48] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:48,786 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:49,106 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:49] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:49,127 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:49,509 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:49] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:49,523 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:49,993 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:49] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:50,002 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:50,453 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:50] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:50,457 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:50,919 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:50] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:50,922 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:51,312 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:51] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:51,321 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:51,677 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:51] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:51,687 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:52,077 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:52] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:52,087 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:52,445 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:52] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:52,454 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:52,902 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:52] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:52,929 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:53,335 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:53] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:53,357 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:53,705 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:53] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:53,708 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:54,124 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:54] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:54,144 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:54,519 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:54] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:54,527 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:54,912 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:54] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:54,920 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:55,306 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:55] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:55,309 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:55] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:55,708 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:55] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:55,712 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:55] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:56,119 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:56] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:56,123 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:56,508 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:56] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:56,511 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:56,892 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:56] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:56,904 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:57,357 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:57] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:57,372 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:57,587 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:57,977 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:58,387 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:58] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:58,754 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:58] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:59,153 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:59] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:59,156 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:59] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:59,494 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:59] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:20:59,870 - INFO - 127.0.0.1 - - [27/Jun/2025 07:20:59] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:00,321 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:00] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:00,645 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:00] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:01,019 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:01] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:01,392 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:01] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:01,712 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:01] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:01,919 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:01] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:02,248 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:02] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:02,627 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:02] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:02,960 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:02] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:03,147 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:03] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:21:03,383 - INFO - 127.0.0.1 - - [27/Jun/2025 07:21:03] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:22:59,106 - INFO - MongoDB connection established for authentication
+2025-06-27 07:22:59,108 - INFO - Starting FraudShield Authentication API...
+2025-06-27 07:22:59,109 - INFO - Max login attempts: 5
+2025-06-27 07:22:59,109 - INFO - Lockout duration: 30 minutes
+2025-06-27 07:22:59,143 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 07:22:59,143 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 07:22:59,145 - INFO -  * Restarting with stat
+2025-06-27 07:22:59,617 - INFO - MongoDB connection established for authentication
+2025-06-27 07:22:59,618 - INFO - Starting FraudShield Authentication API...
+2025-06-27 07:22:59,619 - INFO - Max login attempts: 5
+2025-06-27 07:22:59,619 - INFO - Lockout duration: 30 minutes
+2025-06-27 07:22:59,638 - WARNING -  * Debugger is active!
+2025-06-27 07:22:59,641 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 07:23:19,347 - INFO - 127.0.0.1 - - [27/Jun/2025 07:23:19] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 07:23:19,351 - INFO - 127.0.0.1 - - [27/Jun/2025 07:23:19] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 07:23:42,460 - INFO - 127.0.0.1 - - [27/Jun/2025 07:23:42] "OPTIONS /auth/register HTTP/1.1" 200 -
+2025-06-27 07:23:42,831 - INFO - Auth attempt - Email: bijaykoirala003@gmail.com, Success: True, IP: 127.0.0.1
+2025-06-27 07:23:42,832 - INFO - User registered successfully: bijaykoirala003@gmail.com
+2025-06-27 07:23:42,832 - INFO - 127.0.0.1 - - [27/Jun/2025 07:23:42] "POST /auth/register HTTP/1.1" 200 -

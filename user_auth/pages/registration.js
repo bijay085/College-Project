@@ -1,8 +1,8 @@
 /**
- * Registration Page JavaScript - Enhanced Validation & UX
+ * Enhanced Registration Page JavaScript - Database Integration
  * Author: FraudShield Team
  * Location: user_auth/pages/registration.js
- * About: Modern form validation with real-time feedback and clean UI interactions
+ * About: Complete registration form with real database integration via Python API
  */
 
 class RegistrationForm {
@@ -49,7 +49,13 @@ class RegistrationForm {
         };
 
         this.debounceTimers = {};
-        this.formSubmitted = false; // Track if form has been submitted
+        this.formSubmitted = false;
+        
+        // API Configuration
+        this.API_BASE_URL = 'http://127.0.0.1:5001/auth';
+        this.MAX_RETRIES = 3;
+        this.RETRY_DELAY = 1000; // 1 second
+        
         this.init();
     }
 
@@ -58,6 +64,27 @@ class RegistrationForm {
         this.setupPasswordRequirements();
         this.updateProgress();
         this.animateEntrance();
+        this.checkApiConnection();
+    }
+
+    async checkApiConnection() {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/health`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                console.log('✅ Authentication API connected successfully');
+            } else {
+                console.warn('⚠️ Authentication API health check failed');
+            }
+        } catch (error) {
+            console.error('❌ Cannot connect to authentication API:', error);
+            this.showError('Unable to connect to authentication service. Please try again later.');
+        }
     }
 
     setupEventListeners() {
@@ -95,6 +122,18 @@ class RegistrationForm {
 
         // Password visibility toggles
         this.setupPasswordToggles();
+        
+        // Handle Enter key in inputs
+        Object.values(this.inputs).forEach(input => {
+            if (input && input.type !== 'checkbox') {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.handleSubmit(e);
+                    }
+                });
+            }
+        });
     }
 
     setupPasswordToggles() {
@@ -226,7 +265,7 @@ class RegistrationForm {
         return true;
     }
 
-    validateEmail(value) {
+    async validateEmail(value) {
         const trimmed = value.trim().toLowerCase();
         const input = this.inputs.email;
 
@@ -252,7 +291,7 @@ class RegistrationForm {
         }
 
         // Check for common disposable email domains
-        const disposableDomains = ['tempmail.org', '10minutemail.com', 'guerrillamail.com'];
+        const disposableDomains = ['tempmail.org', '10minutemail.com', 'guerrillamail.com', 'mailinator.com'];
         const domain = trimmed.split('@')[1];
         if (disposableDomains.includes(domain)) {
             this.setFieldState(input, 'error', 'Temporary email addresses are not allowed');
@@ -260,9 +299,35 @@ class RegistrationForm {
             return false;
         }
 
+        // Check if email already exists (only if form has been submitted or on blur)
+        if (this.formSubmitted || event.type === 'blur') {
+            try {
+                const emailCheckResult = await this.checkEmailExists(trimmed);
+                if (emailCheckResult.exists) {
+                    this.setFieldState(input, 'error', 'An account with this email already exists');
+                    this.validation.email = false;
+                    return false;
+                }
+            } catch (error) {
+                console.warn('Email check failed:', error);
+                // Continue with validation even if check fails
+            }
+        }
+
         this.setFieldState(input, 'valid', 'Valid email address');
         this.validation.email = true;
         return true;
+    }
+
+    async checkEmailExists(email) {
+        try {
+            // For now, we'll skip the email check to avoid complexity
+            // In a full implementation, you'd call an API endpoint
+            return { exists: false };
+        } catch (error) {
+            console.warn('Email existence check failed:', error);
+            return { exists: false };
+        }
     }
 
     validateCompany(value) {
@@ -567,21 +632,103 @@ class RegistrationForm {
         this.hideMessages();
 
         try {
-            // Simulate API call
-            await this.simulateRegistration();
+            // Attempt registration with retry logic
+            const result = await this.attemptRegistration();
             
-            // Generate API key
-            const apiKey = this.generateApiKey();
-            
-            // Show success and transition to API key display
-            await this.showSuccess();
-            this.displayApiKey(apiKey);
+            if (result.success) {
+                this.handleRegistrationSuccess(result.data);
+            } else {
+                this.handleRegistrationError(result.error);
+            }
             
         } catch (error) {
             console.error('Registration error:', error);
-            this.showError('Something went wrong. Please try again.');
+            this.handleRegistrationError(error.message || 'Registration failed. Please try again.');
         } finally {
             this.setLoadingState(false);
+        }
+    }
+
+    async attemptRegistration(retryCount = 0) {
+        try {
+            const formData = {
+                name: this.inputs.name.value.trim(),
+                email: this.inputs.email.value.trim().toLowerCase(),
+                company: this.inputs.company.value.trim() || null,
+                password: this.inputs.password.value,
+                confirmPassword: this.inputs.confirmPassword.value,
+                terms: this.inputs.terms.checked
+            };
+
+            console.log('🚀 Attempting registration for:', formData.email);
+            
+            const response = await fetch(`${this.API_BASE_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const result = await response.json();
+            
+            if (response.ok && result.success) {
+                console.log('✅ Registration successful');
+                return { success: true, data: result.data };
+            } else {
+                const errorMessage = result.error || 'Registration failed';
+                console.error('❌ Registration failed:', errorMessage);
+                return { success: false, error: errorMessage };
+            }
+
+        } catch (error) {
+            console.error('🔌 Network error:', error);
+            
+            // Retry logic for network errors
+            if (retryCount < this.MAX_RETRIES) {
+                console.log(`🔄 Retrying registration (${retryCount + 1}/${this.MAX_RETRIES})...`);
+                await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
+                return this.attemptRegistration(retryCount + 1);
+            }
+            
+            return { 
+                success: false, 
+                error: 'Unable to connect to authentication service. Please check your connection and try again.' 
+            };
+        }
+    }
+
+    handleRegistrationSuccess(registrationData) {
+        console.log('👤 Registration data:', registrationData);
+        
+        // Store user data in sessionStorage
+        sessionStorage.setItem('fraudshield_user', JSON.stringify(registrationData));
+        
+        // Store API key securely
+        if (registrationData.api_key) {
+            sessionStorage.setItem('fraudshield_api_key', registrationData.api_key);
+        }
+        
+        this.showSuccess('Account created successfully!');
+        
+        // Display API key section
+        setTimeout(() => {
+            this.displayApiKey(registrationData.api_key);
+        }, 1000);
+    }
+
+    handleRegistrationError(errorMessage) {
+        // Specific error handling
+        if (errorMessage.includes('already exists')) {
+            this.showError('An account with this email already exists. Please use a different email or try logging in.');
+            this.inputs.email.focus();
+        } else if (errorMessage.includes('weak')) {
+            this.showError('Password is too weak. Please choose a stronger password.');
+            this.inputs.password.focus();
+        } else if (errorMessage.includes('terms')) {
+            this.showError('You must agree to the Terms of Service and Privacy Policy to create an account.');
+        } else {
+            this.showError(errorMessage);
         }
     }
 
@@ -612,36 +759,6 @@ class RegistrationForm {
         return isValid;
     }
 
-    async simulateRegistration() {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Simulate potential failure (5% chance)
-        if (Math.random() < 0.05) {
-            throw new Error('Registration failed');
-        }
-    }
-
-    generateApiKey() {
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let result = 'fsk_';
-        
-        for (let i = 0; i < 32; i++) {
-            result += chars.charAt(Math.floor(Math.random() * chars.length));
-        }
-        
-        return result;
-    }
-
-    async showSuccess() {
-        this.ui.successMessage.querySelector('.alert-text').textContent = 'Account created successfully!';
-        this.ui.successMessage.classList.remove('hidden');
-        this.ui.successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        
-        // Wait for success message animation
-        await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-
     async displayApiKey(apiKey) {
         // Hide form and show API key section
         this.form.style.opacity = '0';
@@ -656,6 +773,9 @@ class RegistrationForm {
         // Update progress to show completion
         this.ui.progressFill.style.width = '100%';
         this.ui.progressText.textContent = 'Account created successfully!';
+        
+        // Scroll to API key section
+        this.ui.apiKeyDisplay.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     async copyApiKey() {
@@ -706,23 +826,17 @@ class RegistrationForm {
         }
     }
 
-    togglePassword(inputId) {
-        const input = document.getElementById(inputId);
-        const toggle = document.querySelector(`button[onclick*="${inputId}"]`);
-        
-        if (input && toggle) {
-            this.togglePasswordVisibility(input, toggle);
-        }
-    }
-
     setLoadingState(loading) {
         if (loading) {
             this.ui.btnContent.classList.add('hidden');
             this.ui.btnLoader.classList.remove('hidden');
             this.ui.submitBtn.disabled = true;
+            this.ui.submitBtn.style.cursor = 'not-allowed';
         } else {
             this.ui.btnContent.classList.remove('hidden');
             this.ui.btnLoader.classList.add('hidden');
+            // Don't re-enable if form is invalid
+            this.updateProgress();
         }
     }
 
@@ -731,6 +845,18 @@ class RegistrationForm {
         this.ui.errorMessage.classList.remove('hidden');
         this.ui.successMessage.classList.add('hidden');
         this.ui.errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Auto-hide error after 10 seconds
+        setTimeout(() => {
+            this.ui.errorMessage.classList.add('hidden');
+        }, 10000);
+    }
+
+    showSuccess(message) {
+        this.ui.successMessage.querySelector('.alert-text').textContent = message;
+        this.ui.successMessage.classList.remove('hidden');
+        this.ui.errorMessage.classList.add('hidden');
+        this.ui.successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     hideMessages() {
@@ -751,16 +877,57 @@ class RegistrationForm {
             }, 100 + (index * 50));
         });
     }
-}
 
-// Global password toggle function for onclick handlers
-function togglePassword(inputId) {
-    if (window.registrationForm) {
-        window.registrationForm.togglePassword(inputId);
+    // Static utility methods
+    static isLoggedIn() {
+        const userData = sessionStorage.getItem('fraudshield_user');
+        const apiKey = sessionStorage.getItem('fraudshield_api_key');
+        return userData && apiKey;
+    }
+
+    static getCurrentUser() {
+        const userData = sessionStorage.getItem('fraudshield_user');
+        return userData ? JSON.parse(userData) : null;
+    }
+
+    static getApiKey() {
+        return sessionStorage.getItem('fraudshield_api_key');
+    }
+
+    static logout() {
+        sessionStorage.removeItem('fraudshield_user');
+        sessionStorage.removeItem('fraudshield_api_key');
+        localStorage.removeItem('fraudshield_remember');
+        localStorage.removeItem('fraudshield_email');
+        console.log('👋 User logged out');
     }
 }
 
 // Initialize the registration form when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is already logged in
+    if (RegistrationForm.isLoggedIn()) {
+        console.log('👤 User already logged in, redirecting...');
+        const user = RegistrationForm.getCurrentUser();
+        if (user && user.user) {
+            // Redirect to appropriate dashboard
+            console.log('Redirecting logged-in user...');
+            // window.location.href = user.user.role === 'admin' ? '/admin-dashboard.html' : '/index.html';
+        }
+        return;
+    }
+    
     window.registrationForm = new RegistrationForm();
+    
+    // Show development info in console
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('🔧 Development Mode');
+        console.log('📡 Make sure auth API is running: python user_auth/auth_api.py');
+        console.log('📊 Make sure MongoDB is running and collections are initialized');
+    }
 });
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = RegistrationForm;
+}

@@ -1,4 +1,4 @@
-# user_auth/auth_api.py
+# user_auth/auth_api.py - COMPLETE FIXED VERSION
 import sys
 import os
 import time
@@ -6,7 +6,7 @@ import logging
 from datetime import datetime, timedelta
 import secrets
 import re
-import asyncio
+import pymongo
 from typing import Optional
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
@@ -15,8 +15,6 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import bcrypt
 from bson import ObjectId
-
-from db.mongo import MongoManager
 
 # ============================================================================
 # CONFIGURATION
@@ -34,7 +32,7 @@ class AuthConfig:
 # ============================================================================
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["http://127.0.0.1:5500", "http://localhost:5500", "http://127.0.0.1:3000", "http://localhost:3000"])
 
 # Set up logging
 logging.basicConfig(
@@ -46,13 +44,24 @@ logging.basicConfig(
     ]
 )
 
-# Initialize MongoDB
-try:
-    mongo = MongoManager()
+# Initialize MongoDB connection - FIXED: Synchronous connection
+def get_db():
+    """Get MongoDB database connection"""
+    try:
+        client = pymongo.MongoClient('mongodb://localhost:27017', serverSelectionTimeoutMS=3000)
+        # Test connection
+        client.server_info()
+        return client.fraudshield
+    except Exception as e:
+        app.logger.error(f"MongoDB connection failed: {e}")
+        return None
+
+# Test MongoDB connection on startup
+db = get_db()
+if db is not None:
     app.logger.info("MongoDB connection established for authentication")
-except Exception as e:
-    app.logger.error(f"Failed to connect to MongoDB: {e}")
-    mongo = None
+else:
+    app.logger.error("Failed to connect to MongoDB")
 
 # ============================================================================
 # UTILITY FUNCTIONS
@@ -135,20 +144,19 @@ def create_success_response(data: Optional[dict] = None, message: str = "Success
     
     return jsonify(response), 200
 
-async def log_auth_attempt(email: str, success: bool, ip_address: str, user_agent: Optional[str] = None):
-    """Log authentication attempts"""
+def log_auth_attempt(email: str, success: bool, ip_address: str, user_agent: Optional[str] = None):
+    """Log authentication attempts - FIXED: Synchronous version"""
     try:
-        log_entry = {
-            "email": email,
-            "success": success,
-            "ip_address": ip_address,
-            "user_agent": user_agent,
-            "timestamp": datetime.now(),
-            "type": "auth_attempt"
-        }
-        
-        if mongo:
-            await mongo.get_collection("logs").insert_one(log_entry)
+        if db is not None:
+            log_entry = {
+                "email": email,
+                "success": success,
+                "ip_address": ip_address,
+                "user_agent": user_agent,
+                "timestamp": datetime.now(),
+                "type": "auth_attempt"
+            }
+            db.logs.insert_one(log_entry)
         
         app.logger.info(f"Auth attempt - Email: {email}, Success: {success}, IP: {ip_address}")
         
@@ -163,10 +171,20 @@ async def log_auth_attempt(email: str, success: bool, ip_address: str, user_agen
 def health_check():
     """Health check endpoint"""
     try:
+        # Test database connection
+        db_status = "connected" if db is not None else "disconnected"
+        if db is not None:
+            # Try a simple operation
+            try:
+                db.users.count_documents({}, limit=1)
+                db_status = "connected"
+            except:
+                db_status = "error"
+        
         status = {
             "status": "healthy",
             "timestamp": datetime.now().isoformat(),
-            "database": "connected" if mongo else "disconnected",
+            "database": db_status,
             "version": "1.0.0"
         }
         return jsonify(status)
@@ -176,8 +194,8 @@ def health_check():
 
 @app.route("/auth/register", methods=["POST"])
 def register():
-    """User registration endpoint"""
-    if not mongo:
+    """User registration endpoint - FIXED VERSION"""
+    if db is None:
         return create_error_response("Database unavailable", 503)
     
     try:
@@ -185,12 +203,12 @@ def register():
         if not data:
             return create_error_response("No data provided", 400)
         
-        # Extract and validate required fields
-        name = data.get('name', '').strip()
-        email = data.get('email', '').strip().lower()
-        company = data.get('company', '').strip()
-        password = data.get('password', '')
-        confirm_password = data.get('confirmPassword', '')
+        # FIXED: Add null checks for all fields
+        name = (data.get('name') or '').strip()
+        email = (data.get('email') or '').strip().lower()
+        company = (data.get('company') or '').strip()
+        password = data.get('password') or ''
+        confirm_password = data.get('confirmPassword') or ''
         terms_accepted = data.get('terms', False)
         
         # Validation
@@ -230,11 +248,8 @@ def register():
         if not is_strong:
             return create_error_response(password_message)
         
-        # Check if user already exists (using synchronous MongoDB call)
-        users_collection = mongo.get_collection("users")
-        
-        # Convert to async call using run_in_executor or direct sync call
-        existing_user = asyncio.run(users_collection.find_one({"email": email}))
+        # Check if user already exists
+        existing_user = db.users.find_one({"email": email})
         if existing_user:
             return create_error_response("An account with this email already exists")
         
@@ -261,10 +276,9 @@ def register():
         }
         
         # Insert user
-        result = asyncio.run(users_collection.insert_one(user_doc))
+        result = db.users.insert_one(user_doc)
         
         # Create site entry
-        sites_collection = mongo.get_collection("sites")
         site_doc = {
             "user_id": str(result.inserted_id),
             "api_key": api_key,
@@ -273,10 +287,10 @@ def register():
             "created_at": datetime.now(),
             "status": "active"
         }
-        asyncio.run(sites_collection.insert_one(site_doc))
+        db.sites.insert_one(site_doc)
         
         # Log successful registration
-        asyncio.run(log_auth_attempt(email, True, request.remote_addr or "", request.headers.get('User-Agent')))
+        log_auth_attempt(email, True, request.remote_addr or "", request.headers.get('User-Agent'))
         
         app.logger.info(f"User registered successfully: {email}")
         
@@ -297,8 +311,8 @@ def register():
 
 @app.route("/auth/login", methods=["POST"])
 def login():
-    """User login endpoint"""
-    if not mongo:
+    """User login endpoint - FIXED VERSION"""
+    if db is None:
         return create_error_response("Database unavailable", 503)
     
     try:
@@ -306,19 +320,19 @@ def login():
         if not data:
             return create_error_response("No data provided", 400)
         
-        email = data.get('email', '').strip().lower()
-        password = data.get('password', '')
+        # FIXED: Add null checks
+        email = (data.get('email') or '').strip().lower()
+        password = data.get('password') or ''
         remember = data.get('remember', False)
         
         if not email or not password:
             return create_error_response("Email and password are required")
         
         # Find user
-        users_collection = mongo.get_collection("users")
-        user = asyncio.run(users_collection.find_one({"email": email}))
+        user = db.users.find_one({"email": email})
         
         if not user:
-            asyncio.run(log_auth_attempt(email, False, request.remote_addr or "", request.headers.get('User-Agent')))
+            log_auth_attempt(email, False, request.remote_addr or "", request.headers.get('User-Agent'))
             return create_error_response("Invalid email or password")
         
         # Check if account is locked
@@ -337,13 +351,13 @@ def login():
                 update_data["locked_until"] = datetime.now() + timedelta(minutes=AuthConfig.LOCKOUT_DURATION_MINUTES)
                 app.logger.warning(f"Account locked for {email} due to too many failed attempts")
             
-            asyncio.run(users_collection.update_one({"_id": user["_id"]}, {"$set": update_data}))
+            db.users.update_one({"_id": user["_id"]}, {"$set": update_data})
             
-            asyncio.run(log_auth_attempt(email, False, request.remote_addr or "", request.headers.get('User-Agent')))
+            log_auth_attempt(email, False, request.remote_addr or "", request.headers.get('User-Agent'))
             return create_error_response("Invalid email or password")
         
         # Successful login - reset attempts and update last login
-        asyncio.run(users_collection.update_one(
+        db.users.update_one(
             {"_id": user["_id"]}, 
             {
                 "$set": {
@@ -352,9 +366,9 @@ def login():
                 },
                 "$unset": {"locked_until": ""}
             }
-        ))
+        )
         
-        asyncio.run(log_auth_attempt(email, True, request.remote_addr or "", request.headers.get('User-Agent')))
+        log_auth_attempt(email, True, request.remote_addr or "", request.headers.get('User-Agent'))
         
         app.logger.info(f"User logged in successfully: {email}")
         
@@ -382,22 +396,20 @@ def login():
 def get_user_stats():
     """Get user statistics"""
     try:
-        if not mongo:
+        if db is None:
             return create_error_response("Database unavailable", 503)
         
-        users_collection = mongo.get_collection("users")
-        
         # Get basic stats
-        total_users = asyncio.run(users_collection.count_documents({}))
-        verified_users = asyncio.run(users_collection.count_documents({"is_verified": True}))
-        active_today = asyncio.run(users_collection.count_documents({
+        total_users = db.users.count_documents({})
+        verified_users = db.users.count_documents({"is_verified": True})
+        active_today = db.users.count_documents({
             "last_login": {"$gte": datetime.now() - timedelta(days=1)}
-        }))
+        })
         
         # Get recent registrations
-        recent_registrations = asyncio.run(users_collection.count_documents({
+        recent_registrations = db.users.count_documents({
             "created_at": {"$gte": datetime.now() - timedelta(days=7)}
-        }))
+        })
         
         stats = {
             "total_users": total_users,
@@ -418,16 +430,15 @@ def validate_api_key():
     """Validate API key"""
     try:
         data = request.get_json()
-        api_key = data.get('api_key', '')
+        api_key = data.get('api_key', '') if data else ''
         
         if not api_key:
             return create_error_response("API key is required")
         
-        if not mongo:
+        if db is None:
             return create_error_response("Database unavailable", 503)
         
-        users_collection = mongo.get_collection("users")
-        user = asyncio.run(users_collection.find_one({"api_key": api_key}))
+        user = db.users.find_one({"api_key": api_key})
         
         if not user:
             return create_error_response("Invalid API key", 401)
@@ -475,6 +486,6 @@ if __name__ == "__main__":
     app.run(
         debug=True,
         host='127.0.0.1',
-        port=5001,  # Different port from fraud detection API
+        port=5001,
         threaded=True
     )

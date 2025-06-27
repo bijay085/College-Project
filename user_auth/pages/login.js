@@ -1,8 +1,8 @@
 /**
- * Login Page JavaScript - Enhanced Validation & UX
+ * Enhanced Login Page JavaScript - Database Integration
  * Author: FraudShield Team
  * Location: user_auth/pages/login.js
- * About: Modern login form with real-time validation and clean UI interactions
+ * About: Complete login form with real database authentication via Python API
  */
 
 class LoginForm {
@@ -30,13 +30,40 @@ class LoginForm {
 
         this.debounceTimers = {};
         this.formSubmitted = false;
+        
+        // API Configuration
+        this.API_BASE_URL = 'http://127.0.0.1:5001/auth';
+        this.MAX_RETRIES = 3;
+        this.RETRY_DELAY = 1000; // 1 second
+        
         this.init();
     }
 
     init() {
         this.setupEventListeners();
         this.animateEntrance();
-        this.clearInputs();
+        this.loadRememberedUser();
+        this.checkApiConnection();
+    }
+
+    async checkApiConnection() {
+        try {
+            const response = await fetch(`${this.API_BASE_URL}/health`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            if (response.ok) {
+                console.log('✅ Authentication API connected successfully');
+            } else {
+                console.warn('⚠️ Authentication API health check failed');
+            }
+        } catch (error) {
+            console.error('❌ Cannot connect to authentication API:', error);
+            this.showError('Unable to connect to authentication service. Please try again later.');
+        }
     }
 
     setupEventListeners() {
@@ -61,6 +88,18 @@ class LoginForm {
 
         // Password visibility toggle
         this.setupPasswordToggle();
+        
+        // Handle Enter key in inputs
+        Object.values(this.inputs).forEach(input => {
+            if (input && input.type !== 'checkbox') {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.handleSubmit(e);
+                    }
+                });
+            }
+        });
     }
 
     setupPasswordToggle() {
@@ -245,15 +284,143 @@ class LoginForm {
             const password = this.inputs.password.value;
             const remember = this.inputs.remember.checked;
 
-            // Simulate API call
-            await this.simulateLogin(email, password, remember);
+            // Attempt login with retry logic
+            const result = await this.attemptLogin(email, password, remember);
+            
+            if (result.success) {
+                this.handleLoginSuccess(result.data, remember);
+                window.location.href = '/index.html';
+            } else {
+                this.handleLoginError(result.error);
+            }
             
         } catch (error) {
             console.error('Login error:', error);
-            this.showError(error.message || 'Login failed. Please try again.');
+            this.handleLoginError(error.message || 'Login failed. Please try again.');
         } finally {
             this.setLoadingState(false);
         }
+    }
+
+    async attemptLogin(email, password, remember, retryCount = 0) {
+        try {
+            console.log(`🔐 Attempting login for: ${email}`);
+            
+            const response = await fetch(`${this.API_BASE_URL}/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    remember: remember
+                })
+            });
+
+            const result = await response.json();
+            
+            if (response.ok && result.success) {
+                console.log('✅ Login successful');
+                return { success: true, data: result.data };
+            } else {
+                const errorMessage = result.error || 'Login failed';
+                console.error('❌ Login failed:', errorMessage);
+                return { success: false, error: errorMessage };
+            }
+
+        } catch (error) {
+            console.error('🔌 Network error:', error);
+            
+            // Retry logic for network errors
+            if (retryCount < this.MAX_RETRIES) {
+                console.log(`🔄 Retrying login (${retryCount + 1}/${this.MAX_RETRIES})...`);
+                await new Promise(resolve => setTimeout(resolve, this.RETRY_DELAY));
+                return this.attemptLogin(email, password, remember, retryCount + 1);
+            }
+            
+            return { 
+                success: false, 
+                error: 'Unable to connect to authentication service. Please check your connection and try again.' 
+            };
+        }
+    }
+
+    handleLoginSuccess(userData, remember) {
+        console.log('👤 User data:', userData);
+        
+        // Store user data in sessionStorage
+        sessionStorage.setItem('fraudshield_user', JSON.stringify(userData));
+        
+        // Store API key securely
+        if (userData.api_key) {
+            sessionStorage.setItem('fraudshield_api_key', userData.api_key);
+        }
+        
+        // Handle remember me functionality
+        if (remember) {
+            localStorage.setItem('fraudshield_remember', 'true');
+            localStorage.setItem('fraudshield_email', userData.user.email);
+        } else {
+            localStorage.removeItem('fraudshield_remember');
+            localStorage.removeItem('fraudshield_email');
+        }
+        
+        this.showSuccess('Login successful! Redirecting to dashboard...');
+        
+        // Redirect based on user role
+        setTimeout(() => {
+            this.redirectUser(userData.user);
+        }, 1500);
+    }
+
+    redirectUser(user) {
+        const role = user.role || 'user';
+        const redirectUrl = this.getRedirectUrl(role);
+        
+        console.log(`🚀 Redirecting ${role} to: ${redirectUrl}`);
+        
+        // In a real application, you would redirect to the appropriate page
+        // For now, we'll just show a message
+        if (role === 'admin') {
+            this.showSuccess('Redirecting to Admin Dashboard...');
+            // window.location.href = '/admin-dashboard.html';
+        } else {
+            this.showSuccess('Redirecting to User Dashboard...');
+            // window.location.href = '/index.html'; // Main dashboard
+        }
+        
+        // Simulate redirect
+        setTimeout(() => {
+            console.log('Redirect would happen here');
+        }, 2000);
+    }
+
+    getRedirectUrl(role) {
+        const redirectUrls = {
+            'admin': '/admin-dashboard.html',
+            'user': '/index.html',
+            'moderator': '/moderator-dashboard.html'
+        };
+        
+        return redirectUrls[role] || '/index.html';
+    }
+
+    handleLoginError(errorMessage) {
+        // Specific error handling
+        if (errorMessage.includes('locked')) {
+            this.showError('Account temporarily locked due to too many failed attempts. Please try again later.');
+        } else if (errorMessage.includes('Invalid email or password')) {
+            this.showError('Invalid email or password. Please check your credentials and try again.');
+        } else if (errorMessage.includes('not verified')) {
+            this.showError('Please verify your email address before logging in. Check your inbox for a verification link.');
+        } else {
+            this.showError(errorMessage);
+        }
+        
+        // Clear password field on error
+        this.inputs.password.value = '';
+        this.inputs.password.focus();
     }
 
     performFinalValidation() {
@@ -279,54 +446,17 @@ class LoginForm {
         return isValid;
     }
 
-    async simulateLogin(email, password, remember) {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        // Demo credentials for testing
-        const testCredentials = [
-            { email: 'admin@fraudshield.com', password: 'admin123', role: 'admin' },
-            { email: 'user@fraudshield.com', password: 'user123', role: 'user' },
-            { email: 'demo@fraudshield.com', password: 'demo123', role: 'user' }
-        ];
-
-        const user = testCredentials.find(cred => 
-            cred.email === email.toLowerCase() && cred.password === password
-        );
-
-        if (user) {
-            this.showSuccess('Login successful! Redirecting to dashboard...');
-            
-            // Store login state if remember me is checked
-            if (remember) {
-                localStorage.setItem('fraudshield_remember', 'true');
-                localStorage.setItem('fraudshield_email', email);
-            }
-            
-            // Simulate redirect
-            setTimeout(() => {
-                if (user.role === 'admin') {
-                    // window.location.href = '/admin-dashboard';
-                    this.showSuccess('Redirecting to Admin Dashboard...');
-                } else {
-                    // window.location.href = '/dashboard';
-                    this.showSuccess('Redirecting to User Dashboard...');
-                }
-            }, 2000);
-        } else {
-            throw new Error('Invalid email or password. Please try again.');
-        }
-    }
-
     setLoadingState(loading) {
         if (loading) {
             this.ui.btnContent.classList.add('hidden');
             this.ui.btnLoader.classList.remove('hidden');
             this.ui.submitBtn.disabled = true;
+            this.ui.submitBtn.style.cursor = 'not-allowed';
         } else {
             this.ui.btnContent.classList.remove('hidden');
             this.ui.btnLoader.classList.add('hidden');
             this.ui.submitBtn.disabled = false;
+            this.ui.submitBtn.style.cursor = 'pointer';
         }
     }
 
@@ -335,6 +465,11 @@ class LoginForm {
         this.ui.errorMessage.classList.remove('hidden');
         this.ui.successMessage.classList.add('hidden');
         this.ui.errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Auto-hide error after 10 seconds
+        setTimeout(() => {
+            this.ui.errorMessage.classList.add('hidden');
+        }, 10000);
     }
 
     showSuccess(message) {
@@ -349,17 +484,17 @@ class LoginForm {
         this.ui.successMessage.classList.add('hidden');
     }
 
-    clearInputs() {
-        // Clear form inputs on page load
-        this.inputs.email.value = '';
-        this.inputs.password.value = '';
-        
+    loadRememberedUser() {
         // Check if user wants to be remembered
         if (localStorage.getItem('fraudshield_remember') === 'true') {
             const savedEmail = localStorage.getItem('fraudshield_email');
             if (savedEmail) {
                 this.inputs.email.value = savedEmail;
                 this.inputs.remember.checked = true;
+                // Validate the pre-filled email
+                this.validateEmail(savedEmail);
+                // Focus on password field
+                this.inputs.password.focus();
             }
         }
     }
@@ -377,15 +512,62 @@ class LoginForm {
             }, 100 + (index * 100));
         });
     }
+
+    // Utility method to check if user is already logged in
+    static isLoggedIn() {
+        const userData = sessionStorage.getItem('fraudshield_user');
+        const apiKey = sessionStorage.getItem('fraudshield_api_key');
+        return userData && apiKey;
+    }
+
+    // Utility method to logout user
+    static logout() {
+        sessionStorage.removeItem('fraudshield_user');
+        sessionStorage.removeItem('fraudshield_api_key');
+        localStorage.removeItem('fraudshield_remember');
+        localStorage.removeItem('fraudshield_email');
+        console.log('👋 User logged out');
+    }
+
+    // Utility method to get current user
+    static getCurrentUser() {
+        const userData = sessionStorage.getItem('fraudshield_user');
+        return userData ? JSON.parse(userData) : null;
+    }
+
+    // Utility method to get API key
+    static getApiKey() {
+        return sessionStorage.getItem('fraudshield_api_key');
+    }
 }
 
 // Initialize the login form when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Check if user is already logged in
+    if (LoginForm.isLoggedIn()) {
+        console.log('👤 User already logged in, redirecting...');
+        const user = LoginForm.getCurrentUser();
+        if (user && user.user) {
+            // Redirect to appropriate dashboard
+            console.log('Redirecting logged-in user...');
+            // window.location.href = user.user.role === 'admin' ? '/admin-dashboard.html' : '/index.html';
+        }
+        return;
+    }
+    
     window.loginForm = new LoginForm();
     
-    // Show demo credentials hint in console
-    console.log('Demo login credentials:');
-    console.log('Admin: admin@fraudshield.com / admin123');
-    console.log('User: user@fraudshield.com / user123');
-    console.log('Demo: demo@fraudshield.com / demo123');
+    // Show demo credentials hint in console for development
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        console.log('🔧 Development Mode - Demo credentials:');
+        console.log('Admin: admin@fraudshield.com / Admin@123!');
+        console.log('User: user@example.com / User@123!');
+        console.log('');
+        console.log('📡 Make sure auth API is running: python user_auth/auth_api.py');
+    }
 });
+
+// Export for use in other modules
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = LoginForm;
+}
