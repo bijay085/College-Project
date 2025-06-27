@@ -1,4 +1,4 @@
-# logic/fraud_checker.py - FIXED VERSION WITH GUARANTEED WORKING METRICS
+# logic/fraud_checker.py - COMPLETE VERSION WITH DEBUG
 
 import sys
 import os
@@ -20,30 +20,36 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class SyncMetricsTracker:
-    """Synchronous metrics tracker using pymongo (guaranteed to work)"""
+    """Synchronous metrics tracker using pymongo with DEBUG"""
     
     def __init__(self):
         """Initialize with synchronous MongoDB connection"""
+        print("🔧 DEBUG: Initializing SyncMetricsTracker")
         try:
             # Use synchronous pymongo instead of motor for metrics
             self.client = pymongo.MongoClient("mongodb://localhost:27017")
             self.db = self.client.fraudshield
             self.metrics_collection = self.db.metrics
+            print("✅ DEBUG: Synchronous metrics database connection established")
             logger.info("✅ Synchronous metrics database connection established")
         except Exception as e:
+            print(f"❌ DEBUG: Failed to connect to metrics database: {e}")
             logger.error(f"❌ Failed to connect to metrics database: {e}")
             self.client = None
             self.db = None
             self.metrics_collection = None
         
     def increment_metric(self, metric_name: str, increment: int = 1):
-        """Synchronously increment a metric - GUARANTEED TO WORK"""
+        """Synchronously increment a metric - WITH DEBUG"""
+        print(f"🔧 CALLED: increment_metric({metric_name}, {increment})")
+        
         if self.metrics_collection is None:
-            logger.error(f"❌ No database connection for metric: {metric_name}")
+            print(f"❌ No database connection for metric: {metric_name}")
             return False
             
         try:
-            # Direct synchronous update - no threads, no async complications
+            print(f"🔧 Connecting to database for {metric_name}...")
+            
             result = self.metrics_collection.update_one(
                 {"_id": metric_name},
                 {
@@ -53,15 +59,21 @@ class SyncMetricsTracker:
                 upsert=True
             )
             
-            if result.upserted_id or result.modified_count > 0:
-                logger.info(f"✅ Successfully incremented {metric_name} by {increment}")
-                return True
+            print(f"🔧 Update result: modified={result.modified_count}, upserted={result.upserted_id}")
+            
+            # Check what's actually in database
+            doc = self.metrics_collection.find_one({"_id": metric_name})
+            if doc:
+                print(f"🔧 Database now shows {metric_name} = {doc.get('count', 0)}")
             else:
-                logger.warning(f"⚠️ No documents updated for metric: {metric_name}")
-                return False
+                print(f"🔧 No document found for {metric_name}")
                 
+            return True
+            
         except Exception as e:
-            logger.error(f"❌ Failed to increment metric {metric_name}: {e}")
+            print(f"💥 ERROR updating {metric_name}: {e}")
+            import traceback
+            traceback.print_exc()
             return False
     
     def get_metric_count(self, metric_name: str) -> int:
@@ -78,7 +90,9 @@ class SyncMetricsTracker:
     
     def initialize_metrics(self):
         """Initialize default metrics synchronously"""
+        print("🔧 DEBUG: Initializing metrics...")
         if self.metrics_collection is None:
+            print("❌ DEBUG: No database connection for metrics initialization")
             logger.error("No database connection for metrics initialization")
             return False
             
@@ -106,19 +120,22 @@ class SyncMetricsTracker:
                     upsert=True
                 )
             
+            print("✅ DEBUG: Metrics collection initialized synchronously")
             logger.info("✅ Metrics collection initialized synchronously")
             return True
             
         except Exception as e:
+            print(f"💥 DEBUG: Failed to initialize metrics: {e}")
             logger.error(f"Failed to initialize metrics: {e}")
             return False
 
 
 class FraudChecker:
-    """Enhanced Fraud Checker with GUARANTEED WORKING Metrics"""
+    """Enhanced Fraud Checker with DEBUG LOGGING"""
     
     def __init__(self) -> None:
         """Initialize the fraud checker and load data from MongoDB"""
+        print("🔧 DEBUG: Initializing FraudChecker...")
         logger.info("Initializing FraudChecker with guaranteed working metrics...")
         
         # Initialize sets for blacklists
@@ -132,21 +149,26 @@ class FraudChecker:
         # MongoDB connection for async operations (data loading)
         try:
             self.mongo = MongoManager()
+            print("✅ DEBUG: MongoDB connection established")
             logger.info("MongoDB connection established")
         except Exception as e:
+            print(f"❌ DEBUG: Failed to connect to MongoDB: {e}")
             logger.error(f"Failed to connect to MongoDB: {e}")
             raise
         
-        # Initialize SYNCHRONOUS metrics tracker (guaranteed to work)
+        # Initialize SYNCHRONOUS metrics tracker
+        print("🔧 DEBUG: Creating metrics tracker...")
         self.metrics = SyncMetricsTracker()
         self.metrics.initialize_metrics()
         
         # Load data from MongoDB
         try:
             asyncio.run(self._warm_cache())
+            print("✅ DEBUG: FraudChecker initialized successfully")
             logger.info("FraudChecker initialized successfully")
             self._log_cache_stats()
         except Exception as e:
+            print(f"❌ DEBUG: Failed to initialize FraudChecker: {e}")
             logger.error(f"Failed to initialize FraudChecker: {e}")
             raise
 
@@ -248,12 +270,12 @@ class FraudChecker:
         return float(weight)
 
     def analyze_transaction(self, tx: dict) -> dict:
-        """Analyze a single transaction for fraud indicators WITH GUARANTEED WORKING METRICS"""
+        """Analyze a single transaction for fraud indicators WITH DEBUG"""
         try:
-            # Increment total checks metric (SYNCHRONOUSLY - GUARANTEED TO WORK)
+            print("🔧 DEBUG: About to call increment_metric for total_checks")
+            # Increment total checks metric (SYNCHRONOUSLY)
             success = self.metrics.increment_metric("total_checks")
-            if not success:
-                logger.warning("Failed to increment total_checks metric")
+            print(f"🔧 DEBUG: increment_metric for total_checks returned: {success}")
             
             score = 0.0
             reasons = []
@@ -271,6 +293,7 @@ class FraudChecker:
                     weight = self._safe_get_rule_weight("disposable_email")
                     score += weight
                     reasons.append("disposable_email")
+                    print(f"🔧 DEBUG: Disposable email detected: {domain}, weight: {weight}")
                     logger.debug(f"Disposable email detected: {domain}")
             
             # Check suspicious BIN
@@ -281,6 +304,7 @@ class FraudChecker:
                     weight = self._safe_get_rule_weight("suspicious_bin")
                     score += weight
                     reasons.append("suspicious_bin")
+                    print(f"🔧 DEBUG: Suspicious BIN detected: {bin_number}, weight: {weight}")
                     logger.debug(f"Suspicious BIN detected: {bin_number}")
             
             # Check flagged IP
@@ -289,6 +313,7 @@ class FraudChecker:
                 weight = self._safe_get_rule_weight("flagged_ip")
                 score += weight
                 reasons.append("flagged_ip")
+                print(f"🔧 DEBUG: Flagged IP detected: {ip}, weight: {weight}")
                 logger.debug(f"Flagged IP detected: {ip}")
             
             # Check reused fingerprint
@@ -297,6 +322,7 @@ class FraudChecker:
                 weight = self._safe_get_rule_weight("reused_fingerprint")
                 score += weight
                 reasons.append("reused_fingerprint")
+                print(f"🔧 DEBUG: Reused fingerprint detected: {fingerprint}, weight: {weight}")
                 logger.debug(f"Reused fingerprint detected: {fingerprint}")
             
             # Check tampered price
@@ -306,26 +332,28 @@ class FraudChecker:
                     weight = self._safe_get_rule_weight("tampered_price")
                     score += weight
                     reasons.append("tampered_price")
+                    print(f"🔧 DEBUG: Tampered price detected: {price}, weight: {weight}")
                     logger.debug(f"Tampered price detected: {price}")
             except (ValueError, TypeError):
                 logger.warning(f"Invalid price value: {tx.get('price')}")
             
-            # Determine decision based on score and update metrics (SYNCHRONOUSLY)
+            # Determine decision based on score and update metrics
+            print(f"🔧 DEBUG: Final score: {score}, about to determine decision")
             if score >= 0.7:
                 decision = "fraud"
+                print("🔧 DEBUG: About to call increment_metric for fraud_blocked")
                 success = self.metrics.increment_metric("fraud_blocked")
-                if not success:
-                    logger.warning("Failed to increment fraud_blocked metric")
+                print(f"🔧 DEBUG: increment_metric for fraud_blocked returned: {success}")
             elif score >= 0.4:
                 decision = "suspicious"
+                print("🔧 DEBUG: About to call increment_metric for suspicious_flagged")
                 success = self.metrics.increment_metric("suspicious_flagged")
-                if not success:
-                    logger.warning("Failed to increment suspicious_flagged metric")
+                print(f"🔧 DEBUG: increment_metric for suspicious_flagged returned: {success}")
             else:
                 decision = "not_fraud"
+                print("🔧 DEBUG: About to call increment_metric for clean_approved")
                 success = self.metrics.increment_metric("clean_approved")
-                if not success:
-                    logger.warning("Failed to increment clean_approved metric")
+                print(f"🔧 DEBUG: increment_metric for clean_approved returned: {success}")
             
             result = {
                 **tx,
@@ -335,10 +363,12 @@ class FraudChecker:
                 "analysis_timestamp": datetime.now().isoformat()
             }
             
+            print(f"🔧 DEBUG: Transaction analyzed: score={score}, decision={decision}")
             logger.debug(f"Transaction analyzed: score={score}, decision={decision}")
             return result
             
         except Exception as e:
+            print(f"💥 DEBUG: Error analyzing transaction: {e}")
             logger.error(f"Error analyzing transaction: {e}")
             logger.error(traceback.format_exc())
             return self._create_error_result(tx, f"Analysis failed: {str(e)}")
@@ -356,14 +386,15 @@ class FraudChecker:
         }
 
     def analyze_bulk(self, file_obj) -> List[dict]:
-        """Analyze multiple transactions from uploaded file WITH GUARANTEED WORKING METRICS"""
+        """Analyze multiple transactions from uploaded file WITH DEBUG"""
         try:
+            print(f"🔧 DEBUG: Starting bulk analysis of file: {getattr(file_obj, 'filename', 'unknown')}")
             logger.info(f"Starting bulk analysis of file: {getattr(file_obj, 'filename', 'unknown')}")
             
-            # Increment bulk analysis metric (SYNCHRONOUSLY - GUARANTEED TO WORK)
+            # Increment bulk analysis metric
+            print("🔧 DEBUG: About to call increment_metric for bulk_analyses")
             success = self.metrics.increment_metric("bulk_analyses")
-            if not success:
-                logger.warning("Failed to increment bulk_analyses metric")
+            print(f"🔧 DEBUG: increment_metric for bulk_analyses returned: {success}")
             
             # Read file into DataFrame
             df = self._read_file_to_dataframe(file_obj)
@@ -371,6 +402,7 @@ class FraudChecker:
             if df is None or df.empty:
                 raise ValueError("File is empty or could not be read")
             
+            print(f"🔧 DEBUG: Processing {len(df)} transactions")
             logger.info(f"Processing {len(df)} transactions")
             
             # Analyze each transaction
@@ -390,6 +422,11 @@ class FraudChecker:
                     # Replace NaN values with None or appropriate defaults
                     tx_dict = self._clean_transaction_data(tx_dict)
                     
+                    if isinstance(index, int):
+                        tx_number = index + 1
+                    else:
+                        tx_number = index
+                    print(f"🔧 DEBUG: Analyzing transaction {tx_number}")
                     result = self.analyze_transaction(tx_dict)
                     results.append(result)
                     
@@ -405,6 +442,7 @@ class FraudChecker:
                         errors += 1
                         
                 except Exception as e:
+                    print(f"💥 DEBUG: Error processing row {index}: {e}")
                     logger.error(f"Error processing row {index}: {e}")
                     error_result = self._create_error_result(
                         {"row_index": index}, 
@@ -414,6 +452,8 @@ class FraudChecker:
                     errors += 1
             
             # Log detailed results for verification
+            print(f"🔧 DEBUG: Bulk analysis completed: {len(results)} processed, {errors} errors")
+            print(f"🔧 DEBUG: Results breakdown: {fraud_count} fraud, {suspicious_count} suspicious, {clean_count} clean")
             logger.info(f"Bulk analysis completed: {len(results)} processed, {errors} errors")
             logger.info(f"Results breakdown: {fraud_count} fraud, {suspicious_count} suspicious, {clean_count} clean")
             
@@ -424,6 +464,12 @@ class FraudChecker:
             clean_approved = self.metrics.get_metric_count("clean_approved")
             bulk_analyses = self.metrics.get_metric_count("bulk_analyses")
             
+            print(f"📊 DEBUG: CURRENT METRICS IN DATABASE:")
+            print(f"   Total checks: {total_checks}")
+            print(f"   Fraud blocked: {fraud_blocked}")
+            print(f"   Suspicious flagged: {suspicious_flagged}")
+            print(f"   Clean approved: {clean_approved}")
+            print(f"   Bulk analyses: {bulk_analyses}")
             logger.info(f"📊 CURRENT METRICS IN DATABASE:")
             logger.info(f"   Total checks: {total_checks}")
             logger.info(f"   Fraud blocked: {fraud_blocked}")
@@ -434,6 +480,7 @@ class FraudChecker:
             return results
             
         except Exception as e:
+            print(f"💥 DEBUG: Bulk analysis failed: {e}")
             logger.error(f"Bulk analysis failed: {e}")
             logger.error(traceback.format_exc())
             raise ValueError(f"Bulk analysis failed: {str(e)}")
