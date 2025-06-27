@@ -372,10 +372,13 @@ def fraud_check():
             str(e) if app.debug else None
         )
 
+# ============================================================================
+# FIXED: Activity Log Filter Endpoint
+# ============================================================================
 @app.route("/user-logs", methods=["GET"])
 @require_api_key
 def get_user_logs():
-    """Get activity logs for authenticated user only"""
+    """Get activity logs for authenticated user with FIXED filtering"""
     
     try:
         # Check if logs collection is available
@@ -401,18 +404,76 @@ def get_user_logs():
         else:
             query_filter = {"user_email": user_email}  # User sees only their logs
         
-        # Add log level filter if specified
+        # FIXED: Add log level filter if specified with proper OR logic
         if log_level != 'all':
             if log_level == 'fraud':
-                query_filter["log_level"] = "fraud"
+                # Show logs where decision is fraud or log_level is fraud
+                if user_role == 'admin':
+                    query_filter = {
+                        "$or": [
+                            {"log_level": "fraud"},
+                            {"decision": "fraud"}
+                        ]
+                    }
+                else:
+                    query_filter = {
+                        "user_email": user_email,
+                        "$or": [
+                            {"log_level": "fraud"},
+                            {"decision": "fraud"}
+                        ]
+                    }
             elif log_level == 'warning':
-                query_filter["log_level"] = "warning"  
+                # Show suspicious transactions and warning logs
+                if user_role == 'admin':
+                    query_filter = {
+                        "$or": [
+                            {"log_level": "warning"},
+                            {"decision": "suspicious"}
+                        ]
+                    }
+                else:
+                    query_filter = {
+                        "user_email": user_email,
+                        "$or": [
+                            {"log_level": "warning"},
+                            {"decision": "suspicious"}
+                        ]
+                    }
             elif log_level == 'error':
-                query_filter["log_level"] = "error"
+                if user_role == 'admin':
+                    query_filter = {"log_level": "error"}
+                else:
+                    query_filter = {
+                        "user_email": user_email,
+                        "log_level": "error"
+                    }
             elif log_level == 'info':
-                query_filter["log_level"] = "info"
+                # Show info logs and authentication activities
+                if user_role == 'admin':
+                    query_filter = {
+                        "$or": [
+                            {"log_level": "info"},
+                            {"action": {"$in": ["login", "register", "logout", "auth_attempt"]}},
+                            {"decision": "not_fraud"}
+                        ]
+                    }
+                else:
+                    query_filter = {
+                        "user_email": user_email,
+                        "$or": [
+                            {"log_level": "info"},
+                            {"action": {"$in": ["login", "register", "logout", "auth_attempt"]}},
+                            {"decision": "not_fraud"}
+                        ]
+                    }
         
-        # Get logs
+        # Debug: Log the query being executed
+        app.logger.info(f"Log query filter: {query_filter}")
+        app.logger.info(f"Log level requested: {log_level}")
+        app.logger.info(f"User role: {user_role}, User email: {user_email}")
+        
+        # Get logs with the filter
         logs_cursor = logs_collection.find(query_filter).sort("timestamp", -1).skip(skip).limit(limit)
         logs = list(logs_cursor)
         
@@ -434,15 +495,18 @@ def get_user_logs():
             "viewing_all": user_role == 'admin',
             "limit": limit,
             "skip": skip,
+            "filter_applied": log_level,
             "has_more": total_count > (skip + limit)
         }
+        
+        app.logger.info(f"Retrieved {len(formatted_logs)} logs for user: {user_email}, filter: {log_level}")
         
         return create_success_response(response_data, f"Retrieved {len(formatted_logs)} logs")
         
     except Exception as e:
         app.logger.error(f"Failed to get user logs: {e}")
         return create_error_response("Failed to retrieve logs", 500)
-
+    
 @app.route("/real-stats", methods=["GET"])
 def get_real_stats():
     """Get real metrics - now supports API key validation for user-specific data"""

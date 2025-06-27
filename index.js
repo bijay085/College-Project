@@ -1075,6 +1075,9 @@ class AuthManager {
 // ============================================================================
 // ACTIVITY LOGS MANAGEMENT (USER-SPECIFIC)
 // ============================================================================
+// ============================================================================
+// FIXED: Activity Logs Management with Working Filter
+// ============================================================================
 
 class ActivityLogsManager {
     constructor() {
@@ -1109,11 +1112,12 @@ class ActivityLogsManager {
             });
         }
 
-        // Log level filter
+        // FIXED: Log level filter - Add proper event listener
         const logLevelSelect = document.getElementById('logLevel');
         if (logLevelSelect) {
-            logLevelSelect.addEventListener('change', () => {
-                this.loadUserLogs();
+            logLevelSelect.addEventListener('change', (e) => {
+                console.log('🔧 Log level changed to:', e.target.value);
+                this.loadUserLogs(true); // Force reload with new filter
             });
         }
 
@@ -1152,14 +1156,20 @@ class ActivityLogsManager {
                 throw new Error('No API key found');
             }
 
-            // Get log level filter
-            const logLevel = document.getElementById('logLevel')?.value || 'all';
+            // FIXED: Get log level filter properly
+            const logLevelSelect = document.getElementById('logLevel');
+            const logLevel = logLevelSelect ? logLevelSelect.value : 'all';
+            
+            console.log('🔧 Loading logs with filter:', logLevel);
 
-            const response = await fetch('http://127.0.0.1:5000/user-logs?' + new URLSearchParams({
+            // Build query parameters
+            const params = new URLSearchParams({
                 limit: '50',
                 skip: '0',
                 level: logLevel
-            }), {
+            });
+
+            const response = await fetch(`http://127.0.0.1:5000/user-logs?${params}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${apiKey}`,
@@ -1176,10 +1186,17 @@ class ActivityLogsManager {
             
             if (result.success) {
                 this.currentLogs = result.data.logs || [];
-                this.displayLogs(this.currentLogs);
+                
+                console.log('🔧 Loaded logs:', {
+                    count: this.currentLogs.length,
+                    filter: result.data.filter_applied,
+                    total: result.data.total_count
+                });
+                
+                this.displayLogs(this.currentLogs, result.data);
                 
                 if (showLoading) {
-                    showToast('Logs Updated', `Retrieved ${this.currentLogs.length} activity logs`, 'success');
+                    showToast('Logs Updated', `Retrieved ${this.currentLogs.length} activity logs (filter: ${logLevel})`, 'success');
                 }
             } else {
                 throw new Error(result.error || 'Failed to load logs');
@@ -1193,7 +1210,7 @@ class ActivityLogsManager {
                 if (error.message.includes('Invalid API key') || error.message.includes('API key required')) {
                     showToast('Authentication Error', 'Please sign in again to view logs', 'error');
                 } else {
-                    showToast('Error', 'Failed to load activity logs', 'error');
+                    showToast('Error', 'Failed to load activity logs: ' + error.message, 'error');
                 }
             }
         } finally {
@@ -1245,19 +1262,33 @@ class ActivityLogsManager {
         `;
     }
 
-    displayLogs(logs) {
+    displayLogs(logs, metadata = {}) {
         if (!this.logsContainer) return;
 
         if (!logs || logs.length === 0) {
+            const filterText = metadata.filter_applied && metadata.filter_applied !== 'all' 
+                ? ` (filter: ${metadata.filter_applied})` 
+                : '';
+            
             this.logsContainer.innerHTML = `
                 <div class="log-placeholder">
                     <div class="placeholder-icon">📋</div>
-                    <h3>No Activity Yet</h3>
-                    <p>Your fraud detection activity will appear here</p>
+                    <h3>No Activity Found${filterText}</h3>
+                    <p>No logs match the current filter. Try changing the filter or check back later.</p>
+                    ${metadata.filter_applied && metadata.filter_applied !== 'all' ? `
+                    <button onclick="document.getElementById('logLevel').value='all'; activityLogsManager.loadUserLogs(true);" class="btn btn-secondary">
+                        🔄 Show All Logs
+                    </button>
+                    ` : ''}
                 </div>
             `;
             return;
         }
+
+        // FIXED: Show filter information in header
+        const filterInfo = metadata.filter_applied && metadata.filter_applied !== 'all' 
+            ? ` (filtered by: ${metadata.filter_applied})`
+            : '';
 
         // Generate log entries HTML
         const logEntriesHTML = logs.map(log => this.createLogEntry(log)).join('');
@@ -1265,8 +1296,9 @@ class ActivityLogsManager {
         this.logsContainer.innerHTML = `
             <div class="log-header">
                 <div class="log-stats">
-                    <span class="log-count">${logs.length} entries</span>
+                    <span class="log-count">${logs.length} entries${filterInfo}</span>
                     <span class="last-updated">Updated: ${new Date().toLocaleTimeString()}</span>
+                    ${metadata.total_count ? `<span class="total-count">Total: ${metadata.total_count}</span>` : ''}
                 </div>
             </div>
             <div class="log-entries">
@@ -1280,22 +1312,35 @@ class ActivityLogsManager {
         const action = log.action || 'unknown';
         const details = log.details || {};
         
-        // Determine log type and icon
+        // FIXED: Determine log type and icon based on both log_level and decision
         let logType = 'info';
         let icon = 'ℹ️';
         
+        // Priority: decision field first, then log_level
         if (log.decision === 'fraud') {
             logType = 'error';
             icon = '❌';
         } else if (log.decision === 'suspicious') {
             logType = 'warning';
             icon = '⚠️';
-        } else if (action === 'fraud_check') {
+        } else if (log.log_level === 'fraud') {
+            logType = 'error';
+            icon = '❌';
+        } else if (log.log_level === 'warning') {
+            logType = 'warning';
+            icon = '⚠️';
+        } else if (log.log_level === 'error') {
+            logType = 'error';
+            icon = '💥';
+        } else if (action === 'fraud_check' && log.decision === 'not_fraud') {
             logType = 'success';
             icon = '✅';
         } else if (action === 'bulk_analysis') {
             logType = 'info';
             icon = '📊';
+        } else if (action === 'login' || action === 'register') {
+            logType = 'success';
+            icon = '🚪';
         }
 
         // Create action description
@@ -1310,6 +1355,12 @@ class ActivityLogsManager {
             if (details.total_records) {
                 actionDescription += ` (${details.total_records} records)`;
             }
+        } else if (action === 'login') {
+            actionDescription = 'User login';
+        } else if (action === 'register') {
+            actionDescription = 'Account registration';
+        } else if (action === 'logout') {
+            actionDescription = 'User logout';
         } else {
             actionDescription = action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
         }
@@ -1324,19 +1375,30 @@ class ActivityLogsManager {
             `;
         }
 
+        // Add decision badge if present
+        let decisionBadge = '';
+        if (log.decision) {
+            const badgeClass = log.decision === 'fraud' ? 'badge-error' : 
+                             log.decision === 'suspicious' ? 'badge-warning' : 'badge-success';
+            decisionBadge = `<span class="decision-badge ${badgeClass}">${log.decision}</span>`;
+        }
+
         return `
             <div class="log-entry log-${logType}">
                 <div class="log-icon">${icon}</div>
                 <div class="log-content">
                     <div class="log-header-line">
                         <span class="log-action">${actionDescription}</span>
-                        <span class="log-timestamp">${timestamp}</span>
+                        <div class="log-meta-right">
+                            ${decisionBadge}
+                            <span class="log-timestamp">${timestamp}</span>
+                        </div>
                     </div>
                     <div class="log-details">
                         <div class="log-meta">
                             <span>IP: ${log.ip_address || 'Unknown'}</span>
                             <span>Endpoint: ${log.endpoint || 'Unknown'}</span>
-                            ${log.decision ? `<span>Decision: ${log.decision}</span>` : ''}
+                            ${log.fraud_score ? `<span>Score: ${log.fraud_score}</span>` : ''}
                         </div>
                         ${rulesDisplay}
                     </div>
@@ -1411,7 +1473,6 @@ class ActivityLogsManager {
         }
     }
 }
-
 // FIXED: Check tab accessibility based on user authentication and role
 function isTabAccessible(tabName) {
     // Home and bulk are always accessible (public)
