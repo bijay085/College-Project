@@ -27,7 +27,33 @@ class Config:
 # ============================================================================
 
 app = Flask(__name__)
-CORS(app)
+
+# Enhanced CORS configuration
+CORS(app, 
+     origins=[
+         "http://127.0.0.1:5500",
+         "http://localhost:5500", 
+         "http://127.0.0.1:3000",
+         "http://localhost:3000",
+         "http://127.0.0.1:8080",
+         "http://localhost:8080",
+         "http://127.0.0.1:8000",
+         "http://localhost:8000",
+         "file://"  # For local file access
+     ],
+     allow_headers=["Content-Type", "Authorization"],
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     supports_credentials=True
+)
+
+# Add OPTIONS handler for preflight requests
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
 
 # Set up logging
 logging.basicConfig(

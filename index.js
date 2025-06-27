@@ -605,24 +605,39 @@ class AuthManager {
         if (!this.isAdmin()) return;
 
         try {
-            const response = await fetch('http://127.0.0.1:5001/auth/user-stats', {
+            // Use the correct protocol (http) and handle fetch errors
+            const url = window.location.protocol === "https:" 
+                ? "http://127.0.0.1:5001/auth/admin/stats"
+                : "http://127.0.0.1:5001/auth/admin/stats";
+            const response = await fetch(url, {
                 headers: {
                     'Authorization': `Bearer ${this.getApiKey()}`
-                }
+                },
+                mode: 'cors'
             });
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    const totalUsers = document.getElementById('totalUsers');
-                    const activeUsers = document.getElementById('activeUsers');
-                    
-                    if (totalUsers) totalUsers.textContent = data.data.total_users || 0;
-                    if (activeUsers) activeUsers.textContent = data.data.active_today || 0;
-                }
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                const totalUsers = document.getElementById('totalUsers');
+                const activeUsers = document.getElementById('activeUsers');
+                
+                if (totalUsers) totalUsers.textContent = data.data.total_users || 0;
+                if (activeUsers) activeUsers.textContent = data.data.active_today || 0;
+            } else {
+                throw new Error(data.error || "Unknown error");
             }
         } catch (error) {
             console.error('Failed to load user stats:', error);
+            // Show toast if it's a network error
+            if (error instanceof TypeError) {
+                showToast('Network Error', 'Cannot connect to admin stats API. Is the backend running at http://127.0.0.1:5001?', 'error');
+            } else {
+                showToast('Error', 'Failed to load user stats.', 'error');
+            }
             const totalUsers = document.getElementById('totalUsers');
             const activeUsers = document.getElementById('activeUsers');
             

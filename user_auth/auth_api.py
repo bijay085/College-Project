@@ -24,6 +24,8 @@ from bson import ObjectId
 from flask import Flask, jsonify, request, g
 from flask_cors import CORS
 
+app: Flask = Flask(__name__)
+
 # Add parent directory to path for imports
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
@@ -36,6 +38,7 @@ ResponseTuple = Tuple[Any, int]
 SessionDict = Dict[str, Any]
 DatabaseResponse = Optional[Dict[str, Any]]
 
+# ============================================================================
 # ============================================================================
 # CONFIGURATION CLASS
 # ============================================================================
@@ -59,13 +62,17 @@ class AuthConfig:
     REMEMBER_DURATION_DAYS: int = 30
     
     # API Configuration
+    # FIXED: Enhanced CORS Configuration
     CORS_ORIGINS: List[str] = [
         "http://127.0.0.1:5500", 
         "http://localhost:5500",
         "http://127.0.0.1:3000", 
         "http://localhost:3000",
         "http://127.0.0.1:8080", 
-        "http://localhost:8080"
+        "http://localhost:8080",
+        "http://127.0.0.1:8000",
+        "http://localhost:8000",
+        "null"  # file:// protocol for local dev
     ]
 
 # ============================================================================
@@ -73,7 +80,18 @@ class AuthConfig:
 # ============================================================================
 
 app: Flask = Flask(__name__)
-CORS(app, origins=AuthConfig.CORS_ORIGINS, supports_credentials=True)
+
+# FIXED: Enhanced CORS configuration
+CORS(app, 
+     origins=AuthConfig.CORS_ORIGINS,
+     supports_credentials=True,
+     allow_headers=['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With'],
+     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+     expose_headers=['Content-Type', 'Authorization'])
+
+# ============================================================================
+# FLASK APP SETUP
+# ============================================================================
 
 # Configure logging
 logging.basicConfig(
@@ -1397,6 +1415,19 @@ def maintenance_worker() -> None:
     while True:
         time.sleep(3600)  # Run every hour
         run_maintenance()
+
+# ============================================================================
+# CORS PREFLIGHT HANDLER
+@app.before_request
+def handle_preflight():
+    """Handle CORS preflight requests."""
+    if request.method == "OPTIONS":
+        response = jsonify({'status': 'OK'})
+        response.headers.add("Access-Control-Allow-Origin", request.headers.get('Origin', '*'))
+        response.headers.add('Access-Control-Allow-Headers', "Content-Type,Authorization,Accept,Origin,X-Requested-With")
+        response.headers.add('Access-Control-Allow-Methods', "GET,PUT,POST,DELETE,OPTIONS")
+        response.headers.add('Access-Control-Allow-Credentials', "true")
+        return response
 
 # ============================================================================
 # MAIN APPLICATION
