@@ -1,15 +1,20 @@
-# logic/fraud_checker.py - COMPLETE VERSION WITH DEBUG
+# logic/fraud_checker.py - ENHANCED VERSION WITH ADVANCED ALGORITHMS
 
 import sys
 import os
 import asyncio
 import logging
 import json
-from typing import Dict, List, Set, Optional, Union
+import re
+import hashlib
+from typing import Dict, List, Set, Optional, Union, Tuple
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 import traceback
-import pymongo  # Using synchronous MongoDB driver
+import pymongo
+from collections import defaultdict, Counter
+import math
+import ipaddress
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
@@ -103,7 +108,11 @@ class SyncMetricsTracker:
                 ("suspicious_flagged", "Number of transactions flagged as suspicious"),
                 ("clean_approved", "Number of transactions approved as clean"),
                 ("bulk_analyses", "Number of bulk analysis operations"),
-                ("api_requests", "Total API requests processed")
+                ("api_requests", "Total API requests processed"),
+                ("velocity_alerts", "Velocity-based fraud alerts"),
+                ("pattern_anomalies", "Pattern anomaly detections"),
+                ("geo_anomalies", "Geographic anomaly detections"),
+                ("behavioral_alerts", "Behavioral pattern alerts")
             ]
             
             for metric_name, description in default_metrics:
@@ -131,11 +140,11 @@ class SyncMetricsTracker:
 
 
 class FraudChecker:
-    """Enhanced Fraud Checker with DEBUG LOGGING"""
+    """Enhanced Fraud Checker with ADVANCED ALGORITHMS and DEBUG LOGGING"""
     
     def __init__(self) -> None:
         """Initialize the fraud checker and load data from MongoDB"""
-        print("🔧 DEBUG: Initializing FraudChecker...")
+        print("🔧 DEBUG: Initializing FraudChecker with advanced algorithms...")
         logger.info("Initializing FraudChecker with guaranteed working metrics...")
         
         # Initialize sets for blacklists
@@ -145,6 +154,25 @@ class FraudChecker:
         self.reused_fingerprints: Set[str] = set()
         self.tampered_prices: Set[float] = set()
         self.rules: Dict[str, Dict] = {}
+        
+        # Advanced algorithm caches
+        self.transaction_history: Dict[str, List[Dict]] = defaultdict(list)
+        self.ip_reputation_cache: Dict[str, float] = {}
+        self.email_patterns: Dict[str, int] = defaultdict(int)
+        self.velocity_cache: Dict[str, List[datetime]] = defaultdict(list)
+        self.behavioral_profiles: Dict[str, Dict] = {}
+        self.geo_patterns: Dict[str, List[Tuple]] = defaultdict(list)
+        
+        # Risk scoring weights for advanced algorithms
+        self.advanced_weights = {
+            'velocity_abuse': 0.3,
+            'suspicious_patterns': 0.25,
+            'geo_anomaly': 0.2,
+            'behavioral_deviation': 0.15,
+            'network_analysis': 0.1,
+            'time_pattern_anomaly': 0.1,
+            'amount_clustering': 0.05
+        }
         
         # MongoDB connection for async operations (data loading)
         try:
@@ -182,6 +210,9 @@ class FraudChecker:
             
             # Load rules
             await self._load_rules()
+            
+            # Load transaction history for advanced algorithms
+            await self._load_transaction_history()
             
             logger.info("Cache warming completed successfully")
             
@@ -247,6 +278,26 @@ class FraudChecker:
             logger.error(f"Failed to load rules: {e}")
             self.rules = {}
 
+    async def _load_transaction_history(self):
+        """Load recent transaction history for advanced pattern analysis"""
+        try:
+            # Load last 30 days of transactions for pattern analysis
+            cutoff_date = datetime.now() - timedelta(days=30)
+            
+            transactions = await self.mongo.get_collection("transactions").find({
+                "timestamp": {"$gte": cutoff_date}
+            }).to_list(None)
+            
+            for tx in transactions:
+                email = tx.get("email", "")
+                if email:
+                    self.transaction_history[email].append(tx)
+            
+            logger.info(f"Loaded transaction history for {len(self.transaction_history)} users")
+            
+        except Exception as e:
+            logger.error(f"Failed to load transaction history: {e}")
+
     def _log_cache_stats(self):
         """Log statistics about loaded data"""
         logger.info("=== Fraud Detection Cache Stats ===")
@@ -256,6 +307,7 @@ class FraudChecker:
         logger.info(f"Reused fingerprints: {len(self.reused_fingerprints)}")
         logger.info(f"Tampered prices: {len(self.tampered_prices)}")
         logger.info(f"Active rules: {len(self.rules)}")
+        logger.info(f"User histories: {len(self.transaction_history)}")
         logger.info("================================")
 
     def _safe_get_rule_weight(self, rule_key: str) -> float:
@@ -269,21 +321,302 @@ class FraudChecker:
         
         return float(weight)
 
+    # ============================================================================
+    # ADVANCED ALGORITHM METHODS
+    # ============================================================================
+
+    def _analyze_velocity_patterns(self, tx: dict) -> Tuple[float, List[str]]:
+        """Advanced velocity analysis with multiple time windows"""
+        reasons = []
+        score = 0.0
+        
+        email = tx.get("email", "").strip().lower()
+        current_time = datetime.now()
+        
+        if not email:
+            return score, reasons
+        
+        # Update velocity cache
+        self.velocity_cache[email].append(current_time)
+        
+        # Analyze different time windows
+        time_windows = {
+            "1_minute": timedelta(minutes=1),
+            "5_minutes": timedelta(minutes=5),
+            "1_hour": timedelta(hours=1),
+            "1_day": timedelta(days=1)
+        }
+        
+        thresholds = {
+            "1_minute": 3,
+            "5_minutes": 5,
+            "1_hour": 10,
+            "1_day": 50
+        }
+        
+        for window_name, window_delta in time_windows.items():
+            cutoff = current_time - window_delta
+            recent_txs = [t for t in self.velocity_cache[email] if t >= cutoff]
+            
+            threshold = thresholds[window_name]
+            if len(recent_txs) > threshold:
+                velocity_score = min(0.3, (len(recent_txs) - threshold) * 0.05)
+                score += velocity_score
+                reasons.append(f"velocity_abuse_{window_name}")
+                print(f"🔧 DEBUG: Velocity abuse detected in {window_name}: {len(recent_txs)} txs")
+        
+        # Clean old entries (keep last 24 hours)
+        cutoff_24h = current_time - timedelta(hours=24)
+        self.velocity_cache[email] = [t for t in self.velocity_cache[email] if t >= cutoff_24h]
+        
+        return score, reasons
+
+    def _analyze_behavioral_patterns(self, tx: dict) -> Tuple[float, List[str]]:
+        """Analyze behavioral deviations from user's normal patterns"""
+        reasons = []
+        score = 0.0
+        
+        email = tx.get("email", "").strip().lower()
+        if not email or email not in self.transaction_history:
+            return score, reasons
+        
+        user_history = self.transaction_history[email]
+        if len(user_history) < 3:  # Need minimum history
+            return score, reasons
+        
+        current_amount = float(tx.get("price", 0))
+        current_hour = datetime.now().hour
+        current_ip = tx.get("ip", "")
+        
+        # Analyze amount patterns
+        historical_amounts = [float(h.get("price", 0)) for h in user_history]
+        avg_amount = sum(historical_amounts) / len(historical_amounts)
+        std_amount = math.sqrt(sum((x - avg_amount) ** 2 for x in historical_amounts) / len(historical_amounts))
+        
+        if std_amount > 0 and abs(current_amount - avg_amount) > 3 * std_amount:
+            score += 0.15
+            reasons.append("unusual_amount_pattern")
+            print(f"🔧 DEBUG: Unusual amount pattern: {current_amount} vs avg {avg_amount:.2f}")
+        
+        # Analyze time patterns
+        historical_hours = [datetime.fromisoformat(h.get("timestamp", "")).hour 
+                           for h in user_history if h.get("timestamp")]
+        if historical_hours:
+            hour_counts = Counter(historical_hours)
+            if hour_counts[current_hour] == 0 and len(historical_hours) > 5:
+                score += 0.1
+                reasons.append("unusual_time_pattern")
+                print(f"🔧 DEBUG: Unusual time pattern: hour {current_hour}")
+        
+        # Analyze IP patterns
+        historical_ips = set(h.get("ip", "") for h in user_history)
+        if current_ip and current_ip not in historical_ips and len(historical_ips) < 3:
+            score += 0.1
+            reasons.append("new_ip_pattern")
+            print(f"🔧 DEBUG: New IP pattern: {current_ip}")
+        
+        return score, reasons
+
+    def _analyze_geographic_anomalies(self, tx: dict) -> Tuple[float, List[str]]:
+        """Detect impossible geographic travel patterns"""
+        reasons = []
+        score = 0.0
+        
+        email = tx.get("email", "").strip().lower()
+        current_ip = tx.get("ip", "")
+        
+        if not email or not current_ip:
+            return score, reasons
+        
+        # Simple geographic analysis (in production, use GeoIP database)
+        current_time = datetime.now()
+        
+        if email in self.geo_patterns:
+            last_location_data = self.geo_patterns[email][-1] if self.geo_patterns[email] else None
+            
+            if last_location_data:
+                last_ip, last_time = last_location_data
+                time_diff = (current_time - last_time).total_seconds() / 3600  # hours
+                
+                # Simple check: if IP subnet changes too quickly
+                if self._get_ip_subnet(current_ip) != self._get_ip_subnet(last_ip) and time_diff < 1:
+                    score += 0.2
+                    reasons.append("impossible_travel")
+                    print(f"🔧 DEBUG: Impossible travel detected: {last_ip} -> {current_ip} in {time_diff:.2f}h")
+        
+        # Update geo patterns
+        self.geo_patterns[email].append((current_ip, current_time))
+        
+        # Keep only last 10 locations per user
+        if len(self.geo_patterns[email]) > 10:
+            self.geo_patterns[email] = self.geo_patterns[email][-10:]
+        
+        return score, reasons
+
+    def _get_ip_subnet(self, ip: str) -> str:
+        """Get IP subnet for basic geographic comparison"""
+        try:
+            ip_obj = ipaddress.ip_address(ip)
+            if ip_obj.version == 4:
+                # Class B subnet
+                return str(ipaddress.ip_network(f"{ip}/16", strict=False))
+            else:
+                # IPv6 /64 subnet
+                return str(ipaddress.ip_network(f"{ip}/64", strict=False))
+        except:
+            return ip  # Fallback to original IP
+
+    def _analyze_network_patterns(self, tx: dict) -> Tuple[float, List[str]]:
+        """Analyze network-level fraud indicators"""
+        reasons = []
+        score = 0.0
+        
+        ip = tx.get("ip", "")
+        if not ip:
+            return score, reasons
+        
+        # Check for suspicious IP patterns
+        try:
+            ip_obj = ipaddress.ip_address(ip)
+            
+            # Check for private/local IPs in production environment
+            if ip_obj.is_private or ip_obj.is_loopback:
+                score += 0.1
+                reasons.append("private_ip_usage")
+                print(f"🔧 DEBUG: Private IP detected: {ip}")
+            
+            # Check for known VPN/Proxy ranges (simplified)
+            if self._is_known_proxy_range(ip):
+                score += 0.15
+                reasons.append("proxy_ip_detected")
+                print(f"🔧 DEBUG: Proxy IP detected: {ip}")
+                
+        except ValueError:
+            score += 0.05
+            reasons.append("invalid_ip_format")
+            print(f"🔧 DEBUG: Invalid IP format: {ip}")
+        
+        return score, reasons
+
+    def _is_known_proxy_range(self, ip: str) -> bool:
+        """Check if IP belongs to known proxy/VPN ranges (simplified)"""
+        # In production, use proper proxy/VPN detection service
+        proxy_ranges = [
+            "10.0.0.0/8",
+            "192.168.0.0/16",
+            "172.16.0.0/12"
+        ]
+        
+        try:
+            ip_obj = ipaddress.ip_address(ip)
+            for range_str in proxy_ranges:
+                if ip_obj in ipaddress.ip_network(range_str):
+                    return True
+        except:
+            pass
+        
+        return False
+
+    def _analyze_email_patterns(self, tx: dict) -> Tuple[float, List[str]]:
+        """Advanced email pattern analysis"""
+        reasons = []
+        score = 0.0
+        
+        email = tx.get("email", "").strip().lower()
+        if not email or "@" not in email:
+            return score, reasons
+        
+        local_part, domain = email.split("@", 1)
+        
+        # Pattern 1: Sequential/numbered emails
+        if re.search(r'\d{3,}', local_part):
+            score += 0.1
+            reasons.append("numbered_email_pattern")
+            print(f"🔧 DEBUG: Numbered email pattern: {email}")
+        
+        # Pattern 2: Random-looking local parts
+        if len(local_part) > 8 and not re.search(r'[aeiou]', local_part):
+            score += 0.05
+            reasons.append("random_email_pattern")
+            print(f"🔧 DEBUG: Random email pattern: {email}")
+        
+        # Pattern 3: Plus addressing abuse
+        if '+' in local_part and local_part.count('+') > 1:
+            score += 0.1
+            reasons.append("plus_addressing_abuse")
+            print(f"🔧 DEBUG: Plus addressing abuse: {email}")
+        
+        # Pattern 4: Recently created patterns
+        creation_patterns = ["2024", "2025", "new", "temp"]
+        if any(pattern in local_part for pattern in creation_patterns):
+            score += 0.05
+            reasons.append("recent_creation_pattern")
+            print(f"🔧 DEBUG: Recent creation pattern: {email}")
+        
+        return score, reasons
+
+    def _analyze_amount_clustering(self, tx: dict) -> Tuple[float, List[str]]:
+        """Detect suspicious amount clustering patterns"""
+        reasons = []
+        score = 0.0
+        
+        current_amount = float(tx.get("price", 0))
+        
+        # Check for common fraud amounts
+        fraud_amounts = [0.01, 1.00, 9.99, 99.99, 999.99]
+        if current_amount in fraud_amounts:
+            score += 0.05
+            reasons.append("common_fraud_amount")
+            print(f"🔧 DEBUG: Common fraud amount: {current_amount}")
+        
+        # Check for round number patterns
+        if current_amount > 10 and current_amount % 100 == 0:
+            score += 0.03
+            reasons.append("round_amount_pattern")
+            print(f"🔧 DEBUG: Round amount pattern: {current_amount}")
+        
+        return score, reasons
+
+    def _calculate_composite_risk_score(self, base_score: float, advanced_scores: Dict[str, float]) -> float:
+        """Calculate composite risk score using weighted combination"""
+        total_advanced_score = 0.0
+        
+        for algorithm, score in advanced_scores.items():
+            weight = self.advanced_weights.get(algorithm, 0.1)
+            total_advanced_score += score * weight
+        
+        # Combine base score with advanced algorithms using weighted average
+        # Base score has 60% weight, advanced algorithms have 40% weight
+        composite_score = (base_score * 0.6) + (total_advanced_score * 0.4)
+        
+        # Apply sigmoid normalization to keep score between 0 and 1
+        normalized_score = 1 / (1 + math.exp(-5 * (composite_score - 0.5)))
+        
+        return min(normalized_score, 1.0)
+
+    # ============================================================================
+    # MAIN ANALYSIS METHOD (ENHANCED)
+    # ============================================================================
+
     def analyze_transaction(self, tx: dict) -> dict:
-        """Analyze a single transaction for fraud indicators WITH DEBUG"""
+        """Analyze a single transaction for fraud indicators WITH ADVANCED ALGORITHMS"""
         try:
             print("🔧 DEBUG: About to call increment_metric for total_checks")
             # Increment total checks metric (SYNCHRONOUSLY)
             success = self.metrics.increment_metric("total_checks")
             print(f"🔧 DEBUG: increment_metric for total_checks returned: {success}")
             
-            score = 0.0
+            base_score = 0.0
             reasons = []
+            advanced_scores = {}
+            all_advanced_reasons = []
             
             # Validate input
             if not isinstance(tx, dict):
                 logger.warning("Transaction must be a dictionary")
                 return self._create_error_result(tx, "Invalid transaction format")
+            
+            # === BASIC FRAUD CHECKS (ORIGINAL) ===
             
             # Check disposable email
             email = str(tx.get("email", "")).strip().lower()
@@ -291,7 +624,7 @@ class FraudChecker:
                 domain = email.split("@")[-1]
                 if domain in self.disposable_domains:
                     weight = self._safe_get_rule_weight("disposable_email")
-                    score += weight
+                    base_score += weight
                     reasons.append("disposable_email")
                     print(f"🔧 DEBUG: Disposable email detected: {domain}, weight: {weight}")
                     logger.debug(f"Disposable email detected: {domain}")
@@ -302,7 +635,7 @@ class FraudChecker:
                 bin_number = card_number[:6]
                 if bin_number in self.suspicious_bins:
                     weight = self._safe_get_rule_weight("suspicious_bin")
-                    score += weight
+                    base_score += weight
                     reasons.append("suspicious_bin")
                     print(f"🔧 DEBUG: Suspicious BIN detected: {bin_number}, weight: {weight}")
                     logger.debug(f"Suspicious BIN detected: {bin_number}")
@@ -311,7 +644,7 @@ class FraudChecker:
             ip = str(tx.get("ip", "")).strip()
             if ip in self.flagged_ips:
                 weight = self._safe_get_rule_weight("flagged_ip")
-                score += weight
+                base_score += weight
                 reasons.append("flagged_ip")
                 print(f"🔧 DEBUG: Flagged IP detected: {ip}, weight: {weight}")
                 logger.debug(f"Flagged IP detected: {ip}")
@@ -320,7 +653,7 @@ class FraudChecker:
             fingerprint = str(tx.get("fingerprint", "")).strip()
             if fingerprint in self.reused_fingerprints:
                 weight = self._safe_get_rule_weight("reused_fingerprint")
-                score += weight
+                base_score += weight
                 reasons.append("reused_fingerprint")
                 print(f"🔧 DEBUG: Reused fingerprint detected: {fingerprint}, weight: {weight}")
                 logger.debug(f"Reused fingerprint detected: {fingerprint}")
@@ -330,21 +663,73 @@ class FraudChecker:
                 price = float(tx.get("price", 0))
                 if price in self.tampered_prices:
                     weight = self._safe_get_rule_weight("tampered_price")
-                    score += weight
+                    base_score += weight
                     reasons.append("tampered_price")
                     print(f"🔧 DEBUG: Tampered price detected: {price}, weight: {weight}")
                     logger.debug(f"Tampered price detected: {price}")
             except (ValueError, TypeError):
                 logger.warning(f"Invalid price value: {tx.get('price')}")
             
-            # Determine decision based on score and update metrics
-            print(f"🔧 DEBUG: Final score: {score}, about to determine decision")
-            if score >= 0.7:
+            # === ADVANCED ALGORITHM CHECKS ===
+            
+            print("🔧 DEBUG: Running advanced fraud algorithms...")
+            
+            # 1. Velocity Pattern Analysis
+            velocity_score, velocity_reasons = self._analyze_velocity_patterns(tx)
+            if velocity_score > 0:
+                advanced_scores['velocity_abuse'] = velocity_score
+                all_advanced_reasons.extend(velocity_reasons)
+                self.metrics.increment_metric("velocity_alerts")
+            
+            # 2. Behavioral Pattern Analysis
+            behavioral_score, behavioral_reasons = self._analyze_behavioral_patterns(tx)
+            if behavioral_score > 0:
+                advanced_scores['behavioral_deviation'] = behavioral_score
+                all_advanced_reasons.extend(behavioral_reasons)
+                self.metrics.increment_metric("behavioral_alerts")
+            
+            # 3. Geographic Anomaly Detection
+            geo_score, geo_reasons = self._analyze_geographic_anomalies(tx)
+            if geo_score > 0:
+                advanced_scores['geo_anomaly'] = geo_score
+                all_advanced_reasons.extend(geo_reasons)
+                self.metrics.increment_metric("geo_anomalies")
+            
+            # 4. Network Pattern Analysis
+            network_score, network_reasons = self._analyze_network_patterns(tx)
+            if network_score > 0:
+                advanced_scores['network_analysis'] = network_score
+                all_advanced_reasons.extend(network_reasons)
+            
+            # 5. Email Pattern Analysis
+            email_score, email_reasons = self._analyze_email_patterns(tx)
+            if email_score > 0:
+                advanced_scores['suspicious_patterns'] = email_score
+                all_advanced_reasons.extend(email_reasons)
+                self.metrics.increment_metric("pattern_anomalies")
+            
+            # 6. Amount Clustering Analysis
+            amount_score, amount_reasons = self._analyze_amount_clustering(tx)
+            if amount_score > 0:
+                advanced_scores['amount_clustering'] = amount_score
+                all_advanced_reasons.extend(amount_reasons)
+            
+            # Calculate composite risk score
+            composite_score = self._calculate_composite_risk_score(base_score, advanced_scores)
+            
+            # Combine all reasons
+            all_reasons = reasons + all_advanced_reasons
+            
+            # Determine decision based on composite score and update metrics
+            print(f"🔧 DEBUG: Base score: {base_score}, Composite score: {composite_score}")
+            print(f"🔧 DEBUG: Advanced scores: {advanced_scores}")
+            
+            if composite_score >= 0.7:
                 decision = "fraud"
                 print("🔧 DEBUG: About to call increment_metric for fraud_blocked")
                 success = self.metrics.increment_metric("fraud_blocked")
                 print(f"🔧 DEBUG: increment_metric for fraud_blocked returned: {success}")
-            elif score >= 0.4:
+            elif composite_score >= 0.4:
                 decision = "suspicious"
                 print("🔧 DEBUG: About to call increment_metric for suspicious_flagged")
                 success = self.metrics.increment_metric("suspicious_flagged")
@@ -357,14 +742,18 @@ class FraudChecker:
             
             result = {
                 **tx,
-                "fraud_score": round(score, 2),
+                "fraud_score": round(composite_score, 3),
+                "base_score": round(base_score, 3),
+                "advanced_scores": {k: round(v, 3) for k, v in advanced_scores.items()},
                 "decision": decision,
-                "triggered_rules": reasons,
-                "analysis_timestamp": datetime.now().isoformat()
+                "triggered_rules": all_reasons,
+                "analysis_timestamp": datetime.now().isoformat(),
+                "algorithm_version": "2.0_advanced"
             }
             
-            print(f"🔧 DEBUG: Transaction analyzed: score={score}, decision={decision}")
-            logger.debug(f"Transaction analyzed: score={score}, decision={decision}")
+            print(f"🔧 DEBUG: Transaction analyzed: composite_score={composite_score:.3f}, decision={decision}")
+            print(f"🔧 DEBUG: Advanced algorithms triggered: {list(advanced_scores.keys())}")
+            logger.debug(f"Transaction analyzed: score={composite_score:.3f}, decision={decision}")
             return result
             
         except Exception as e:
@@ -379,14 +768,17 @@ class FraudChecker:
         return {
             **base_tx,
             "fraud_score": 0.0,
+            "base_score": 0.0,
+            "advanced_scores": {},
             "decision": "error",
             "triggered_rules": [],
             "error": error_msg,
-            "analysis_timestamp": datetime.now().isoformat()
+            "analysis_timestamp": datetime.now().isoformat(),
+            "algorithm_version": "2.0_advanced"
         }
 
     def analyze_bulk(self, file_obj) -> List[dict]:
-        """Analyze multiple transactions from uploaded file WITH DEBUG"""
+        """Analyze multiple transactions from uploaded file WITH ADVANCED ALGORITHMS"""
         try:
             print(f"🔧 DEBUG: Starting bulk analysis of file: {getattr(file_obj, 'filename', 'unknown')}")
             logger.info(f"Starting bulk analysis of file: {getattr(file_obj, 'filename', 'unknown')}")
@@ -402,8 +794,8 @@ class FraudChecker:
             if df is None or df.empty:
                 raise ValueError("File is empty or could not be read")
             
-            print(f"🔧 DEBUG: Processing {len(df)} transactions")
-            logger.info(f"Processing {len(df)} transactions")
+            print(f"🔧 DEBUG: Processing {len(df)} transactions with advanced algorithms")
+            logger.info(f"Processing {len(df)} transactions with advanced algorithms")
             
             # Analyze each transaction
             results = []
@@ -413,6 +805,7 @@ class FraudChecker:
             fraud_count = 0
             suspicious_count = 0
             clean_count = 0
+            advanced_detections = defaultdict(int)
             
             for index, row in df.iterrows():
                 try:
@@ -426,7 +819,7 @@ class FraudChecker:
                         tx_number = index + 1
                     else:
                         tx_number = index
-                    print(f"🔧 DEBUG: Analyzing transaction {tx_number}")
+                    print(f"🔧 DEBUG: Analyzing transaction {tx_number} with advanced algorithms")
                     result = self.analyze_transaction(tx_dict)
                     results.append(result)
                     
@@ -440,6 +833,10 @@ class FraudChecker:
                         clean_count += 1
                     elif decision == "error":
                         errors += 1
+                    
+                    # Count advanced algorithm detections
+                    for algo in result.get("advanced_scores", {}):
+                        advanced_detections[algo] += 1
                         
                 except Exception as e:
                     print(f"💥 DEBUG: Error processing row {index}: {e}")
@@ -452,10 +849,12 @@ class FraudChecker:
                     errors += 1
             
             # Log detailed results for verification
-            print(f"🔧 DEBUG: Bulk analysis completed: {len(results)} processed, {errors} errors")
+            print(f"🔧 DEBUG: Advanced bulk analysis completed: {len(results)} processed, {errors} errors")
             print(f"🔧 DEBUG: Results breakdown: {fraud_count} fraud, {suspicious_count} suspicious, {clean_count} clean")
-            logger.info(f"Bulk analysis completed: {len(results)} processed, {errors} errors")
+            print(f"🔧 DEBUG: Advanced detections: {dict(advanced_detections)}")
+            logger.info(f"Advanced bulk analysis completed: {len(results)} processed, {errors} errors")
             logger.info(f"Results breakdown: {fraud_count} fraud, {suspicious_count} suspicious, {clean_count} clean")
+            logger.info(f"Advanced algorithm detections: {dict(advanced_detections)}")
             
             # Verify metrics were updated
             total_checks = self.metrics.get_metric_count("total_checks")
@@ -463,6 +862,10 @@ class FraudChecker:
             suspicious_flagged = self.metrics.get_metric_count("suspicious_flagged")
             clean_approved = self.metrics.get_metric_count("clean_approved")
             bulk_analyses = self.metrics.get_metric_count("bulk_analyses")
+            velocity_alerts = self.metrics.get_metric_count("velocity_alerts")
+            pattern_anomalies = self.metrics.get_metric_count("pattern_anomalies")
+            geo_anomalies = self.metrics.get_metric_count("geo_anomalies")
+            behavioral_alerts = self.metrics.get_metric_count("behavioral_alerts")
             
             print(f"📊 DEBUG: CURRENT METRICS IN DATABASE:")
             print(f"   Total checks: {total_checks}")
@@ -470,20 +873,18 @@ class FraudChecker:
             print(f"   Suspicious flagged: {suspicious_flagged}")
             print(f"   Clean approved: {clean_approved}")
             print(f"   Bulk analyses: {bulk_analyses}")
-            logger.info(f"📊 CURRENT METRICS IN DATABASE:")
-            logger.info(f"   Total checks: {total_checks}")
-            logger.info(f"   Fraud blocked: {fraud_blocked}")
-            logger.info(f"   Suspicious flagged: {suspicious_flagged}")
-            logger.info(f"   Clean approved: {clean_approved}")
-            logger.info(f"   Bulk analyses: {bulk_analyses}")
+            print(f"   Velocity alerts: {velocity_alerts}")
+            print(f"   Pattern anomalies: {pattern_anomalies}")
+            print(f"   Geo anomalies: {geo_anomalies}")
+            print(f"   Behavioral alerts: {behavioral_alerts}")
             
             return results
             
         except Exception as e:
-            print(f"💥 DEBUG: Bulk analysis failed: {e}")
-            logger.error(f"Bulk analysis failed: {e}")
+            print(f"💥 DEBUG: Advanced bulk analysis failed: {e}")
+            logger.error(f"Advanced bulk analysis failed: {e}")
             logger.error(traceback.format_exc())
-            raise ValueError(f"Bulk analysis failed: {str(e)}")
+            raise ValueError(f"Advanced bulk analysis failed: {str(e)}")
 
     def _read_file_to_dataframe(self, file_obj) -> Optional[pd.DataFrame]:
         """Read uploaded file into pandas DataFrame"""
@@ -533,7 +934,7 @@ class FraudChecker:
         return cleaned
 
     async def get_stats(self) -> dict:
-        """Get fraud checker statistics including real metrics"""
+        """Get fraud checker statistics including real metrics and advanced algorithm stats"""
         try:
             # Get real metrics from database using synchronous connection
             real_metrics = {}
@@ -548,7 +949,10 @@ class FraudChecker:
                     "suspicious_bins": len(self.suspicious_bins),
                     "reused_fingerprints": len(self.reused_fingerprints),
                     "tampered_prices": len(self.tampered_prices),
-                    "active_rules": len(self.rules)
+                    "active_rules": len(self.rules),
+                    "user_histories": len(self.transaction_history),
+                    "velocity_cache_size": len(self.velocity_cache),
+                    "geo_patterns_size": len(self.geo_patterns)
                 },
                 "detection_metrics": {
                     "total_checks": real_metrics.get("total_checks", 0),
@@ -556,7 +960,16 @@ class FraudChecker:
                     "suspicious_flagged": real_metrics.get("suspicious_flagged", 0),
                     "clean_approved": real_metrics.get("clean_approved", 0),
                     "bulk_analyses": real_metrics.get("bulk_analyses", 0),
-                    "api_requests": real_metrics.get("api_requests", 0)
+                    "api_requests": real_metrics.get("api_requests", 0),
+                    "velocity_alerts": real_metrics.get("velocity_alerts", 0),
+                    "pattern_anomalies": real_metrics.get("pattern_anomalies", 0),
+                    "geo_anomalies": real_metrics.get("geo_anomalies", 0),
+                    "behavioral_alerts": real_metrics.get("behavioral_alerts", 0)
+                },
+                "algorithm_info": {
+                    "version": "2.0_advanced",
+                    "enabled_algorithms": list(self.advanced_weights.keys()),
+                    "algorithm_weights": self.advanced_weights
                 },
                 "rules": {key: {"weight": rule.get("weight", 0)} for key, rule in self.rules.items()},
                 "last_updated": datetime.now().isoformat()
@@ -571,7 +984,10 @@ class FraudChecker:
                     "suspicious_bins": len(self.suspicious_bins),
                     "reused_fingerprints": len(self.reused_fingerprints),
                     "tampered_prices": len(self.tampered_prices),
-                    "active_rules": len(self.rules)
+                    "active_rules": len(self.rules),
+                    "user_histories": len(self.transaction_history),
+                    "velocity_cache_size": len(self.velocity_cache),
+                    "geo_patterns_size": len(self.geo_patterns)
                 },
                 "detection_metrics": {
                     "total_checks": 0,
@@ -579,7 +995,16 @@ class FraudChecker:
                     "suspicious_flagged": 0,
                     "clean_approved": 0,
                     "bulk_analyses": 0,
-                    "api_requests": 0
+                    "api_requests": 0,
+                    "velocity_alerts": 0,
+                    "pattern_anomalies": 0,
+                    "geo_anomalies": 0,
+                    "behavioral_alerts": 0
+                },
+                "algorithm_info": {
+                    "version": "2.0_advanced",
+                    "enabled_algorithms": list(self.advanced_weights.keys()),
+                    "algorithm_weights": self.advanced_weights
                 },
                 "rules": {key: {"weight": rule.get("weight", 0)} for key, rule in self.rules.items()},
                 "last_updated": datetime.now().isoformat()
@@ -591,7 +1016,7 @@ class FraudChecker:
 # ============================================================================
 
 if __name__ == "__main__":
-    print("🚀 Testing FraudChecker with GUARANTEED working metrics...")
+    print("🚀 Testing Enhanced FraudChecker with ADVANCED ALGORITHMS...")
     
     # Install pymongo if not available
     try:
@@ -604,26 +1029,46 @@ if __name__ == "__main__":
     
     checker = FraudChecker()
     
-    # Test single transaction
+    # Test single transaction with multiple fraud indicators
     test_tx = {
-        "email": "test@tempmail.com",  # Should trigger disposable email rule
-        "card_number": "123456789012345",  # Should trigger suspicious BIN
-        "ip": "203.0.113.45",  # Should trigger flagged IP
-        "fingerprint": "fp_abc123",  # Should trigger reused fingerprint
-        "price": 0.01  # Should trigger tampered price
+        "email": "user123456@tempmail.com",  # Should trigger disposable email + numbered pattern
+        "card_number": "123456789012345",    # Should trigger suspicious BIN
+        "ip": "203.0.113.45",               # Should trigger flagged IP + network analysis
+        "fingerprint": "fp_abc123",         # Should trigger reused fingerprint
+        "price": 0.01                       # Should trigger tampered price + fraud amount
     }
     
-    print("\n🧪 Testing single transaction:")
+    print("\n🧪 Testing single transaction with advanced algorithms:")
     print("BEFORE - Metrics in database:")
     print(f"  Total checks: {checker.metrics.get_metric_count('total_checks')}")
     print(f"  Fraud blocked: {checker.metrics.get_metric_count('fraud_blocked')}")
+    print(f"  Velocity alerts: {checker.metrics.get_metric_count('velocity_alerts')}")
+    print(f"  Pattern anomalies: {checker.metrics.get_metric_count('pattern_anomalies')}")
     
     result = checker.analyze_transaction(test_tx)
-    print(f"Result: {result}")
+    print(f"\nAdvanced Analysis Result:")
+    print(f"  Composite Score: {result.get('fraud_score')}")
+    print(f"  Base Score: {result.get('base_score')}")
+    print(f"  Advanced Scores: {result.get('advanced_scores')}")
+    print(f"  Decision: {result.get('decision')}")
+    print(f"  Triggered Rules: {result.get('triggered_rules')}")
     
     print("\nAFTER - Metrics in database:")
     print(f"  Total checks: {checker.metrics.get_metric_count('total_checks')}")
     print(f"  Fraud blocked: {checker.metrics.get_metric_count('fraud_blocked')}")
+    print(f"  Velocity alerts: {checker.metrics.get_metric_count('velocity_alerts')}")
+    print(f"  Pattern anomalies: {checker.metrics.get_metric_count('pattern_anomalies')}")
     
-    print("\n📊 Metrics should now be updated in the database!")
+    # Test velocity patterns with multiple rapid transactions
+    print("\n🧪 Testing velocity patterns with rapid transactions:")
+    for i in range(5):
+        velocity_test_tx = {
+            "email": "velocity_test@example.com",
+            "price": 10.00 + i,
+            "ip": "192.168.1.100"
+        }
+        result = checker.analyze_transaction(velocity_test_tx)
+        print(f"  Transaction {i+1}: Score={result.get('fraud_score')}, Advanced={result.get('advanced_scores')}")
+    
+    print("\n📊 Advanced algorithms now active! Enhanced fraud detection ready!")
     print("Run: python db/init_metrics.py show")
