@@ -1,2 +1,4 @@
 # Ignore all log files in the project
 *.log
+*.csv
+.vscode/
