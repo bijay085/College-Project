@@ -336,3 +336,15 @@
 2025-06-27 10:30:25,689 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:25] "[33mOPTIONS /auth/user-logs HTTP/1.1[0m" 404 -
 2025-06-27 10:30:26,077 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:26] "[33mOPTIONS /auth/user-logs HTTP/1.1[0m" 404 -
 2025-06-27 10:30:26,453 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:26] "[33mOPTIONS /auth/user-logs HTTP/1.1[0m" 404 -
+2025-06-27 10:30:37,877 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:37] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 10:30:37,887 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:37] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 10:30:43,020 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:43] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 10:30:43,387 - ERROR - Failed to create session: E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }', 'keyPattern': {'token': 1}, 'keyValue': {'token': None}}
+2025-06-27 10:30:43,388 - INFO - Auth attempt - Email: admin@fraudshield.com, Success: True, IP: 127.0.0.1
+2025-06-27 10:30:43,390 - INFO - User logged in successfully: admin@fraudshield.com
+2025-06-27 10:30:43,390 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:43] "POST /auth/login HTTP/1.1" 200 -
+2025-06-27 10:30:46,052 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:46] "OPTIONS /auth/user-stats HTTP/1.1" 200 -
+2025-06-27 10:30:46,059 - INFO - 127.0.0.1 - - [27/Jun/2025 10:30:46] "GET /auth/user-stats HTTP/1.1" 200 -
+2025-06-27 10:31:01,365 - INFO - 127.0.0.1 - - [27/Jun/2025 10:31:01] "OPTIONS /auth/user-stats HTTP/1.1" 200 -
+2025-06-27 10:31:01,371 - INFO - 127.0.0.1 - - [27/Jun/2025 10:31:01] "GET /auth/user-stats HTTP/1.1" 200 -
+2025-06-27 10:31:01,839 - INFO - 127.0.0.1 - - [27/Jun/2025 10:31:01] "GET /auth/user-stats HTTP/1.1" 200 -
