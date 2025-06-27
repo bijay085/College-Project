@@ -60,3 +60,511 @@
 2025-06-27 12:07:13,138 - INFO - Database: mongodb://localhost:27017/fraudshield
 2025-06-27 12:07:13,159 - WARNING -  * Debugger is active!
 2025-06-27 12:07:13,161 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 12:08:15,406 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 12:08:15,778 - INFO -  * Restarting with stat
+2025-06-27 12:08:16,278 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 12:08:16,329 - INFO - Max login attempts: 5
+2025-06-27 12:08:16,329 - INFO - Lockout duration: 30 minutes
+2025-06-27 12:08:16,329 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 12:08:16,354 - WARNING -  * Debugger is active!
+2025-06-27 12:08:16,356 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 12:08:21,384 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 12:08:21,853 - INFO -  * Restarting with stat
+2025-06-27 12:08:22,292 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 12:08:22,336 - INFO - Max login attempts: 5
+2025-06-27 12:08:22,336 - INFO - Lockout duration: 30 minutes
+2025-06-27 12:08:22,336 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 12:08:22,357 - WARNING -  * Debugger is active!
+2025-06-27 12:08:22,359 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 12:09:10,577 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 12:09:11,021 - INFO -  * Restarting with stat
+2025-06-27 12:10:13,579 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 12:10:13,636 - INFO - Max login attempts: 5
+2025-06-27 12:10:13,636 - INFO - Lockout duration: 30 minutes
+2025-06-27 12:10:13,636 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 12:10:13,668 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 12:10:13,668 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 12:10:13,669 - INFO -  * Restarting with stat
+2025-06-27 12:10:14,163 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 12:10:14,185 - INFO - Max login attempts: 5
+2025-06-27 12:10:14,185 - INFO - Lockout duration: 30 minutes
+2025-06-27 12:10:14,186 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 12:10:14,208 - WARNING -  * Debugger is active!
+2025-06-27 12:10:14,211 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 12:11:19,493 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 12:11:19,863 - INFO -  * Restarting with stat
+2025-06-27 12:21:17,664 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 12:21:17,702 - INFO - Max login attempts: 5
+2025-06-27 12:21:17,702 - INFO - Lockout duration: 30 minutes
+2025-06-27 12:21:17,702 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 12:21:17,734 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 12:21:17,734 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 12:21:17,736 - INFO -  * Restarting with stat
+2025-06-27 12:21:18,113 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 12:21:18,156 - INFO - Max login attempts: 5
+2025-06-27 12:21:18,156 - INFO - Lockout duration: 30 minutes
+2025-06-27 12:21:18,156 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 12:21:18,175 - WARNING -  * Debugger is active!
+2025-06-27 12:21:18,177 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 12:21:18,185 - INFO - 127.0.0.1 - - [27/Jun/2025 12:21:18] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 12:21:18,421 - ERROR - [ERROR] Failed to create session: E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }', 'keyPattern': {'token': 1}, 'keyValue': {'token': None}} | Extra: None
+2025-06-27 12:21:18,423 - INFO - Auth attempt - Email: admin@fraudshield.com, Success: True, IP: 127.0.0.1
+2025-06-27 12:21:18,423 - INFO - User logged in successfully: admin@fraudshield.com
+2025-06-27 12:21:18,423 - INFO - 127.0.0.1 - - [27/Jun/2025 12:21:18] "POST /auth/login HTTP/1.1" 200 -
+2025-06-27 12:21:21,100 - INFO - 127.0.0.1 - - [27/Jun/2025 12:21:21] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:21:21,122 - INFO - 127.0.0.1 - - [27/Jun/2025 12:21:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:22:37,858 - INFO - 127.0.0.1 - - [27/Jun/2025 12:22:37] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:22:37,872 - INFO - 127.0.0.1 - - [27/Jun/2025 12:22:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:23:13,311 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:13] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:23:13,338 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:23:31,198 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:31] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:23:31,220 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:23:41,155 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:41] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:23:41,157 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:41] "OPTIONS /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 12:23:41,176 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:23:41,195 - INFO - Retrieved 3 users (page 1, total: 3)
+2025-06-27 12:23:41,196 - INFO - 127.0.0.1 - - [27/Jun/2025 12:23:41] "GET /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 12:24:13,443 - INFO - 127.0.0.1 - - [27/Jun/2025 12:24:13] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 12:24:13,448 - INFO - 127.0.0.1 - - [27/Jun/2025 12:24:13] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 12:37:05,285 - INFO - 127.0.0.1 - - [27/Jun/2025 12:37:05] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:37:05,305 - INFO - 127.0.0.1 - - [27/Jun/2025 12:37:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:37:05,320 - INFO - 127.0.0.1 - - [27/Jun/2025 12:37:05] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 12:37:05,336 - INFO - 127.0.0.1 - - [27/Jun/2025 12:37:05] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 12:58:33,172 - INFO - 127.0.0.1 - - [27/Jun/2025 12:58:33] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 12:58:33,208 - INFO - 127.0.0.1 - - [27/Jun/2025 12:58:33] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 12:58:33,217 - INFO - 127.0.0.1 - - [27/Jun/2025 12:58:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 12:58:33,220 - INFO - 127.0.0.1 - - [27/Jun/2025 12:58:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:03:37,700 - INFO - 127.0.0.1 - - [27/Jun/2025 13:03:37] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:03:37,729 - INFO - 127.0.0.1 - - [27/Jun/2025 13:03:37] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:03:37,730 - INFO - 127.0.0.1 - - [27/Jun/2025 13:03:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:03:37,738 - INFO - 127.0.0.1 - - [27/Jun/2025 13:03:37] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:21,177 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:21,191 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:21,197 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:21,206 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:21,512 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:21,534 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:21,890 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:21,921 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:21] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:22,341 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:22,361 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:22] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:22,694 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:22] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:22,731 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:23,112 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:23] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:23,132 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:23,514 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:23,532 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:23] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:23,946 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:23] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:23,986 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:23] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:24,363 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:24] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:24,389 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:24,738 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:24] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:24,752 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:25,141 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:25] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:25,185 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:25,556 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:25,577 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:25] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:25,942 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:25] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:25,963 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:25] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:26,370 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:26] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:26,388 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:26] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:26,394 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:26] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:26,398 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:26,858 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:26] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:26,876 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:26] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:27,240 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:27] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:27,271 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:27,649 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:27] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:27,683 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:27] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:28,119 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:28] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:28,138 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:28,459 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:28] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:28,481 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:28,848 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:28] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:28,862 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:28] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:29,308 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:29,326 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:29] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:29,641 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:29] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:29,669 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:29] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:30,127 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:30] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:30,161 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:30,509 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:30] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:30,525 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:30,842 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:30] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:30,871 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:30] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:31,287 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:31,310 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:31] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:31,683 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:31] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:31,691 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:31] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:31,701 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:31] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:31,704 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:31] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:32,095 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:32,113 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:32] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:32,472 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:32,489 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:32] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:32,888 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:32] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:32,904 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:32] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:33,276 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:33,304 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:33,713 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:33] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:33,763 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:34,110 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:34,134 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:34,604 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:34] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:34,699 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:35,083 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:35,092 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:35] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:35,328 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:35] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:35,350 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:35,746 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:35,759 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:35] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:36,141 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:36,167 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:36,561 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:36,601 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:36,938 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:36,954 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:36,958 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:36,962 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:37,336 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:37,352 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:37] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:37,757 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:37] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:37,785 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:38,170 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:38,200 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:38,565 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:38,593 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:38,950 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:38,974 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:38] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:07:39,533 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:07:39,545 - INFO - 127.0.0.1 - - [27/Jun/2025 13:07:39] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:19:24,874 - INFO - 127.0.0.1 - - [27/Jun/2025 13:19:24] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:19:24,877 - INFO - 127.0.0.1 - - [27/Jun/2025 13:19:24] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:19:24,885 - INFO - 127.0.0.1 - - [27/Jun/2025 13:19:24] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:19:24,897 - INFO - 127.0.0.1 - - [27/Jun/2025 13:19:24] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:37:05,672 - INFO - 127.0.0.1 - - [27/Jun/2025 13:37:05] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:37:05,675 - INFO - 127.0.0.1 - - [27/Jun/2025 13:37:05] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:37:05,680 - INFO - 127.0.0.1 - - [27/Jun/2025 13:37:05] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:37:05,688 - INFO - 127.0.0.1 - - [27/Jun/2025 13:37:05] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:47:42,762 - INFO - 127.0.0.1 - - [27/Jun/2025 13:47:42] "OPTIONS /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 13:47:42,763 - INFO - 127.0.0.1 - - [27/Jun/2025 13:47:42] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:47:42,780 - INFO - Retrieved 3 users (page 1, total: 3)
+2025-06-27 13:47:42,780 - INFO - 127.0.0.1 - - [27/Jun/2025 13:47:42] "GET /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 13:47:42,792 - INFO - 127.0.0.1 - - [27/Jun/2025 13:47:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:48:16,032 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:16] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:48:16,041 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:16] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:48:20,169 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:20] "OPTIONS /auth/login HTTP/1.1" 200 -
+2025-06-27 13:48:20,528 - ERROR - [ERROR] Failed to create session: E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }, full error: {'index': 0, 'code': 11000, 'errmsg': 'E11000 duplicate key error collection: fraudshield.sessions index: token_1 dup key: { token: null }', 'keyPattern': {'token': 1}, 'keyValue': {'token': None}} | Extra: None
+2025-06-27 13:48:20,530 - INFO - Auth attempt - Email: admin@fraudshield.com, Success: True, IP: 127.0.0.1
+2025-06-27 13:48:20,530 - INFO - User logged in successfully: admin@fraudshield.com
+2025-06-27 13:48:20,531 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:20] "POST /auth/login HTTP/1.1" 200 -
+2025-06-27 13:48:22,197 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:22] "OPTIONS /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 13:48:22,199 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:22] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:48:22,218 - INFO - Retrieved 3 users (page 1, total: 3)
+2025-06-27 13:48:22,220 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:22] "GET /auth/users?page=1&limit=50 HTTP/1.1" 200 -
+2025-06-27 13:48:22,229 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:22] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:48:41,788 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:41] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:48:41,802 - INFO - 127.0.0.1 - - [27/Jun/2025 13:48:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:16,092 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:16,105 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:16,127 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:16,176 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:16,189 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:16,507 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:16,516 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:16,543 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:16,860 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:16,878 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:16,999 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:17,263 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:17,278 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:17,301 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:17] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:17,669 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:17,688 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:17] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:17,707 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:18,167 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:18,206 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:18] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:18,242 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:18,405 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:18,881 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:18] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:18,909 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:18,933 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:18] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:19,314 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:19,332 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:19] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:19,364 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:19,698 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:19,700 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:19] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:19,733 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:19] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:20,087 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:20] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:20,097 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:20,137 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:20,759 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:20] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:20,860 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:20,942 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:20] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:48,100 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:48] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:48,107 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:48,184 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:48] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:48,200 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:48,219 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:51,152 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:51,169 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:51,184 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:51,209 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:51,469 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:51,619 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:51,632 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:51,902 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:52,023 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:52,047 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:52,280 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:52,414 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:52,424 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:52,670 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:52,826 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:52,835 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:53,067 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:53,204 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:53,210 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:53,222 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:53,585 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:53,606 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:53,619 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:53,869 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:53,996 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:54,006 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:54,248 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:54,405 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:54,409 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:54,771 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:54,825 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:54,829 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:55,075 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:55,203 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:55] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:55,213 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:55,611 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:55] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:55,616 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:55,651 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:55,890 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:56,038 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:56,056 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:56,370 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:56,387 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:56,455 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:56,465 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:56,757 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:56,790 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:56,802 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:57,146 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:57,170 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:57,177 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:57,535 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:57,542 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:57,574 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:57,974 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:57,978 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:57] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:58,002 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:58,323 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:58,336 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:58,377 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:58,396 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:58,880 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:49:58,898 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:49:58,908 - INFO - 127.0.0.1 - - [27/Jun/2025 13:49:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:04,306 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:04] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:04,307 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:04] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:04,322 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:04] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:04,331 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:04,345 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:04] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:09,486 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:09] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:09,502 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:47,419 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:47] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:47,459 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:47,464 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:47] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:47,485 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:47,486 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:47] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:47,949 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:47,993 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:47] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:48,003 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:48,486 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:48,543 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:48] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:48,552 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:49,102 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:49,144 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:49,150 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:49,535 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:49,538 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:49,578 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:49,901 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:49,941 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:49] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:50,021 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:50,035 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:50,243 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:50,258 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:50,287 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:50,347 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:50,682 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:50,720 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:50,761 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:51,050 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:51,186 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:51,197 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:51,437 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:51,553 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:51,566 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:51,834 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:51,953 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:51,961 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:52,253 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:52,359 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:52,368 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:52,712 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:52,779 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:52,783 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:52] "OPTIONS /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:52,802 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:52] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:53,179 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:53,226 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:53,229 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:53,469 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:53,602 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:53] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:53,606 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:53,869 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:54,019 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:54,032 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:54,312 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:54,339 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:54] "GET /auth/health HTTP/1.1" 200 -
+2025-06-27 13:50:54,377 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:54,727 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:54,811 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:55,119 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:55,245 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:55,507 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:55] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:55,566 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:55,599 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:56,489 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:56] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:50:58,935 - INFO - 127.0.0.1 - - [27/Jun/2025 13:50:58] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:51:02,492 - INFO - 127.0.0.1 - - [27/Jun/2025 13:51:02] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:51:02,512 - INFO - 127.0.0.1 - - [27/Jun/2025 13:51:02] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:33,465 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:33] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:33,482 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:33,735 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:33] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:34,134 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:34,638 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:34,961 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:34] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:35,369 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:35,767 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:35] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:36,144 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:36,569 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:36,998 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:36] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:37,379 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:37,903 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:37] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:38,192 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:38,596 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:38] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:38,621 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:38] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:39,019 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:39,469 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:39,851 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:39] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:40,251 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:40,649 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:40] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:41,078 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:41,470 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:41,873 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:41] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:42,324 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:42,673 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:42] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:43,107 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:43,485 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:43,893 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:43] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:43,914 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:43] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:44,330 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:44,715 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:44] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:45,125 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:45,520 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:45,944 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:45] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:46,355 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:46,741 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:46] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:47,137 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:47,584 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:47,960 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:47] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:48,391 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:48,768 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:48] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:49,155 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:49] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:49,174 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:49,589 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:49] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:50,000 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:50,391 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:50,834 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:50] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:51,222 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:51,638 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:51] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:52,019 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:52,423 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:52,842 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:52] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:53,222 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:53,642 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:53] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:54,052 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:54,489 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:54] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:54,505 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:54] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 13:58:55,042 - INFO - 127.0.0.1 - - [27/Jun/2025 13:58:55] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:08,788 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:08] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:08,803 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:08] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:09,080 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:09,502 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:09,894 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:09] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:10,295 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:10,779 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:10] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:11,119 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:11,501 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:11,913 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:11] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:12,334 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:12,918 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:12] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:13,249 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:13,641 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:13] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:14,055 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:14] "OPTIONS /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:14,070 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:14,434 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:14,850 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:14] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:15,250 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:15,657 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:15] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:16,096 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:16,436 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:16] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:00:17,089 - INFO - 127.0.0.1 - - [27/Jun/2025 14:00:17] "GET /auth/admin/stats HTTP/1.1" 200 -
+2025-06-27 14:17:28,175 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 14:17:28,200 - INFO - Max login attempts: 5
+2025-06-27 14:17:28,201 - INFO - Lockout duration: 30 minutes
+2025-06-27 14:17:28,201 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 14:17:28,235 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 14:17:28,235 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 14:17:28,237 - INFO -  * Restarting with stat
+2025-06-27 14:17:28,683 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 14:17:28,713 - INFO - Max login attempts: 5
+2025-06-27 14:17:28,713 - INFO - Lockout duration: 30 minutes
+2025-06-27 14:17:28,713 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 14:17:28,737 - WARNING -  * Debugger is active!
+2025-06-27 14:17:28,740 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 14:18:28,022 - INFO -  * Detected change in 'd:\\College-Project\\user_auth\\auth_api.py', reloading
+2025-06-27 14:18:28,384 - INFO -  * Restarting with stat
+2025-06-27 14:18:53,153 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 14:18:53,166 - INFO - MongoDB connection established successfully
+2025-06-27 14:18:53,218 - INFO - Database indexes created/verified
+2025-06-27 14:18:53,224 - INFO - Starting FraudShield Authentication API...
+2025-06-27 14:18:53,224 - INFO - Max login attempts: 5
+2025-06-27 14:18:53,225 - INFO - Lockout duration: 30 minutes
+2025-06-27 14:18:53,225 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 14:18:53,225 - INFO - Authentication API is ready!
+2025-06-27 14:18:53,225 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 14:18:53,252 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 14:18:53,253 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 14:18:53,254 - INFO -  * Restarting with stat
+2025-06-27 14:18:53,689 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 14:18:53,701 - INFO - MongoDB connection established successfully
+2025-06-27 14:18:53,709 - INFO - Database indexes created/verified
+2025-06-27 14:18:53,715 - INFO - Starting FraudShield Authentication API...
+2025-06-27 14:18:53,715 - INFO - Max login attempts: 5
+2025-06-27 14:18:53,715 - INFO - Lockout duration: 30 minutes
+2025-06-27 14:18:53,715 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 14:18:53,715 - INFO - Authentication API is ready!
+2025-06-27 14:18:53,715 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 14:18:53,740 - WARNING -  * Debugger is active!
+2025-06-27 14:18:53,743 - INFO -  * Debugger PIN: 298-914-561

@@ -54,15 +54,15 @@ header img:hover {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: 2px 10px; /* tighter padding */
   background: var(--surface-cream);
   border-radius: var(--radius-lg);
   border: 1px solid var(--gray-200);
-  font-size: 0.85rem;
+  font-size: 0.8rem; /* slightly smaller text */
   font-weight: 500;
   /* Ensure status bar and dot are vertically centered and inline */
-  height: 32px;
-  min-width: 90px;
+  height: 20px;      /* reduced from 32px */
+  min-width: 40px;   /* reduced from 90px */
   justify-content: flex-start;
   position: relative;
 }

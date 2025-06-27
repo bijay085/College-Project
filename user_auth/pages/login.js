@@ -685,6 +685,403 @@ class LoginForm {
         
         return apiKey;
     }
+
+    // ============================================================================
+    // FIXED: Database-Connected Settings Methods
+    // ============================================================================
+
+    static async loadUserStats() {
+        if (!this.isAdmin()) return;
+
+        try {
+            const apiKey = this.getApiKey();
+            if (!apiKey) {
+                throw new Error('No API key found');
+            }
+
+            // Use the correct AUTH API endpoint (port 5001)
+            const response = await fetch('http://127.0.0.1:5001/auth/admin/stats', {
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors'
+            });
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const data = await response.json();
+            if (data.success) {
+                const totalUsers = document.getElementById('totalUsers');
+                const activeUsers = document.getElementById('activeUsers');
+                
+                if (totalUsers) totalUsers.textContent = data.data.total_users || 0;
+                if (activeUsers) activeUsers.textContent = data.data.active_today || 0;
+                
+                console.log('✅ User stats loaded successfully');
+            } else {
+                throw new Error(data.error || "Unknown error");
+            }
+        } catch (error) {
+            console.error('Failed to load user stats:', error);
+            
+            // Show specific error messages
+            if (error.message.includes('Failed to fetch')) {
+                showToast('Connection Error', 'Cannot connect to authentication API. Make sure the auth API is running on port 5001.', 'error');
+            } else {
+                showToast('Error', 'Failed to load user stats: ' + error.message, 'error');
+            }
+            
+            // Set fallback values
+            const totalUsers = document.getElementById('totalUsers');
+            const activeUsers = document.getElementById('activeUsers');
+            
+            if (totalUsers) totalUsers.textContent = 'Error';
+            if (activeUsers) activeUsers.textContent = 'Error';
+        }
+    }
+
+    // FIXED: Save profile with database persistence
+    static async saveProfile() {
+        if (!this.isAdmin()) {
+            showToast('Access Denied', 'Only administrators can edit profiles.', 'error');
+            return;
+        }
+
+        const apiKey = this.getApiKey();
+        if (!apiKey) {
+            showToast('Error', 'No API key found. Please log in again.', 'error');
+            return;
+        }
+
+        const profileData = {
+            name: document.getElementById('profileName')?.value?.trim() || '',
+            company: document.getElementById('profileCompany')?.value?.trim() || ''
+        };
+
+        if (!profileData.name) {
+            showToast('Validation Error', 'Name is required.', 'error');
+            return;
+        }
+
+        try {
+            showToast('Saving...', 'Updating your profile information.', 'info');
+            
+            const response = await fetch('http://127.0.0.1:5001/auth/profile/update', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(profileData)
+            });
+
+            const result = await response.json();
+            
+            if (response.ok && result.success) {
+                // Update session storage with new data
+                const currentUser = this.getCurrentUser();
+                if (currentUser && currentUser.user) {
+                    currentUser.user.name = profileData.name;
+                    currentUser.user.company = profileData.company;
+                    
+                    // Update both session and persistent storage
+                    sessionStorage.setItem('fraudshield_user', JSON.stringify(currentUser));
+                    const persistentUser = localStorage.getItem('fraudshield_persistent_user');
+                    if (persistentUser) {
+                        localStorage.setItem('fraudshield_persistent_user', JSON.stringify(currentUser));
+                    }
+                    
+                    // Update global variable
+                    window.currentUser = currentUser;
+                    
+                    // Refresh UI
+                    this.setupUserInterface();
+                }
+
+                showToast('Success', 'Profile updated successfully!', 'success');
+                console.log('✅ Profile updated in database');
+            } else {
+                throw new Error(result.error || 'Failed to update profile');
+            }
+            
+        } catch (error) {
+            console.error('Failed to save profile:', error);
+            showToast('Error', 'Failed to update profile: ' + error.message, 'error');
+        }
+    }
+
+    // FIXED: Load thresholds from database
+    static async loadThresholds() {
+        if (!this.isAdmin()) return;
+
+        try {
+            const apiKey = this.getApiKey();
+            const response = await fetch('http://127.0.0.1:5001/auth/settings/thresholds', {
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const fraudThreshold = document.getElementById('fraudThreshold');
+                    const suspiciousThreshold = document.getElementById('suspiciousThreshold');
+                    const fraudValue = document.getElementById('fraudThresholdValue');
+                    const suspiciousValue = document.getElementById('suspiciousThresholdValue');
+
+                    if (fraudThreshold && fraudValue) {
+                        fraudThreshold.value = result.data.fraud_threshold;
+                        fraudValue.textContent = result.data.fraud_threshold;
+                    }
+                    
+                    if (suspiciousThreshold && suspiciousValue) {
+                        suspiciousThreshold.value = result.data.suspicious_threshold;
+                        suspiciousValue.textContent = result.data.suspicious_threshold;
+                    }
+
+                    console.log('✅ Thresholds loaded from database');
+                }
+            }
+        } catch (error) {
+            console.error('Failed to load thresholds:', error);
+        }
+    }
+
+    // FIXED: Save thresholds to database
+    static async saveThresholds() {
+        if (!this.isAdmin()) {
+            showToast('Access Denied', 'Only administrators can modify thresholds.', 'error');
+            return;
+        }
+
+        const apiKey = this.getApiKey();
+        if (!apiKey) {
+            showToast('Error', 'No API key found. Please log in again.', 'error');
+            return;
+        }
+
+        const fraudThreshold = document.getElementById('fraudThreshold')?.value;
+        const suspiciousThreshold = document.getElementById('suspiciousThreshold')?.value;
+
+        if (!fraudThreshold || !suspiciousThreshold) {
+            showToast('Validation Error', 'Both threshold values are required.', 'error');
+            return;
+        }
+
+        const thresholdData = {
+            fraud_threshold: parseFloat(fraudThreshold),
+            suspicious_threshold: parseFloat(suspiciousThreshold)
+        };
+
+        // Client-side validation
+        if (thresholdData.fraud_threshold <= thresholdData.suspicious_threshold) {
+            showToast('Validation Error', 'Fraud threshold must be higher than suspicious threshold.', 'error');
+            return;
+        }
+
+        try {
+            showToast('Saving...', 'Updating detection thresholds.', 'info');
+            
+            const response = await fetch('http://127.0.0.1:5001/auth/settings/thresholds', {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(thresholdData)
+            });
+
+            const result = await response.json();
+            
+            if (response.ok && result.success) {
+                showToast('Success', 'Thresholds updated successfully! Changes are now persistent.', 'success');
+                console.log('✅ Thresholds saved to database:', result.data);
+            } else {
+                throw new Error(result.error || 'Failed to update thresholds');
+            }
+        } catch (error) {
+            console.error('Failed to save thresholds:', error);
+            showToast('Error', 'Failed to save thresholds: ' + error.message, 'error');
+        }
+    }
+
+    // FIXED: Perform health check with proper API calls
+    static async performHealthCheck() {
+        if (!this.isAdmin()) {
+            showToast('Access Denied', 'Only administrators can perform health checks.', 'error');
+            return;
+        }
+
+        const apiKey = this.getApiKey();
+        if (!apiKey) {
+            showToast('Error', 'No API key found. Please log in again.', 'error');
+            return;
+        }
+
+        try {
+            const btn = document.getElementById('healthCheck');
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = '🔄 Checking...';
+            }
+
+            // Call the health check endpoint
+            const response = await fetch('http://127.0.0.1:5001/auth/settings/system-health', {
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const healthData = result.data;
+                    
+                    // Update database status
+                    const dbHealth = document.getElementById('dbHealth');
+                    if (dbHealth) {
+                        if (healthData.database_status === 'online') {
+                            dbHealth.innerHTML = '<span class="status-indicator">🟢</span> Online';
+                            dbHealth.className = 'health-status online';
+                        } else {
+                            dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Offline';
+                            dbHealth.className = 'health-status offline';
+                        }
+                    }
+
+                    // Update fraud API status (bulk API)
+                    const fraudApiHealth = document.getElementById('fraudApiHealth');
+                    if (fraudApiHealth) {
+                        if (healthData.fraud_api_status === 'online') {
+                            fraudApiHealth.innerHTML = '<span class="status-indicator">🟢</span> Online';
+                            fraudApiHealth.className = 'health-status online';
+                        } else {
+                            fraudApiHealth.innerHTML = '<span class="status-indicator">🔴</span> Offline';
+                            fraudApiHealth.className = 'health-status offline';
+                        }
+                    }
+
+                    showToast('Health Check', 'System health check completed successfully.', 'success');
+                    console.log('✅ Health check completed:', healthData);
+                } else {
+                    throw new Error(result.error || 'Health check failed');
+                }
+            } else {
+                throw new Error(`Health check API error: ${response.status}`);
+            }
+
+        } catch (error) {
+            console.error('Health check failed:', error);
+            
+            // Set all systems to error state
+            const dbHealth = document.getElementById('dbHealth');
+            const fraudApiHealth = document.getElementById('fraudApiHealth');
+            
+            if (dbHealth) {
+                dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Error';
+                dbHealth.className = 'health-status offline';
+            }
+            
+            if (fraudApiHealth) {
+                fraudApiHealth.innerHTML = '<span class="status-indicator">🔴</span> Error';
+                fraudApiHealth.className = 'health-status offline';
+            }
+            
+            showToast('Error', 'Health check failed: ' + error.message, 'error');
+        } finally {
+            const btn = document.getElementById('healthCheck');
+            if (btn) {
+                btn.disabled = false;
+                btn.textContent = '🔄 Refresh Status';
+            }
+        }
+    }
+
+    // FIXED: Regenerate API key with database update
+    static async regenerateApiKey() {
+        if (!this.isAdmin()) {
+            showToast('Access Denied', 'Only administrators can regenerate API keys.', 'error');
+            return;
+        }
+
+        if (!confirm('Are you sure you want to regenerate your API key? This will invalidate the current key and you will need to update any integrations.')) {
+            return;
+        }
+
+        const currentApiKey = this.getApiKey();
+        if (!currentApiKey) {
+            showToast('Error', 'No API key found. Please log in again.', 'error');
+            return;
+        }
+
+        try {
+            showToast('Generating...', 'Creating new API key.', 'info');
+            
+            const response = await fetch('http://127.0.0.1:5001/auth/user/regenerate-api-key', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${currentApiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const result = await response.json();
+            
+            if (response.ok && result.success && result.data.api_key) {
+                const newApiKey = result.data.api_key;
+                
+                // Update session storage
+                sessionStorage.setItem('fraudshield_api_key', newApiKey);
+                
+                // Update persistent storage if it exists
+                const persistentUser = localStorage.getItem('fraudshield_persistent_user');
+                if (persistentUser) {
+                    localStorage.setItem('fraudshield_persistent_api_key', newApiKey);
+                }
+                
+                // Update global variable
+                window.apiKey = newApiKey;
+                
+                // Update UI
+                const userApiKey = document.getElementById('userApiKey');
+                if (userApiKey) {
+                    userApiKey.textContent = newApiKey;
+                }
+                
+                showToast('Success', 'New API key generated and saved to database!', 'success');
+                console.log('✅ API key regenerated successfully');
+            } else {
+                throw new Error(result.error || 'Failed to regenerate API key');
+            }
+        } catch (error) {
+            console.error('Failed to regenerate API key:', error);
+            showToast('Error', 'Failed to generate new API key: ' + error.message, 'error');
+        }
+    }
+
+    // ADD: Load settings when settings tab is opened
+    static async initializeSettings() {
+        if (!this.isAuthenticated()) return;
+
+        try {
+            // Load user profile data
+            this.loadUserProfile();
+            
+            // Load thresholds for admin users
+            if (this.isAdmin()) {
+                await this.loadThresholds();
+                await this.loadUserStats();
+            }
+        } catch (error) {
+            console.error('Failed to initialize settings:', error);
+        }
+    }
 }
 
 // Initialize the login form when DOM is loaded

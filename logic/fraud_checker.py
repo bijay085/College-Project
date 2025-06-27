@@ -1,4 +1,4 @@
-# logic/fraud_checker.py
+# logic/fraud_checker.py - Enhanced with Dynamic Thresholds
 import sys
 import os
 import asyncio
@@ -18,7 +18,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class FraudChecker:
-    """Enhanced Fraud Checker with better error handling and validation"""
+    """Enhanced Fraud Checker with dynamic thresholds and better error handling"""
     
     def __init__(self) -> None:
         """Initialize the fraud checker and load data from MongoDB"""
@@ -31,6 +31,10 @@ class FraudChecker:
         self.reused_fingerprints: Set[str] = set()
         self.tampered_prices: Set[float] = set()
         self.rules: Dict[str, Dict] = {}
+        
+        # Dynamic thresholds (can be updated via API)
+        self.fraud_threshold: float = 0.7
+        self.suspicious_threshold: float = 0.4
         
         # MongoDB connection
         try:
@@ -48,6 +52,25 @@ class FraudChecker:
         except Exception as e:
             logger.error(f"Failed to initialize FraudChecker: {e}")
             raise
+
+    def update_thresholds(self, fraud_threshold: float, suspicious_threshold: float) -> None:
+        """
+        Update fraud detection thresholds.
+        
+        Args:
+            fraud_threshold: New fraud threshold (0.0 to 1.0)
+            suspicious_threshold: New suspicious threshold (0.0 to 1.0)
+        """
+        if not (0 <= fraud_threshold <= 1) or not (0 <= suspicious_threshold <= 1):
+            raise ValueError("Thresholds must be between 0 and 1")
+        
+        if suspicious_threshold >= fraud_threshold:
+            raise ValueError("Suspicious threshold must be less than fraud threshold")
+        
+        self.fraud_threshold = fraud_threshold
+        self.suspicious_threshold = suspicious_threshold
+        
+        logger.info(f"Thresholds updated: fraud={fraud_threshold}, suspicious={suspicious_threshold}")
 
     async def _warm_cache(self):
         """Load blacklists and rules from MongoDB"""
@@ -133,6 +156,7 @@ class FraudChecker:
         logger.info(f"Reused fingerprints: {len(self.reused_fingerprints)}")
         logger.info(f"Tampered prices: {len(self.tampered_prices)}")
         logger.info(f"Active rules: {len(self.rules)}")
+        logger.info(f"Current thresholds: fraud={self.fraud_threshold}, suspicious={self.suspicious_threshold}")
         logger.info("================================")
 
     def _safe_get_rule_weight(self, rule_key: str) -> float:
@@ -204,10 +228,10 @@ class FraudChecker:
             except (ValueError, TypeError):
                 logger.warning(f"Invalid price value: {tx.get('price')}")
             
-            # Determine decision based on score
-            if score >= 0.7:
+            # Determine decision based on current thresholds
+            if score >= self.fraud_threshold:
                 decision = "fraud"
-            elif score >= 0.4:
+            elif score >= self.suspicious_threshold:
                 decision = "suspicious"
             else:
                 decision = "not_fraud"
@@ -217,7 +241,11 @@ class FraudChecker:
                 "fraud_score": round(score, 2),
                 "decision": decision,
                 "triggered_rules": reasons,
-                "analysis_timestamp": datetime.now().isoformat()
+                "analysis_timestamp": datetime.now().isoformat(),
+                "thresholds_used": {
+                    "fraud_threshold": self.fraud_threshold,
+                    "suspicious_threshold": self.suspicious_threshold
+                }
             }
             
             logger.debug(f"Transaction analyzed: score={score}, decision={decision}")
@@ -237,52 +265,71 @@ class FraudChecker:
             "decision": "error",
             "triggered_rules": [],
             "error": error_msg,
-            "analysis_timestamp": datetime.now().isoformat()
+            "analysis_timestamp": datetime.now().isoformat(),
+            "thresholds_used": {
+                "fraud_threshold": self.fraud_threshold,
+                "suspicious_threshold": self.suspicious_threshold
+            }
         }
 
-    def analyze_bulk(self, file_obj) -> List[dict]:
-        """Analyze multiple transactions from uploaded file"""
+    def analyze_bulk(self, file_obj, fraud_threshold=None, suspicious_threshold=None) -> List[dict]:
+        """Analyze multiple transactions from uploaded file with optional threshold override"""
         try:
             logger.info(f"Starting bulk analysis of file: {getattr(file_obj, 'filename', 'unknown')}")
             
-            # Read file into DataFrame
-            df = self._read_file_to_dataframe(file_obj)
+            # Temporarily override thresholds if provided
+            original_fraud_threshold = self.fraud_threshold
+            original_suspicious_threshold = self.suspicious_threshold
             
-            if df is None or df.empty:
-                raise ValueError("File is empty or could not be read")
+            if fraud_threshold is not None:
+                self.fraud_threshold = fraud_threshold
+            if suspicious_threshold is not None:
+                self.suspicious_threshold = suspicious_threshold
             
-            logger.info(f"Processing {len(df)} transactions")
-            
-            # Analyze each transaction
-            results = []
-            errors = 0
-            
-            for index, row in df.iterrows():
-                try:
-                    # Convert pandas Series to dict and handle NaN values
-                    tx_dict = row.to_dict()
-                    
-                    # Replace NaN values with None or appropriate defaults
-                    tx_dict = self._clean_transaction_data(tx_dict)
-                    
-                    result = self.analyze_transaction(tx_dict)
-                    results.append(result)
-                    
-                    if result.get("decision") == "error":
-                        errors += 1
+            try:
+                # Read file into DataFrame
+                df = self._read_file_to_dataframe(file_obj)
+                
+                if df is None or df.empty:
+                    raise ValueError("File is empty or could not be read")
+                
+                logger.info(f"Processing {len(df)} transactions with thresholds: fraud={self.fraud_threshold}, suspicious={self.suspicious_threshold}")
+                
+                # Analyze each transaction
+                results = []
+                errors = 0
+                
+                for index, row in df.iterrows():
+                    try:
+                        # Convert pandas Series to dict and handle NaN values
+                        tx_dict = row.to_dict()
                         
-                except Exception as e:
-                    logger.error(f"Error processing row {index}: {e}")
-                    error_result = self._create_error_result(
-                        {"row_index": index}, 
-                        f"Row processing failed: {str(e)}"
-                    )
-                    results.append(error_result)
-                    errors += 1
-            
-            logger.info(f"Bulk analysis completed: {len(results)} processed, {errors} errors")
-            return results
-            
+                        # Replace NaN values with None or appropriate defaults
+                        tx_dict = self._clean_transaction_data(tx_dict)
+                        
+                        result = self.analyze_transaction(tx_dict)
+                        results.append(result)
+                        
+                        if result.get("decision") == "error":
+                            errors += 1
+                            
+                    except Exception as e:
+                        logger.error(f"Error processing row {index}: {e}")
+                        error_result = self._create_error_result(
+                            {"row_index": index}, 
+                            f"Row processing failed: {str(e)}"
+                        )
+                        results.append(error_result)
+                        errors += 1
+                
+                logger.info(f"Bulk analysis completed: {len(results)} processed, {errors} errors")
+                return results
+                
+            finally:
+                # Restore original thresholds
+                self.fraud_threshold = original_fraud_threshold
+                self.suspicious_threshold = original_suspicious_threshold
+                
         except Exception as e:
             logger.error(f"Bulk analysis failed: {e}")
             logger.error(traceback.format_exc())
@@ -346,6 +393,10 @@ class FraudChecker:
                 "tampered_prices": len(self.tampered_prices),
                 "active_rules": len(self.rules)
             },
+            "current_thresholds": {
+                "fraud_threshold": self.fraud_threshold,
+                "suspicious_threshold": self.suspicious_threshold
+            },
             "rules": {key: {"weight": rule.get("weight", 0)} for key, rule in self.rules.items()},
             "last_updated": datetime.now().isoformat()
         }
@@ -396,6 +447,7 @@ def test_file_analysis(file_path: str):
             decision_counts[decision] = decision_counts.get(decision, 0) + 1
         
         print(f"Decision breakdown: {decision_counts}")
+        print(f"Thresholds used: fraud={checker.fraud_threshold}, suspicious={checker.suspicious_threshold}")
         
         # Show first 5 results
         print(f"\nFirst {min(5, len(results))} results:")

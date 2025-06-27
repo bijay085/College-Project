@@ -105,6 +105,14 @@ logging.basicConfig(
 
 logger: logging.Logger = logging.getLogger(__name__)
 
+def log_warning(message, extra=None):
+    """Log a warning with extra context."""
+    logger.warning(f"[WARN] {message} | Extra: {extra}")
+
+def log_error(message, extra=None):
+    """Log an error with extra context."""
+    logger.error(f"[ERROR] {message} | Extra: {extra}")
+
 # ============================================================================
 # DATABASE MANAGER CLASS
 # ============================================================================
@@ -149,14 +157,14 @@ class DatabaseManager:
                 self.db.users.count_documents({}, limit=1)
                 
                 self.connected = True
-                logger.info("✅ MongoDB connection established successfully")
+                logger.info("MongoDB connection established successfully")
                 
                 # Initialize collections if needed
                 self._init_collections()
                 return True
                 
             except Exception as e:
-                logger.error(f"❌ MongoDB connection attempt {attempt + 1} failed: {e}")
+                logger.error(f"MongoDB connection attempt {attempt + 1} failed: {e}")
                 if attempt < max_retries - 1:
                     logger.info(f"⏳ Retrying in {retry_delay} seconds...")
                     time.sleep(retry_delay)
@@ -175,17 +183,18 @@ class DatabaseManager:
                 
             # Create indexes for better performance
             self.db.users.create_index("email", unique=True)
-            self.db.users.create_index("api_key", unique=True)
+            # Specify sparse=True to match existing index and avoid conflict
+            self.db.users.create_index("api_key", unique=True, sparse=True)
             self.db.sessions.create_index("session_id", unique=True)
             self.db.sessions.create_index("expires_at", expireAfterSeconds=0)
             
-            logger.info("✅ Database indexes created/verified")
+            logger.info("Database indexes created/verified")
             
             # Create default admin user if doesn't exist
             self._create_default_admin()
             
         except Exception as e:
-            logger.error(f"❌ Failed to initialize collections: {e}")
+            logger.error(f"Failed to initialize collections: {e}")
     
     def _create_default_admin(self) -> None:
         """Create default admin user if none exists."""
@@ -210,7 +219,7 @@ class DatabaseManager:
                 }
                 
                 self.db.users.insert_one(admin_user)
-                logger.info("✅ Default admin user created: admin@fraudshield.com / Admin@123!")
+                logger.info("Default admin user created: admin@fraudshield.com / Admin@123!")
                 
         except Exception as e:
             logger.error(f"❌ Failed to create default admin: {e}")
@@ -250,7 +259,7 @@ class DatabaseManager:
             Database instance if connected, None otherwise
         """
         if not self.is_connected():
-            logger.warning("🔄 Database disconnected, attempting reconnection...")
+            logger.warning("Database disconnected, attempting reconnection...")
             if not self.reconnect():
                 return None
         return self.db
@@ -259,10 +268,14 @@ class DatabaseManager:
 db_manager: DatabaseManager = DatabaseManager()
 
 # ============================================================================
-# SESSION MANAGEMENT FUNCTIONS
+# UTILITY FUNCTIONS
 # ============================================================================
 
-def create_session(user_id: Union[str, ObjectId], remember: bool = False) -> Optional[str]:
+# ============================================================================
+# SESSION MANAGEMENT FUNCTIONS
+# ============================================================================S
+
+def create_session(user_id: Union[str, ObjectId ], remember: bool = False) -> Optional[str]:
     """
     Create a new session for the user.
     
@@ -300,7 +313,7 @@ def create_session(user_id: Union[str, ObjectId], remember: bool = False) -> Opt
         return session_id
         
     except Exception as e:
-        logger.error(f"Failed to create session: {e}")
+        log_error(f"Failed to create session: {e}")
         return None
 
 def validate_session(session_id: str) -> DatabaseResponse:
@@ -336,7 +349,7 @@ def validate_session(session_id: str) -> DatabaseResponse:
         return user
         
     except Exception as e:
-        logger.error(f"Failed to validate session: {e}")
+        log_error(f"Failed to validate session: {e}")
         return None
 
 def cleanup_sessions() -> None:
@@ -351,7 +364,7 @@ def cleanup_sessions() -> None:
             logger.info(f"Cleaned up {result.deleted_count} expired sessions")
             
     except Exception as e:
-        logger.error(f"Failed to cleanup sessions: {e}")
+        log_error(f"Failed to cleanup sessions: {e}")
 
 # ============================================================================
 # UTILITY FUNCTIONS
@@ -1379,6 +1392,277 @@ def get_admin_stats() -> ResponseTuple:
         return create_error_response("Failed to get statistics", 500)
 
 # ============================================================================
+# SETTINGS MANAGEMENT ENDPOINTS
+# ============================================================================
+
+@app.route("/auth/profile/update", methods=["PUT"])
+@require_admin_auth()
+def update_profile() -> ResponseTuple:
+    """Update user profile (admin or own profile)"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        data = request.get_json()
+        if not data:
+            return create_error_response("No data provided", 400)
+        
+        current_user = g.current_user
+        user_id_to_update = data.get('user_id', str(current_user['_id']))
+        
+        # Check if user can update this profile
+        if str(current_user['_id']) != user_id_to_update and current_user.get('role') != 'admin':
+            return create_error_response("Permission denied", 403)
+        
+        # Build update document
+        update_doc = {}
+        
+        if 'name' in data and data['name'].strip():
+            update_doc['name'] = data['name'].strip()
+        
+        if 'company' in data:
+            update_doc['company'] = data['company'].strip() if data['company'] else None
+        
+        if not update_doc:
+            return create_error_response("No valid updates provided", 400)
+        
+        update_doc['updated_at'] = datetime.now()
+        
+        # Update user
+        try:
+            user_object_id = ObjectId(user_id_to_update)
+        except:
+            return create_error_response("Invalid user ID", 400)
+        
+        result = db.users.update_one(
+            {"_id": user_object_id},
+            {"$set": update_doc}
+        )
+        
+        if result.modified_count == 0:
+            return create_error_response("No changes made or user not found", 400)
+        
+        # Get updated user
+        updated_user = db.users.find_one({"_id": user_object_id}, {'password_hash': 0})
+        if not updated_user:
+            return create_error_response("Failed to retrieve updated user", 500)
+        
+        response_data = {
+            'id': str(updated_user['_id']),
+            'name': updated_user.get('name', ''),
+            'email': updated_user.get('email', ''),
+            'company': updated_user.get('company', ''),
+            'role': updated_user.get('role', 'user')
+        }
+        
+        logger.info(f"Profile updated: {updated_user.get('email')}")
+        return create_success_response(response_data, "Profile updated successfully")
+        
+    except Exception as e:
+        logger.error(f"Update profile error: {e}")
+        return create_error_response("Failed to update profile", 500)
+
+@app.route("/auth/settings/thresholds", methods=["GET"])
+@require_admin_auth()
+def get_fraud_thresholds() -> ResponseTuple:
+    """Get current fraud detection thresholds"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Get thresholds from system_settings collection
+        settings = db.system_settings.find_one({"_id": "fraud_thresholds"})
+        
+        if not settings:
+            # Create default settings
+            default_settings = {
+                "_id": "fraud_thresholds",
+                "fraud_threshold": 0.7,
+                "suspicious_threshold": 0.4,
+                "created_at": datetime.now(),
+                "updated_at": datetime.now()
+            }
+            db.system_settings.insert_one(default_settings)
+            settings = default_settings
+        
+        response_data = {
+            "fraud_threshold": settings.get("fraud_threshold", 0.7) if settings else 0.7,
+            "suspicious_threshold": settings.get("suspicious_threshold", 0.4) if settings else 0.4,
+            "updated_at": settings.get("updated_at") if settings else None
+        }
+        
+        return create_success_response(response_data, "Thresholds retrieved successfully")
+        
+    except Exception as e:
+        logger.error(f"Get thresholds error: {e}")
+        return create_error_response("Failed to get thresholds", 500)
+
+@app.route("/auth/settings/thresholds", methods=["PUT"])
+@require_admin_auth()
+def update_fraud_thresholds() -> ResponseTuple:
+    """Update fraud detection thresholds"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        data = request.get_json()
+        if not data:
+            return create_error_response("No data provided", 400)
+        
+        # Validate threshold values
+        fraud_threshold = data.get('fraud_threshold')
+        suspicious_threshold = data.get('suspicious_threshold')
+        
+        if fraud_threshold is not None:
+            try:
+                fraud_threshold = float(fraud_threshold)
+                if not 0.1 <= fraud_threshold <= 1.0:
+                    return create_error_response("Fraud threshold must be between 0.1 and 1.0", 400)
+            except (ValueError, TypeError):
+                return create_error_response("Invalid fraud threshold value", 400)
+        
+        if suspicious_threshold is not None:
+            try:
+                suspicious_threshold = float(suspicious_threshold)
+                if not 0.1 <= suspicious_threshold <= 1.0:
+                    return create_error_response("Suspicious threshold must be between 0.1 and 1.0", 400)
+            except (ValueError, TypeError):
+                return create_error_response("Invalid suspicious threshold value", 400)
+        
+        # Ensure fraud threshold is higher than suspicious threshold
+        if fraud_threshold and suspicious_threshold and fraud_threshold <= suspicious_threshold:
+            return create_error_response("Fraud threshold must be higher than suspicious threshold", 400)
+        
+        # Build update document
+        update_doc: Dict[str, Any] = {"updated_at": datetime.now()}
+        
+        if fraud_threshold is not None:
+            update_doc["fraud_threshold"] = fraud_threshold
+        
+        if suspicious_threshold is not None:
+            update_doc["suspicious_threshold"] = suspicious_threshold
+        
+        # Update or create settings
+        result = db.system_settings.update_one(
+            {"_id": "fraud_thresholds"},
+            {"$set": update_doc},
+            upsert=True
+        )
+        
+        # Get updated settings
+        settings = db.system_settings.find_one({"_id": "fraud_thresholds"})
+        
+        response_data = {
+            "fraud_threshold": settings["fraud_threshold"] if settings and "fraud_threshold" in settings else 0.7,
+            "suspicious_threshold": settings["suspicious_threshold"] if settings and "suspicious_threshold" in settings else 0.4,
+            "updated_at": settings["updated_at"] if settings and "updated_at" in settings else None
+        }
+        
+        logger.info(f"Thresholds updated by admin: {g.current_user.get('email')}")
+        return create_success_response(response_data, "Thresholds updated successfully")
+        
+    except Exception as e:
+        logger.error(f"Update thresholds error: {e}")
+        return create_error_response("Failed to update thresholds", 500)
+
+@app.route("/auth/settings/system-health", methods=["GET"])
+@require_admin_auth()
+def get_system_health() -> ResponseTuple:
+    """Get system health status"""
+    try:
+        health_status: Dict[str, Any] = {
+            "api_status": "online",
+            "database_status": "checking",
+            "rule_engine_status": "active",
+            "last_check": datetime.now().isoformat()
+        }
+        
+        # Check database connection
+        try:
+            db = db_manager.get_database()
+            if db is not None:
+                # Test database operation
+                test_result = db.users.count_documents({}, limit=1)
+                health_status["database_status"] = "online"
+                health_status["database_info"] = {
+                    "collections": len(db.list_collection_names()),
+                    "users_count": db.users.count_documents({})
+                }
+            else:
+                health_status["database_status"] = "offline"
+        except Exception as e:
+            logger.error(f"Database health check failed: {e}")
+            health_status["database_status"] = "offline"
+            health_status["database_error"] = str(e)
+        
+        # Check bulk API (fraud checking API)
+        try:
+            import requests
+            bulk_response = requests.get('http://127.0.0.1:5000/health', timeout=5)
+            if bulk_response.status_code == 200:
+                health_status["fraud_api_status"] = "online"
+            else:
+                health_status["fraud_api_status"] = "degraded"
+        except Exception as e:
+            health_status["fraud_api_status"] = "offline"
+            health_status["fraud_api_error"] = str(e)
+        
+        return create_success_response(health_status, "System health retrieved")
+        
+    except Exception as e:
+        logger.error(f"System health check error: {e}")
+        return create_error_response("Failed to get system health", 500)
+
+@app.route("/auth/user/regenerate-api-key", methods=["POST"])
+@require_admin_auth()
+def regenerate_user_api_key() -> ResponseTuple:
+    """Regenerate API key for current user"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        current_user = g.current_user
+        
+        # Generate new API key
+        new_api_key = generate_api_key()
+        
+        # Update user with new API key
+        result = db.users.update_one(
+            {"_id": current_user["_id"]},
+            {
+                "$set": {
+                    "api_key": new_api_key,
+                    "api_key_updated_at": datetime.now()
+                }
+            }
+        )
+        
+        if result.modified_count == 0:
+            return create_error_response("Failed to update API key", 500)
+        
+        # Update sites collection as well
+        db.sites.update_many(
+            {"user_id": str(current_user["_id"])},
+            {"$set": {"api_key": new_api_key}}
+        )
+        
+        response_data = {
+            "api_key": new_api_key,
+            "regenerated_at": datetime.now().isoformat()
+        }
+        
+        logger.info(f"API key regenerated for user: {current_user.get('email')}")
+        return create_success_response(response_data, "API key regenerated successfully")
+        
+    except Exception as e:
+        logger.error(f"Regenerate API key error: {e}")
+        return create_error_response("Failed to regenerate API key", 500)
+
+# ============================================================================
 # ERROR HANDLERS
 # ============================================================================
 
@@ -1406,9 +1690,9 @@ def run_maintenance() -> None:
     """Run periodic maintenance tasks."""
     try:
         cleanup_sessions()
-        logger.info("✅ Maintenance tasks completed")
+        logger.info("Maintenance tasks completed")
     except Exception as e:
-        logger.error(f"❌ Maintenance tasks failed: {e}")
+        logger.error(f"Maintenance tasks failed: {e}")
 
 def maintenance_worker() -> None:
     """Background worker for maintenance tasks."""
@@ -1436,16 +1720,16 @@ def handle_preflight():
 if __name__ == "__main__":
     start_time: float = time.time()
     
-    logger.info("🚀 Starting FraudShield Authentication API...")
+    logger.info("Starting FraudShield Authentication API...")
     logger.info(f"Max login attempts: {AuthConfig.MAX_LOGIN_ATTEMPTS}")
     logger.info(f"Lockout duration: {AuthConfig.LOCKOUT_DURATION_MINUTES} minutes")
     logger.info(f"Database: {AuthConfig.MONGODB_URI}/{AuthConfig.DATABASE_NAME}")
     
     if db_manager.connected:
-        logger.info("✅ Authentication API is ready!")
-        logger.info("📡 Default admin: admin@fraudshield.com / Admin@123!")
+        logger.info("Authentication API is ready!")
+        logger.info("Default admin: admin@fraudshield.com / Admin@123!")
     else:
-        logger.warning("⚠️ Authentication API starting with limited functionality (no database)")
+        logger.warning("Authentication API starting with limited functionality (no database)")
     
     # Start maintenance worker in background
     maintenance_thread = threading.Thread(target=maintenance_worker, daemon=True)

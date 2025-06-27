@@ -1,4 +1,4 @@
-# logic/bulk_api.py
+# logic/bulk_api.py - Enhanced with Settings Management
 import sys
 import os
 import time
@@ -9,7 +9,7 @@ import traceback
 
 sys.path.append(os.path.dirname(__file__))
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, g
 from flask_cors import CORS
 from fraud_checker import FraudChecker
 
@@ -21,6 +21,10 @@ class Config:
     MAX_FILE_SIZE = 16 * 1024 * 1024  # 16MB
     ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'json'}
     MAX_RECORDS = 5000  # Reasonable limit for localhost
+    
+    # Default thresholds (can be overridden from database)
+    DEFAULT_FRAUD_THRESHOLD = 0.7
+    DEFAULT_SUSPICIOUS_THRESHOLD = 0.4
 
 # ============================================================================
 # FLASK APP SETUP
@@ -72,6 +76,48 @@ try:
 except Exception as e:
     app.logger.error(f"Failed to initialize FraudChecker: {e}")
     checker = None
+
+# Global settings storage (in production, this would be in database)
+current_settings = {
+    "fraud_threshold": Config.DEFAULT_FRAUD_THRESHOLD,
+    "suspicious_threshold": Config.DEFAULT_SUSPICIOUS_THRESHOLD,
+    "updated_at": datetime.now().isoformat(),
+    "updated_by": "system"
+}
+
+# ============================================================================
+# AUTHENTICATION DECORATOR
+# ============================================================================
+
+def require_api_key():
+    """Decorator to require API key authentication"""
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            try:
+                # Get authorization header
+                auth_header = request.headers.get('Authorization')
+                if not auth_header or not auth_header.startswith('Bearer '):
+                    return create_error_response("API key required", 401)
+                
+                # Extract API key
+                api_key = auth_header.replace('Bearer ', '')
+                
+                # Validate API key format (basic validation)
+                if not api_key.startswith('fsk_') or len(api_key) < 20:
+                    return create_error_response("Invalid API key format", 401)
+                
+                # In production, validate against database
+                # For now, accept any properly formatted key
+                g.api_key = api_key
+                return f(*args, **kwargs)
+                
+            except Exception as e:
+                app.logger.error(f"API key validation failed: {e}")
+                return create_error_response("Authentication failed", 401)
+        
+        return decorated_function
+    return decorator
 
 # ============================================================================
 # UTILITY FUNCTIONS
@@ -155,13 +201,31 @@ def create_success_response(data, message="Success"):
 
 @app.route("/health", methods=["GET"])
 def health_check():
-    """Health check endpoint"""
+    """Health check endpoint with enhanced database status"""
     try:
+        # Test fraud checker and database connectivity
+        db_status = "disconnected"
+        fraud_checker_status = "inactive"
+        
+        if checker:
+            fraud_checker_status = "active"
+            try:
+                # Test database connection through fraud checker
+                stats = checker.get_stats()
+                if stats and stats.get('cache_stats'):
+                    db_status = "connected"
+                else:
+                    db_status = "error"
+            except Exception as e:
+                db_status = f"error: {str(e)}"
+        
         status = {
-            "status": "healthy",
+            "status": "healthy" if fraud_checker_status == "active" and db_status == "connected" else "degraded",
             "timestamp": datetime.now().isoformat(),
-            "fraud_checker": "initialized" if checker else "failed",
-            "version": "1.0.0"
+            "fraud_checker": fraud_checker_status,
+            "database": db_status,
+            "version": "1.0.0",
+            "settings": current_settings
         }
         return jsonify(status)
     except Exception as e:
@@ -221,7 +285,7 @@ def get_real_stats():
 @app.route("/bulk-check", methods=["POST"])
 @log_request
 def bulk_check():
-    """Enhanced bulk fraud checking endpoint"""
+    """Enhanced bulk fraud checking endpoint with dynamic thresholds"""
     
     # Check if fraud checker is available
     if not checker:
@@ -249,8 +313,10 @@ def bulk_check():
         # Record start time
         start_time = time.time()
         
-        # Process the file
-        results = checker.analyze_bulk(file)
+        # Process the file with current thresholds
+        results = checker.analyze_bulk(file, 
+                                     fraud_threshold=current_settings["fraud_threshold"],
+                                     suspicious_threshold=current_settings["suspicious_threshold"])
         
         # Calculate processing time
         processing_time = time.time() - start_time
@@ -280,7 +346,11 @@ def bulk_check():
                 "total_records": len(results),
                 "processing_time_seconds": round(processing_time, 2),
                 "filename": file.filename if file else None,
-                "decision_breakdown": decision_counts
+                "decision_breakdown": decision_counts,
+                "thresholds_used": {
+                    "fraud_threshold": current_settings["fraud_threshold"],
+                    "suspicious_threshold": current_settings["suspicious_threshold"]
+                }
             }
         }
         
@@ -321,9 +391,132 @@ def bulk_check():
             str(e) if app.debug else None
         )
 
+# ============================================================================
+# SETTINGS MANAGEMENT ENDPOINTS
+# ============================================================================
+
+@app.route("/settings/thresholds", methods=["GET"])
+def get_thresholds():
+    """
+    Get current fraud detection thresholds.
+    
+    Returns:
+        JSON response with current threshold settings
+    """
+    try:
+        app.logger.info("Thresholds requested")
+        return create_success_response(
+            {
+                "fraud_threshold": current_settings["fraud_threshold"],
+                "suspicious_threshold": current_settings["suspicious_threshold"],
+                "updated_at": current_settings["updated_at"],
+                "updated_by": current_settings["updated_by"]
+            },
+            "Thresholds retrieved successfully"
+        )
+    except Exception as e:
+        app.logger.error(f"Get thresholds error: {e}")
+        return create_error_response("Failed to get thresholds", 500)
+
+@app.route("/settings/thresholds", methods=["PUT"])
+@require_api_key()
+def update_thresholds():
+    """
+    Update fraud detection thresholds (requires API key).
+    
+    Returns:
+        JSON response confirming threshold update
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return create_error_response("No data provided", 400)
+        
+        fraud_threshold = data.get('fraud_threshold')
+        suspicious_threshold = data.get('suspicious_threshold')
+        
+        # Validate thresholds
+        if fraud_threshold is None or suspicious_threshold is None:
+            return create_error_response("Both fraud_threshold and suspicious_threshold are required")
+        
+        try:
+            fraud_threshold = float(fraud_threshold)
+            suspicious_threshold = float(suspicious_threshold)
+        except (ValueError, TypeError):
+            return create_error_response("Thresholds must be valid numbers")
+        
+        if not (0 <= fraud_threshold <= 1) or not (0 <= suspicious_threshold <= 1):
+            return create_error_response("Thresholds must be between 0 and 1")
+        
+        if suspicious_threshold >= fraud_threshold:
+            return create_error_response("Suspicious threshold must be less than fraud threshold")
+        
+        # Update global settings
+        current_settings["fraud_threshold"] = fraud_threshold
+        current_settings["suspicious_threshold"] = suspicious_threshold
+        current_settings["updated_at"] = datetime.now().isoformat()
+        current_settings["updated_by"] = g.api_key[:10] + "..." if hasattr(g, 'api_key') else "unknown"
+        
+        # Update fraud checker thresholds if available
+        if checker:
+            checker.update_thresholds(fraud_threshold, suspicious_threshold)
+        
+        app.logger.info(f"Thresholds updated: fraud={fraud_threshold}, suspicious={suspicious_threshold}")
+        
+        response_data = {
+            "fraud_threshold": fraud_threshold,
+            "suspicious_threshold": suspicious_threshold,
+            "updated_at": current_settings["updated_at"],
+            "updated_by": current_settings["updated_by"]
+        }
+        
+        return create_success_response(response_data, "Thresholds updated successfully")
+        
+    except Exception as e:
+        app.logger.error(f"Update thresholds error: {e}")
+        return create_error_response("Failed to update thresholds", 500)
+
+@app.route("/settings/reset", methods=["POST"])
+@require_api_key()
+def reset_thresholds():
+    """
+    Reset thresholds to default values (requires API key).
+    
+    Returns:
+        JSON response confirming reset
+    """
+    try:
+        # Reset to default values
+        current_settings["fraud_threshold"] = Config.DEFAULT_FRAUD_THRESHOLD
+        current_settings["suspicious_threshold"] = Config.DEFAULT_SUSPICIOUS_THRESHOLD
+        current_settings["updated_at"] = datetime.now().isoformat()
+        current_settings["updated_by"] = g.api_key[:10] + "..." if hasattr(g, 'api_key') else "system"
+        
+        # Update fraud checker thresholds if available
+        if checker:
+            checker.update_thresholds(
+                Config.DEFAULT_FRAUD_THRESHOLD, 
+                Config.DEFAULT_SUSPICIOUS_THRESHOLD
+            )
+        
+        app.logger.info("Thresholds reset to default values")
+        
+        response_data = {
+            "fraud_threshold": current_settings["fraud_threshold"],
+            "suspicious_threshold": current_settings["suspicious_threshold"],
+            "updated_at": current_settings["updated_at"],
+            "updated_by": current_settings["updated_by"]
+        }
+        
+        return create_success_response(response_data, "Thresholds reset to default values")
+        
+    except Exception as e:
+        app.logger.error(f"Reset thresholds error: {e}")
+        return create_error_response("Failed to reset thresholds", 500)
+
 @app.route("/stats", methods=["GET"])
 def get_stats():
-    """Get API statistics"""
+    """Get API statistics with current settings"""
     try:
         stats = {
             "config": {
@@ -331,6 +524,7 @@ def get_stats():
                 "allowed_extensions": list(Config.ALLOWED_EXTENSIONS),
                 "max_records": Config.MAX_RECORDS
             },
+            "current_settings": current_settings,
             "fraud_checker_status": "active" if checker else "inactive",
             "timestamp": datetime.now().isoformat()
         }
@@ -365,15 +559,17 @@ def internal_server_error(error):
 # ============================================================================
 
 if __name__ == "__main__":
-    app.logger.info("Starting Bulk Fraud Check API...")
+    app.logger.info("Starting Enhanced Bulk Fraud Check API...")
     app.logger.info(f"Max file size: {Config.MAX_FILE_SIZE // (1024*1024)}MB")
     app.logger.info(f"Allowed extensions: {Config.ALLOWED_EXTENSIONS}")
     app.logger.info(f"Max records: {Config.MAX_RECORDS}")
+    app.logger.info(f"Default fraud threshold: {Config.DEFAULT_FRAUD_THRESHOLD}")
+    app.logger.info(f"Default suspicious threshold: {Config.DEFAULT_SUSPICIOUS_THRESHOLD}")
     
     app.run(
         debug=True,
         host='127.0.0.1',
         port=5000,
         threaded=True,
-        use_reloader=False  # Add this line to disable the reloader
+        use_reloader=False
     )

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,15 +8,16 @@
   <meta name="keywords" content="fraud detection, transaction security, risk assessment, financial protection" />
   <meta name="author" content="FraudShield Security Solutions" />
   <title>FraudShield Dashboard - Advanced Fraud Detection Platform</title>
-  
+
   <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/favicon.png" />
-  
+
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/utilities.css" />
@@ -24,14 +26,14 @@
   <link rel="stylesheet" href="css/bulk-analysis.css" />
   <link rel="stylesheet" href="css/logs.css" />
   <link rel="stylesheet" href="css/settings.css" />
-  
+
   <!-- FIXED: Removed forced authentication check - Allow public access -->
   <script>
     // Only set global user data if authenticated, don't force redirect
-    (function() {
+    (function () {
       const userData = sessionStorage.getItem('fraudshield_user');
       const apiKey = sessionStorage.getItem('fraudshield_api_key');
-      
+
       if (userData && apiKey) {
         try {
           window.currentUser = JSON.parse(userData);
@@ -56,13 +58,16 @@
   <!-- Enhanced Header with User Info -->
   <header>
     <div class="logo-section">
-      <img src="assets/logo.png" alt="FraudShield Portal" />
+      <a href="index.html">
+        <img src="assets/logo.png" alt="FraudShield Portal" />
+      </a>
+
       <div class="status-indicator" id="apiStatus">
         <span class="status-dot"></span>
         <span class="status-text">Connecting...</span>
       </div>
     </div>
-    
+
     <nav role="navigation" aria-label="Main navigation">
       <button class="tab-btn active" data-tab="home" aria-selected="true">
         <span class="icon">🏠</span>
@@ -89,10 +94,10 @@
   </header>
 
   <main role="main">
-    
+
     <!-- Enhanced Home/Dashboard Tab -->
     <section id="home" class="tab-content active" role="tabpanel" aria-labelledby="home-tab">
-      
+
       <!-- Hero Section with User Welcome -->
       <div class="hero-section">
         <div class="hero-content">
@@ -117,14 +122,18 @@
 
       <!-- Authentication Prompt for Non-Authenticated Users -->
       <div id="authPrompt" class="hidden">
-        <div style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 12px; margin: 2rem 0; border: 1px solid #e2e8f0;">
+        <div
+          style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 12px; margin: 2rem 0; border: 1px solid #e2e8f0;">
           <h3 style="color: #1e293b; margin-bottom: 1rem;">🔐 Want Full Access?</h3>
-          <p style="color: #64748b; margin-bottom: 1.5rem;">Create a free account to access advanced features, activity logs, and system settings.</p>
+          <p style="color: #64748b; margin-bottom: 1.5rem;">Create a free account to access advanced features, activity
+            logs, and system settings.</p>
           <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="/user_auth/pages/registration.html" style="display: inline-flex; align-items: center; gap: 0.5rem; background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+            <a href="/user_auth/pages/registration.html"
+              style="display: inline-flex; align-items: center; gap: 0.5rem; background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
               <span>👤</span> Create Account
             </a>
-            <a href="/user_auth/pages/login.html" style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2563eb; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid #2563eb;">
+            <a href="/user_auth/pages/login.html"
+              style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2563eb; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid #2563eb;">
               <span>🚪</span> Sign In
             </a>
           </div>
@@ -141,12 +150,12 @@
         <div class="text">
           <h2>🛡️ Intelligent Rule-Based Protection</h2>
           <p>
-            FraudShield uses <strong>advanced algorithms and rule engines</strong> to provide 
-            real-time fraud detection for your business. Our system analyzes transaction patterns, 
+            FraudShield uses <strong>advanced algorithms and rule engines</strong> to provide
+            real-time fraud detection for your business. Our system analyzes transaction patterns,
             device fingerprints, and behavioral indicators using proven detection methods.
           </p>
           <p>
-            Built for businesses that need <em>speed, accuracy, and complete transparency</em> 
+            Built for businesses that need <em>speed, accuracy, and complete transparency</em>
             in their fraud detection pipeline. Every decision is explainable and auditable.
           </p>
           <div class="feature-highlights">
@@ -232,7 +241,7 @@
 
     <!-- Enhanced Bulk Check Tab - ALWAYS ACCESSIBLE -->
     <section id="bulk" class="tab-content" role="tabpanel" aria-labelledby="bulk-tab">
-      
+
       <div class="page-header">
         <h2>📊 Bulk Transaction Analysis</h2>
         <p class="page-subtitle">Upload your transaction data for comprehensive fraud analysis</p>
@@ -240,13 +249,16 @@
 
       <!-- Public Access Notice -->
       <div id="publicAccessNotice" class="hidden">
-        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem; margin-bottom: 2rem;">
+        <div
+          style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem; margin-bottom: 2rem;">
           <div style="display: flex; align-items: center; gap: 0.75rem;">
             <span style="font-size: 1.25rem;">ℹ️</span>
             <div>
               <strong style="color: #1d4ed8;">Public Demo Mode</strong>
               <p style="margin: 0.25rem 0 0 0; color: #1e40af; font-size: 0.9rem;">
-                You're using FraudShield as a guest. <a href="/user_auth/pages/registration.html" style="color: #2563eb; text-decoration: underline;">Create an account</a> for unlimited analysis and advanced features.
+                You're using FraudShield as a guest. <a href="/user_auth/pages/registration.html"
+                  style="color: #2563eb; text-decoration: underline;">Create an account</a> for unlimited analysis and
+                advanced features.
               </p>
             </div>
           </div>
@@ -264,9 +276,9 @@
           <p class="file-types">
             Supported formats: <span class="primary-accent">CSV, JSON, Excel (.xlsx), TXT</span>
           </p>
-          
+
           <input type="file" id="bulkFile" accept=".csv,.json,.xlsx,.txt,.xls" aria-label="Upload transaction file" />
-          
+
           <div class="file-info hidden" id="fileInfo">
             <div class="file-details">
               <span class="file-name" id="fileName"></span>
@@ -308,7 +320,7 @@
 
     <!-- Enhanced Logs Tab - AUTH REQUIRED -->
     <section id="logs" class="tab-content" role="tabpanel" aria-labelledby="logs-tab">
-      
+
       <div class="page-header">
         <h2>📋 Real-time Activity Logs</h2>
         <p class="page-subtitle">Monitor live fraud detection events and system activity</p>
@@ -370,7 +382,7 @@
 
     <!-- Enhanced Settings Tab - AUTH REQUIRED -->
     <section id="settings" class="tab-content" role="tabpanel" aria-labelledby="settings-tab">
-      
+
       <div class="page-header">
         <h2>⚙️ System Configuration</h2>
         <p class="page-subtitle">Configure fraud detection rules and system parameters</p>
@@ -393,7 +405,7 @@
 
       <!-- Settings Grid - Only shown to authenticated users -->
       <div class="settings-grid hidden" id="settingsGrid">
-        
+
         <!-- User Profile Settings (Available to all authenticated users) -->
         <div class="settings-card">
           <h3>👤 Profile Settings</h3>
@@ -435,7 +447,7 @@
         </div>
 
         <!-- Admin-only sections will be added dynamically -->
-        
+
       </div>
 
     </section>
@@ -455,4 +467,5 @@
   <script src="index.js" defer></script>
 
 </body>
+
 </html>
