@@ -139,3 +139,53 @@
 2025-06-27 17:03:45,019 - INFO - Default admin: admin@fraudshield.com / Admin@123!
 2025-06-27 17:03:45,042 - WARNING -  * Debugger is active!
 2025-06-27 17:03:45,045 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 17:10:57,330 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 17:10:57,795 - INFO -  * Restarting with stat
+2025-06-27 17:10:58,326 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 17:10:58,338 - INFO - MongoDB connection established successfully
+2025-06-27 17:10:58,341 - INFO - Database indexes created/verified
+2025-06-27 17:10:58,346 - INFO - Starting FraudShield Authentication API...
+2025-06-27 17:10:58,346 - INFO - Max login attempts: 5
+2025-06-27 17:10:58,346 - INFO - Lockout duration: 30 minutes
+2025-06-27 17:10:58,347 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 17:10:58,347 - INFO - Authentication API is ready!
+2025-06-27 17:10:58,347 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 17:10:58,368 - WARNING -  * Debugger is active!
+2025-06-27 17:10:58,371 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 17:11:09,449 - INFO -  * Detected change in 'd:\\College-Project\\logic\\bulk_api.py', reloading
+2025-06-27 17:11:09,945 - INFO -  * Restarting with stat
+2025-06-27 17:11:10,474 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 17:11:10,486 - INFO - MongoDB connection established successfully
+2025-06-27 17:11:10,488 - INFO - Database indexes created/verified
+2025-06-27 17:11:10,494 - INFO - Starting FraudShield Authentication API...
+2025-06-27 17:11:10,494 - INFO - Max login attempts: 5
+2025-06-27 17:11:10,494 - INFO - Lockout duration: 30 minutes
+2025-06-27 17:11:10,495 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 17:11:10,495 - INFO - Authentication API is ready!
+2025-06-27 17:11:10,495 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 17:11:10,518 - WARNING -  * Debugger is active!
+2025-06-27 17:11:10,520 - INFO -  * Debugger PIN: 298-914-561
+2025-06-27 17:11:33,637 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 17:11:33,674 - INFO - MongoDB connection established successfully
+2025-06-27 17:11:33,676 - INFO - Database indexes created/verified
+2025-06-27 17:11:33,682 - INFO - Starting FraudShield Authentication API...
+2025-06-27 17:11:33,682 - INFO - Max login attempts: 5
+2025-06-27 17:11:33,682 - INFO - Lockout duration: 30 minutes
+2025-06-27 17:11:33,682 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 17:11:33,682 - INFO - Authentication API is ready!
+2025-06-27 17:11:33,682 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 17:11:33,711 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5001
+2025-06-27 17:11:33,711 - INFO - [33mPress CTRL+C to quit[0m
+2025-06-27 17:11:33,712 - INFO -  * Restarting with stat
+2025-06-27 17:11:34,217 - INFO - Attempting MongoDB connection (attempt 1/3)...
+2025-06-27 17:11:34,265 - INFO - MongoDB connection established successfully
+2025-06-27 17:11:34,268 - INFO - Database indexes created/verified
+2025-06-27 17:11:34,278 - INFO - Starting FraudShield Authentication API...
+2025-06-27 17:11:34,278 - INFO - Max login attempts: 5
+2025-06-27 17:11:34,279 - INFO - Lockout duration: 30 minutes
+2025-06-27 17:11:34,279 - INFO - Database: mongodb://localhost:27017/fraudshield
+2025-06-27 17:11:34,279 - INFO - Authentication API is ready!
+2025-06-27 17:11:34,279 - INFO - Default admin: admin@fraudshield.com / Admin@123!
+2025-06-27 17:11:34,308 - WARNING -  * Debugger is active!
+2025-06-27 17:11:34,311 - INFO -  * Debugger PIN: 298-914-561

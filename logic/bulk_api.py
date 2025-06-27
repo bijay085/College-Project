@@ -366,7 +366,59 @@ def bulk_check():
             500,
             str(e) if app.debug else None
         )
+# single check endpoint
 
+@app.route("/fraud-check", methods=["POST"])
+@log_request
+def fraud_check():
+    """Single transaction fraud check endpoint"""
+    
+    if not checker:
+        return create_error_response("Fraud checking service unavailable", 503)
+    
+    # Increment API request metric
+    try:
+        if hasattr(checker.metrics, 'increment_metric'):
+            checker.metrics.increment_metric("api_requests")
+    except Exception as e:
+        app.logger.warning(f"Failed to increment api_requests metric: {e}")
+    
+    try:
+        # Get JSON data from request
+        transaction_data = request.get_json()
+        
+        if not transaction_data:
+            return create_error_response("No transaction data provided", 400)
+        
+        app.logger.info(f"Processing single transaction fraud check")
+        
+        # Analyze the transaction
+        result = checker.analyze_transaction(transaction_data)
+        
+        # Add some additional response data
+        response_data = {
+            "transaction": result,
+            "is_fraud": result["decision"] == "fraud",
+            "fraud_score": result["fraud_score"],
+            "reasons": result.get("triggered_rules", []),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        app.logger.info(f"Single transaction analysis complete: {result['decision']}")
+        
+        return create_success_response(
+            response_data,
+            f"Transaction analyzed: {result['decision']}"
+        )
+        
+    except Exception as e:
+        app.logger.error(f"Single fraud check failed: {traceback.format_exc()}")
+        return create_error_response(
+            "Failed to analyze transaction",
+            500,
+            str(e) if app.debug else None
+        )
+    
 @app.route("/metrics", methods=["GET"])
 def get_metrics():
     """Get detailed metrics for dashboard - SYNCHRONOUS VERSION"""

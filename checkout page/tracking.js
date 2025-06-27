@@ -137,14 +137,35 @@
       if (container) container.appendChild(resultBox);
     }
 
+    // FIXED: Access nested data correctly
+    const responseData = data.data || data;  // Handle nested response
+    const fraudScore = responseData.fraud_score || data.fraud_score || 0;
+    const isFraud = responseData.is_fraud === true || data.is_fraud === true;
+    const reasons = responseData.reasons || data.reasons || [];
+
+    console.log("Debug - fraudScore:", fraudScore, "reasons:", reasons); // Debug line
+
+    let statusText, statusColor;
+    
+    if (isFraud) {
+        statusText = "❌ FRAUD";
+        statusColor = "#dc2626";
+    } else if (fraudScore >= 0.4) {
+        statusText = "🟡 Suspicious";  
+        statusColor = "#d97706";
+    } else {
+        statusText = "✅ Legit";
+        statusColor = "#059669";
+    }
+
     resultBox.innerHTML = `
       <h3>🛡️ FraudShield Result</h3>
-      <p><strong>Status:</strong> ${data.is_fraud === true ? "❌ FRAUD" : data.is_fraud === "chance" ? "🟡 Suspicious" : "✅ Legit"}</p>
-      <p><strong>Fraud Score:</strong> ${data.fraud_score}</p>
+      <p><strong>Status:</strong> <span style="color: ${statusColor}">${statusText}</span></p>
+      <p><strong>Fraud Score:</strong> ${fraudScore}</p>
       <p><strong>Reasons:</strong></p>
-      <ul>${(data.reasons || []).map(r => `<li>${r}</li>`).join("")}</ul>
+      <ul>${reasons.length > 0 ? reasons.map(r => `<li>${r.replace('_', ' ')}</li>`).join("") : '<li>No fraud indicators detected</li>'}</ul>
     `;
-  }
+}
 
   // ========== 7. Submit Hook ==========
   const form = document.getElementById("checkoutForm");
