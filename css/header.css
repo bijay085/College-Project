@@ -6,7 +6,7 @@ header {
   top: 0;
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start; /* Align all items to the left */
   align-items: center;
   padding: 0 var(--spacing-xl);
   height: 80px;
@@ -33,6 +33,7 @@ header {
   display: flex;
   align-items: center;
   gap: var(--spacing);
+  margin-right: 0;
 }
 
 header img {
@@ -83,8 +84,9 @@ header nav {
   display: flex;
   gap: var(--spacing-xs);
   align-items: center;
-  flex: 1;
-  justify-content: center;
+  margin-left: auto; /* Push nav to the right */
+  margin-right: 0;
+  flex: unset;
 }
 
 /* Premium Tab Navigation */
@@ -162,6 +164,7 @@ header nav {
   align-items: center;
   gap: var(--spacing);
   position: relative;
+  margin-left: var(--spacing-xl); /* Add space between nav and user section */
 }
 
 .user-info {
