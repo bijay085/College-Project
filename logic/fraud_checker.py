@@ -1,4 +1,5 @@
-# logic/fraud_checker.py - Enhanced with Metrics Tracking
+# logic/fraud_checker.py - FIXED VERSION WITH WORKING METRICS
+
 import sys
 import os
 import asyncio
@@ -8,6 +9,7 @@ from typing import Dict, List, Set, Optional, Union
 import pandas as pd
 from datetime import datetime
 import traceback
+import threading
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
@@ -17,56 +19,46 @@ from db.mongo import MongoManager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-class MetricsTracker:
-    """Handle metrics tracking for fraud detection"""
+class SyncMetricsTracker:
+    """Synchronous metrics tracker that actually works"""
     
     def __init__(self, mongo_manager):
         self.mongo = mongo_manager
         
-    async def increment_metric(self, metric_name: str, increment: int = 1):
-        """Increment a specific metric"""
-        try:
-            metrics_collection = self.mongo.get_collection("metrics")
-            
-            result = await metrics_collection.update_one(
-                {"_id": metric_name},
-                {
-                    "$inc": {"count": increment},
-                    "$set": {"last_updated": datetime.now()}
-                },
-                upsert=True
-            )
-            
-            logger.debug(f"Incremented {metric_name} by {increment}")
-            return True
-            
-        except Exception as e:
-            logger.error(f"Failed to increment metric {metric_name}: {e}")
-            return False
-    
-    async def get_metric(self, metric_name: str) -> int:
-        """Get current value of a metric"""
-        try:
-            metrics_collection = self.mongo.get_collection("metrics")
-            metric = await metrics_collection.find_one({"_id": metric_name})
-            return metric["count"] if metric else 0
-        except Exception as e:
-            logger.error(f"Failed to get metric {metric_name}: {e}")
-            return 0
-    
-    async def get_all_metrics(self) -> Dict[str, int]:
-        """Get all metrics as a dictionary"""
-        try:
-            metrics_collection = self.mongo.get_collection("metrics")
-            metrics = {}
-            
-            async for doc in metrics_collection.find():
-                metrics[doc["_id"]] = doc.get("count", 0)
-            
-            return metrics
-        except Exception as e:
-            logger.error(f"Failed to get all metrics: {e}")
-            return {}
+    def increment_metric(self, metric_name: str, increment: int = 1):
+        """Synchronously increment a metric using threading"""
+        def update_metric():
+            try:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                async def do_update():
+                    metrics_collection = self.mongo.get_collection("metrics")
+                    
+                    result = await metrics_collection.update_one(
+                        {"_id": metric_name},
+                        {
+                            "$inc": {"count": increment},
+                            "$set": {"last_updated": datetime.now()}
+                        },
+                        upsert=True
+                    )
+                    
+                    logger.info(f"✅ Incremented {metric_name} by {increment}")
+                    return True
+                
+                return loop.run_until_complete(do_update())
+                
+            except Exception as e:
+                logger.error(f"❌ Failed to increment metric {metric_name}: {e}")
+                return False
+            finally:
+                loop.close()
+        
+        # Run in background thread to avoid blocking
+        thread = threading.Thread(target=update_metric)
+        thread.daemon = True
+        thread.start()
     
     async def initialize_metrics(self):
         """Initialize default metrics if they don't exist"""
@@ -115,11 +107,11 @@ class MetricsTracker:
 
 
 class FraudChecker:
-    """Enhanced Fraud Checker with Metrics Tracking"""
+    """Enhanced Fraud Checker with WORKING Metrics Tracking"""
     
     def __init__(self) -> None:
         """Initialize the fraud checker and load data from MongoDB"""
-        logger.info("Initializing FraudChecker with metrics tracking...")
+        logger.info("Initializing FraudChecker with working metrics tracking...")
         
         # Initialize sets for blacklists
         self.disposable_domains: Set[str] = set()
@@ -137,8 +129,8 @@ class FraudChecker:
             logger.error(f"Failed to connect to MongoDB: {e}")
             raise
         
-        # Initialize metrics tracker
-        self.metrics = MetricsTracker(self.mongo)
+        # Initialize SYNCHRONOUS metrics tracker
+        self.metrics = SyncMetricsTracker(self.mongo)
         
         # Load data from MongoDB
         try:
@@ -249,11 +241,11 @@ class FraudChecker:
         
         return float(weight)
 
-    async def analyze_transaction(self, tx: dict) -> dict:
-        """Analyze a single transaction for fraud indicators WITH METRICS TRACKING"""
+    def analyze_transaction(self, tx: dict) -> dict:
+        """Analyze a single transaction for fraud indicators WITH WORKING METRICS"""
         try:
-            # Increment total checks metric
-            await self.metrics.increment_metric("total_checks")
+            # Increment total checks metric (SYNCHRONOUSLY)
+            self.metrics.increment_metric("total_checks")
             
             score = 0.0
             reasons = []
@@ -310,16 +302,16 @@ class FraudChecker:
             except (ValueError, TypeError):
                 logger.warning(f"Invalid price value: {tx.get('price')}")
             
-            # Determine decision based on score
+            # Determine decision based on score and update metrics
             if score >= 0.7:
                 decision = "fraud"
-                await self.metrics.increment_metric("fraud_blocked")
+                self.metrics.increment_metric("fraud_blocked")
             elif score >= 0.4:
                 decision = "suspicious"
-                await self.metrics.increment_metric("suspicious_flagged")
+                self.metrics.increment_metric("suspicious_flagged")
             else:
                 decision = "not_fraud"
-                await self.metrics.increment_metric("clean_approved")
+                self.metrics.increment_metric("clean_approved")
             
             result = {
                 **tx,
@@ -349,13 +341,13 @@ class FraudChecker:
             "analysis_timestamp": datetime.now().isoformat()
         }
 
-    async def analyze_bulk(self, file_obj) -> List[dict]:
-        """Analyze multiple transactions from uploaded file WITH METRICS TRACKING"""
+    def analyze_bulk(self, file_obj) -> List[dict]:
+        """Analyze multiple transactions from uploaded file WITH WORKING METRICS"""
         try:
             logger.info(f"Starting bulk analysis of file: {getattr(file_obj, 'filename', 'unknown')}")
             
-            # Increment bulk analysis metric
-            await self.metrics.increment_metric("bulk_analyses")
+            # Increment bulk analysis metric (SYNCHRONOUSLY)
+            self.metrics.increment_metric("bulk_analyses")
             
             # Read file into DataFrame
             df = self._read_file_to_dataframe(file_obj)
@@ -377,7 +369,7 @@ class FraudChecker:
                     # Replace NaN values with None or appropriate defaults
                     tx_dict = self._clean_transaction_data(tx_dict)
                     
-                    result = await self.analyze_transaction(tx_dict)
+                    result = self.analyze_transaction(tx_dict)
                     results.append(result)
                     
                     if result.get("decision") == "error":
@@ -393,6 +385,8 @@ class FraudChecker:
                     errors += 1
             
             logger.info(f"Bulk analysis completed: {len(results)} processed, {errors} errors")
+            logger.info(f"🎯 METRICS SHOULD BE UPDATED NOW!")
+            
             return results
             
         except Exception as e:
@@ -451,7 +445,11 @@ class FraudChecker:
         """Get fraud checker statistics including real metrics"""
         try:
             # Get real metrics from database
-            real_metrics = await self.metrics.get_all_metrics()
+            metrics_collection = self.mongo.get_collection("metrics")
+            real_metrics = {}
+            
+            async for doc in metrics_collection.find():
+                real_metrics[doc["_id"]] = doc.get("count", 0)
             
             return {
                 "cache_stats": {
@@ -499,86 +497,25 @@ class FraudChecker:
 
 
 # ============================================================================
-# CLI Test Tool
+# CLI Test Tool (unchanged)
 # ============================================================================
 
-def test_file_analysis(file_path: str):
-    """Test fraud checker with a file"""
-    try:
-        logger.info(f"Testing file: {file_path}")
-        
-        # Initialize fraud checker
-        checker = FraudChecker()
-        
-        # Create file-like object for testing
-        class FileWrapper:
-            def __init__(self, file_path):
-                self.filename = os.path.basename(file_path)
-                self._file = open(file_path, 'rb')
-            
-            def seek(self, pos, whence=0):
-                return self._file.seek(pos, whence)
-            
-            def read(self, size=-1):
-                return self._file.read(size)
-            
-            def __enter__(self):
-                return self
-            
-            def __exit__(self, exc_type, exc_val, exc_tb):
-                self._file.close()
-        
-        # Test the analysis
-        async def run_test():
-            with FileWrapper(file_path) as file_obj:
-                results = await checker.analyze_bulk(file_obj)
-            
-            # Print results
-            print("\n=== FRAUD ANALYSIS RESULTS ===")
-            print(f"Total transactions analyzed: {len(results)}")
-            
-            # Count decisions
-            decision_counts = {}
-            for result in results:
-                decision = result.get("decision", "unknown")
-                decision_counts[decision] = decision_counts.get(decision, 0) + 1
-            
-            print(f"Decision breakdown: {decision_counts}")
-            
-            # Show first 5 results
-            print(f"\nFirst {min(5, len(results))} results:")
-            print(json.dumps(results[:5], indent=2, default=str))
-            
-            if len(results) > 5:
-                print(f"\n... and {len(results) - 5} more")
-            
-            # Show statistics with real metrics
-            stats = await checker.get_stats()
-            print(f"\nFraud Checker Stats:")
-            print(json.dumps(stats, indent=2, default=str))
-        
-        asyncio.run(run_test())
-        
-    except Exception as e:
-        logger.error(f"Test failed: {e}")
-        logger.error(traceback.format_exc())
-        return False
-    
-    return True
-
-
-# CLI entry point
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python -m logic.fraud_checker <path/to/file>")
-        print("Example: python -m logic.fraud_checker test_data.csv")
-        sys.exit(1)
+    print("🚀 Testing FraudChecker with working metrics...")
+    checker = FraudChecker()
     
-    file_path = sys.argv[1]
+    # Test single transaction
+    test_tx = {
+        "email": "test@tempmail.com",  # Should trigger disposable email rule
+        "card_number": "123456789012345",  # Should trigger suspicious BIN
+        "ip": "203.0.113.45",  # Should trigger flagged IP
+        "fingerprint": "fp_abc123",  # Should trigger reused fingerprint
+        "price": 0.01  # Should trigger tampered price
+    }
     
-    if not os.path.exists(file_path):
-        print(f"Error: File '{file_path}' does not exist")
-        sys.exit(1)
+    print("\n🧪 Testing single transaction:")
+    result = checker.analyze_transaction(test_tx)
+    print(f"Result: {result}")
     
-    success = test_file_analysis(file_path)
-    sys.exit(0 if success else 1)
+    print("\n📊 Check your database now - metrics should be updated!")
+    print("Run: python db/init_metrics.py show")

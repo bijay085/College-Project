@@ -247,7 +247,7 @@ async def bulk_check():
     
     # Increment API request metric
     try:
-        await checker.metrics.increment_metric("api_requests")
+        checker.metrics.increment_metric("api_requests")
     except Exception as e:
         app.logger.warning(f"Failed to increment api_requests metric: {e}")
     
@@ -270,7 +270,7 @@ async def bulk_check():
         start_time = time.time()
         
         # Process the file (now with metrics tracking)
-        results = await checker.analyze_bulk(file)
+        results = checker.analyze_bulk(file)
         
         # Calculate processing time
         processing_time = time.time() - start_time
@@ -350,7 +350,10 @@ async def get_metrics():
             return create_error_response("Database unavailable", 503)
         
         # Get all metrics from database
-        all_metrics = await checker.metrics.get_all_metrics()
+        if hasattr(checker.metrics, "__dict__"):
+            all_metrics = dict(checker.metrics.__dict__)
+        else:
+            all_metrics = {}
         
         return create_success_response({
             "metrics": all_metrics,

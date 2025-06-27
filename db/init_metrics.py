@@ -8,6 +8,15 @@ async def initialize_metrics():
     try:
         mongo = MongoManager()
         metrics_collection = mongo.get_collection("metrics")
+        # Force collection creation if it doesn't exist
+        # --- DEBUG: Print database and collection info ---
+        print("MongoManager DB:", getattr(mongo, "db", None))
+        print("Collection object:", metrics_collection)
+        print("Collection name:", getattr(metrics_collection, "name", None))
+        # --- END DEBUG ---
+
+        await metrics_collection.insert_one({"_id": "__init__", "dummy": True})
+        await metrics_collection.delete_one({"_id": "__init__"})
         
         # Default metrics to track
         default_metrics = [
@@ -174,4 +183,26 @@ async def main():
         print("  python init_metrics.py reset - Reset all metrics to zero")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    import sys
+    # Print sys.argv for debugging
+    print("DEBUG: sys.argv =", sys.argv)
+    if len(sys.argv) > 1:
+        command = sys.argv[1].lower()
+        if command == "init":
+            asyncio.run(initialize_metrics())
+        elif command == "reset":
+            confirm = input("⚠️  Are you sure you want to reset ALL metrics to zero? (yes/no): ")
+            if confirm.lower() == "yes":
+                asyncio.run(reset_metrics())
+            else:
+                print("❌ Reset cancelled")
+        elif command == "show":
+            asyncio.run(show_metrics())
+        else:
+            print("❌ Unknown command. Use: init, reset, or show")
+    else:
+        print("📊 FraudShield Metrics Manager")
+        print("Usage:")
+        print("  python init_metrics.py init  - Initialize metrics collection")
+        print("  python init_metrics.py show  - Show current metrics")
+        print("  python init_metrics.py reset - Reset all metrics to zero")
