@@ -519,7 +519,9 @@ function setupAdminEventListeners() {
     // User management
     const manageUsersBtn = document.getElementById('manageUsers');
     if (manageUsersBtn) {
-        manageUsersBtn.addEventListener('click', openUserManagement);
+        manageUsersBtn.addEventListener('click', () => {
+            window.location.href = '/admindashboard/user-management.html';
+        });
     }
 }
 
@@ -701,7 +703,7 @@ async function performHealthCheck() {
 }
 
 function openUserManagement() {
-    showToast('Coming Soon', 'User management interface is under development.', 'info');
+    window.location.href = '/admindashboard/user-management.html';
 }
 
 // Log controls for admin

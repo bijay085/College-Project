@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - FraudShield Admin</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="user-management.css">
+    
+    <script>
+        const userData = sessionStorage.getItem('fraudshield_user');
+        if (!userData || JSON.parse(userData).user.role !== 'admin') {
+            window.location.href = '/user_auth/pages/login.html';
+        }
+    </script>
+</head>
+
+<body>
+    <header class="admin-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <img src="../assets/logo.png" alt="FraudShield" class="logo">
+                <h1>User Management</h1>
+            </div>
+            <button class="back-btn" onclick="window.location.href='/index.html'">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-users stat-icon"></i>
+                <div class="stat-info">
+                    <span class="stat-number" id="totalUsers">0</span>
+                    <span class="stat-label">Total Users</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <i class="fas fa-user-check stat-icon"></i>
+                <div class="stat-info">
+                    <span class="stat-number" id="activeUsers">0</span>
+                    <span class="stat-label">Active Today</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <i class="fas fa-user-shield stat-icon"></i>
+                <div class="stat-info">
+                    <span class="stat-number" id="adminUsers">0</span>
+                    <span class="stat-label">Administrators</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <i class="fas fa-user-plus stat-icon"></i>
+                <div class="stat-info">
+                    <span class="stat-number" id="newUsers">0</span>
+                    <span class="stat-label">New This Week</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-section">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search users...">
+            </div>
+            
+            <div class="filter-controls">
+                <select id="roleFilter">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                </select>
+                
+                <button class="btn btn-primary" id="createUserBtn">
+                    <i class="fas fa-user-plus"></i>
+                    Add User
+                </button>
+                
+                <button class="btn btn-secondary" id="refreshBtn">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="users-table">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Company</th>
+                        <th>Last Login</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                </tbody>
+            </table>
+            
+            <div class="loading-state hidden" id="loadingState">
+                <div class="spinner"></div>
+                <p>Loading users...</p>
+            </div>
+            
+            <div class="empty-state hidden" id="emptyState">
+                <i class="fas fa-users-slash"></i>
+                <h3>No Users Found</h3>
+                <p>No users match your search criteria.</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay hidden" id="userModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Edit User</h3>
+                <button class="modal-close" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="userForm">
+                    <div class="form-group">
+                        <label for="userName">Full Name</label>
+                        <input type="text" id="userName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userEmail">Email</label>
+                        <input type="email" id="userEmail" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userCompany">Company</label>
+                        <input type="text" id="userCompany">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userRole">Role</label>
+                        <select id="userRole" required>
+                            <option value="user">User</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" placeholder="Leave blank to keep current">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apiKey">API Key</label>
+                        <div class="api-key-display">
+                            <input type="text" id="apiKey" readonly>
+                            <button type="button" class="btn-icon" id="regenerateApiBtn">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                            <button type="button" class="btn-icon" id="copyApiBtn">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="accountLocked">
+                            <span class="checkbox-custom"></span>
+                            Account is locked
+                        </label>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="deleteUserBtn">
+                    <i class="fas fa-trash"></i>
+                    Delete User
+                </button>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" form="userForm" class="btn btn-primary" id="saveUserBtn">
+                        <i class="fas fa-save"></i>
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script src="user-management.js"></script>
+</body>
+</html>
