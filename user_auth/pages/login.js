@@ -1,5 +1,5 @@
 /**
- * Enhanced Login Page JavaScript - Database Integration
+ * Enhanced Login Page JavaScript - Database Integration - FIXED VERSION
  * Author: FraudShield Team
  * Location: user_auth/pages/login.js
  * About: Complete login form with real database authentication via Python API
@@ -289,7 +289,7 @@ class LoginForm {
             
             if (result.success) {
                 this.handleLoginSuccess(result.data, remember);
-                window.location.href = '/index.html';
+                // ✅ FIXED: Removed hardcoded redirect - let handleLoginSuccess handle it
             } else {
                 this.handleLoginError(result.error);
             }
@@ -366,9 +366,9 @@ class LoginForm {
             localStorage.removeItem('fraudshield_email');
         }
         
-        this.showSuccess('Login successful! Redirecting to dashboard...');
+        this.showSuccess('Login successful! Redirecting...');
         
-        // Redirect based on user role
+        // ✅ FIXED: Redirect based on user role with proper timing
         setTimeout(() => {
             this.redirectUser(userData.user);
         }, 1500);
@@ -376,24 +376,21 @@ class LoginForm {
 
     redirectUser(user) {
         const role = user.role || 'user';
-        const redirectUrl = this.getRedirectUrl(role);
         
-        console.log(`🚀 Redirecting ${role} to: ${redirectUrl}`);
+        console.log(`🚀 Redirecting ${role} user...`);
         
-        // In a real application, you would redirect to the appropriate page
-        // For now, we'll just show a message
+        // ✅ FIXED: Actually redirect based on role
         if (role === 'admin') {
-            this.showSuccess('Redirecting to Admin Dashboard...');
-            // window.location.href = '/admin-dashboard.html';
+            this.showSuccess('Welcome Admin! Redirecting to admin dashboard...');
+            setTimeout(() => {
+                window.location.href = '/index.html';
+            }, 1000);
         } else {
-            this.showSuccess('Redirecting to User Dashboard...');
-            // window.location.href = '/index.html'; // Main dashboard
+            this.showSuccess('Welcome! Redirecting to dashboard...');
+            setTimeout(() => {
+                window.location.href = '/index.html'; // Main dashboard for regular users
+            }, 1000);
         }
-        
-        // Simulate redirect
-        setTimeout(() => {
-            console.log('Redirect would happen here');
-        }, 2000);
     }
 
     getRedirectUrl(role) {
@@ -548,9 +545,13 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('👤 User already logged in, redirecting...');
         const user = LoginForm.getCurrentUser();
         if (user && user.user) {
-            // Redirect to appropriate dashboard
-            console.log('Redirecting logged-in user...');
-            // window.location.href = user.user.role === 'admin' ? '/admin-dashboard.html' : '/index.html';
+            // Redirect to appropriate dashboard based on role
+            const role = user.user.role || 'user';
+            if (role === 'admin') {
+                window.location.href = '/admin-dashboard.html';
+            } else {
+                window.location.href = '/index.html';
+            }
         }
         return;
     }

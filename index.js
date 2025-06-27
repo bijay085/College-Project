@@ -1,14 +1,728 @@
+// Enhanced index.js with Authentication and Role Management
+
+// Tab Navigation
 const tabs = document.querySelectorAll('.tab-btn');
 const contents = document.querySelectorAll('.tab-content');
 
 tabs.forEach(btn => {
     btn.addEventListener('click', () => {
+        // Check if tab is accessible based on user role
+        if (!isTabAccessible(btn.dataset.tab)) {
+            showToast('Access restricted', 'You do not have permission to access this section.', 'warning');
+            return;
+        }
+
         tabs.forEach(b => b.classList.remove('active'));
         contents.forEach(c => c.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(btn.dataset.tab).classList.add('active');
+
+        // Track tab usage for analytics
+        trackTabUsage(btn.dataset.tab);
     });
 });
+
+// Authentication and Role Management
+class AuthManager {
+    static getCurrentUser() {
+        try {
+            const userData = sessionStorage.getItem('fraudshield_user');
+            return userData ? JSON.parse(userData) : null;
+        } catch (error) {
+            console.error('Failed to parse user data:', error);
+            return null;
+        }
+    }
+
+    static isAuthenticated() {
+        const userData = sessionStorage.getItem('fraudshield_user');
+        const apiKey = sessionStorage.getItem('fraudshield_api_key');
+        return userData && apiKey;
+    }
+
+    static hasRole(role) {
+        const currentUser = this.getCurrentUser();
+        return currentUser && currentUser.user && currentUser.user.role === role;
+    }
+
+    static isAdmin() {
+        return this.hasRole('admin');
+    }
+
+    static getApiKey() {
+        return sessionStorage.getItem('fraudshield_api_key');
+    }
+
+    static logout() {
+        sessionStorage.removeItem('fraudshield_user');
+        sessionStorage.removeItem('fraudshield_api_key');
+        localStorage.removeItem('fraudshield_remember');
+        localStorage.removeItem('fraudshield_email');
+        
+        showToast('Logged out', 'You have been successfully logged out.', 'info');
+        
+        setTimeout(() => {
+            window.location.href = '/user_auth/pages/login.html';
+        }, 1500);
+    }
+
+    static init() {
+        this.setupUserInterface();
+        this.setupRoleBasedAccess();
+        this.setupUserMenu();
+        this.loadUserProfile();
+    }
+
+    static setupUserInterface() {
+        if (!window.currentUser) return;
+
+        const user = window.currentUser.user;
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const userAvatar = document.getElementById('userAvatar');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const dropdownName = document.getElementById('dropdownName');
+        const dropdownEmail = document.getElementById('dropdownEmail');
+
+        if (userName) userName.textContent = user.name;
+        if (userRole) userRole.textContent = user.role === 'admin' ? 'Administrator' : 'User';
+        if (userAvatar) userAvatar.textContent = user.name.charAt(0).toUpperCase();
+        if (welcomeMessage) welcomeMessage.textContent = `Welcome back, ${user.name.split(' ')[0]}!`;
+        if (dropdownName) dropdownName.textContent = user.name;
+        if (dropdownEmail) dropdownEmail.textContent = user.email;
+    }
+
+    static setupRoleBasedAccess() {
+        if (!window.currentUser) return;
+
+        const user = window.currentUser.user;
+        const isAdmin = user.role === 'admin';
+
+        // Logs tab access
+        const logsTab = document.getElementById('logsTab');
+        const logsAccessCheck = document.getElementById('logsAccessCheck');
+        const logControls = document.getElementById('logControls');
+        const logContainer = document.getElementById('logContainer');
+
+        if (!isAdmin) {
+            if (logsAccessCheck) logsAccessCheck.classList.remove('hidden');
+            if (logControls) logControls.classList.add('hidden');
+            if (logContainer) logContainer.classList.add('hidden');
+            if (logsTab) logsTab.style.opacity = '0.6';
+        }
+
+        // Settings tab access
+        const settingsTab = document.getElementById('settingsTab');
+        const settingsAccessCheck = document.getElementById('settingsAccessCheck');
+        const settingsGrid = document.getElementById('settingsGrid');
+
+        if (!isAdmin) {
+            // Show limited settings for regular users
+            this.setupUserSettings();
+        } else {
+            // Show full admin settings
+            this.setupAdminSettings();
+        }
+    }
+
+    static setupUserSettings() {
+        // Regular users see profile and API key management only
+        console.log('Setting up user-level settings');
+    }
+
+    static setupAdminSettings() {
+        const settingsGrid = document.getElementById('settingsGrid');
+        if (!settingsGrid) return;
+
+        // Add admin-specific settings cards
+        const adminSettingsHTML = `
+          <!-- Detection Thresholds -->
+          <div class="settings-card">
+            <h3>🎯 Detection Thresholds</h3>
+            <div class="setting-item">
+              <label for="fraudThreshold">Fraud Threshold</label>
+              <input type="range" id="fraudThreshold" min="0.5" max="1.0" step="0.1" value="0.7" />
+              <span class="threshold-value" id="fraudThresholdValue">0.7</span>
+            </div>
+            <div class="setting-item">
+              <label for="suspiciousThreshold">Suspicious Threshold</label>
+              <input type="range" id="suspiciousThreshold" min="0.1" max="0.7" step="0.1" value="0.4" />
+              <span class="threshold-value" id="suspiciousThresholdValue">0.4</span>
+            </div>
+            <button id="saveThresholds" class="primary-btn">💾 Save Thresholds</button>
+          </div>
+
+          <!-- System Health -->
+          <div class="settings-card">
+            <h3>💚 System Status</h3>
+            <div class="health-item">
+              <span class="health-label">API Status</span>
+              <span class="health-status online" id="apiHealth">
+                <span class="status-indicator">🟢</span> Online
+              </span>
+            </div>
+            <div class="health-item">
+              <span class="health-label">Database</span>
+              <span class="health-status" id="dbHealth">
+                <span class="status-indicator">🟡</span> Checking...
+              </span>
+            </div>
+            <div class="health-item">
+              <span class="health-label">Rule Engine</span>
+              <span class="health-status" id="ruleEngineHealth">
+                <span class="status-indicator">🟢</span> Active
+              </span>
+            </div>
+            <button id="healthCheck" class="secondary-btn">🔄 Refresh Status</button>
+          </div>
+
+          <!-- User Management -->
+          <div class="settings-card">
+            <h3>👥 User Management</h3>
+            <div class="stats-grid">
+              <div class="stat-display">
+                <span class="stat-number" id="totalUsers">0</span>
+                <span class="stat-label">Total Users</span>
+              </div>
+              <div class="stat-display">
+                <span class="stat-number" id="activeUsers">0</span>
+                <span class="stat-label">Active Today</span>
+              </div>
+            </div>
+            <button id="manageUsers" class="secondary-btn">👥 Manage Users</button>
+          </div>
+        `;
+
+        settingsGrid.insertAdjacentHTML('beforeend', adminSettingsHTML);
+        console.log('Added admin-specific settings');
+    }
+
+    static setupUserMenu() {
+        const userMenuBtn = document.getElementById('userMenuBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        if (userMenuBtn && userDropdown) {
+            userMenuBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdown.classList.toggle('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', () => {
+                userDropdown.classList.add('hidden');
+            });
+        }
+
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                this.logout();
+            });
+        }
+    }
+
+    static loadUserProfile() {
+        if (!window.currentUser) return;
+
+        const user = window.currentUser.user;
+        const profileName = document.getElementById('profileName');
+        const profileEmail = document.getElementById('profileEmail');
+        const profileCompany = document.getElementById('profileCompany');
+        const userApiKey = document.getElementById('userApiKey');
+
+        if (profileName) profileName.value = user.name || '';
+        if (profileEmail) profileEmail.value = user.email || '';
+        if (profileCompany) profileCompany.value = user.company || '';
+        if (userApiKey) userApiKey.textContent = window.apiKey || 'Loading...';
+    }
+
+    static logout() {
+        // Clear session data
+        sessionStorage.removeItem('fraudshield_user');
+        sessionStorage.removeItem('fraudshield_api_key');
+        localStorage.removeItem('fraudshield_remember');
+        localStorage.removeItem('fraudshield_email');
+
+        // Show logout message
+        console.log('👋 Logging out...');
+
+        // Redirect to login
+        window.location.href = '/user_auth/pages/login.html';
+    }
+}
+
+// Check tab accessibility based on user role
+function isTabAccessible(tabName) {
+    // Allow all users (even not logged in) to access 'home' and 'bulk'
+    if (tabName === 'home' || tabName === 'bulk') {
+        return true;
+    }
+    // All other tabs require authentication
+    return AuthManager.isAuthenticated();
+}
+
+// Track tab usage for analytics
+function trackTabUsage(tabName) {
+    const currentUser = AuthManager.getCurrentUser();
+    if (currentUser) {
+        console.log(`📊 Tab accessed: ${tabName} by ${currentUser.user.email}`);
+        // In production, send to analytics service
+    }
+}
+
+// Enhanced User Interface Setup
+function setupUserInterface() {
+    const currentUser = AuthManager.getCurrentUser();
+    if (!currentUser) return;
+
+    const user = currentUser.user;
+    
+    // Update user interface elements
+    updateElement('userName', user.name);
+    updateElement('userRole', user.role === 'admin' ? 'Administrator' : 'User');
+    updateElement('userAvatar', user.name.charAt(0).toUpperCase());
+    updateElement('welcomeMessage', `Welcome back, ${user.name.split(' ')[0]}!`);
+    updateElement('dropdownName', user.name);
+    updateElement('dropdownEmail', user.email);
+    updateElement('profileName', user.name, 'value');
+    updateElement('profileEmail', user.email, 'value');
+    updateElement('profileCompany', user.company || '', 'value');
+    updateElement('userApiKey', AuthManager.getApiKey());
+
+    // Setup role-specific content
+    setupRoleBasedContent();
+}
+
+function updateElement(id, value, property = 'textContent') {
+    const element = document.getElementById(id);
+    if (element && value !== undefined) {
+        element[property] = value;
+    }
+}
+
+// Setup role-based content and restrictions
+function setupRoleBasedContent() {
+    const isAdmin = AuthManager.isAdmin();
+    
+    // Setup logs access
+    setupLogsAccess(isAdmin);
+    
+    // Setup settings access
+    setupSettingsAccess(isAdmin);
+    
+    // Add admin badge if user is admin
+    if (isAdmin) {
+        addAdminBadge();
+    }
+}
+
+function setupLogsAccess(isAdmin) {
+    const logsAccessCheck = document.getElementById('logsAccessCheck');
+    const logControls = document.getElementById('logControls');
+    const logContainer = document.getElementById('logContainer');
+    const logsTab = document.getElementById('logsTab');
+
+    if (!isAdmin) {
+        if (logsAccessCheck) logsAccessCheck.classList.remove('hidden');
+        if (logControls) logControls.classList.add('hidden');
+        if (logContainer) logContainer.classList.add('hidden');
+        if (logsTab) logsTab.style.opacity = '0.6';
+    } else {
+        if (logsAccessCheck) logsAccessCheck.classList.add('hidden');
+        if (logControls) logControls.classList.remove('hidden');
+        if (logContainer) logContainer.classList.remove('hidden');
+        setupLogControls();
+    }
+}
+
+function setupSettingsAccess(isAdmin) {
+    const settingsGrid = document.getElementById('settingsGrid');
+    if (!settingsGrid) return;
+
+    if (isAdmin) {
+        addAdminSettings(settingsGrid);
+    }
+    
+    setupSettingsEventListeners(isAdmin);
+}
+
+function addAdminSettings(settingsGrid) {
+    const adminSettingsHTML = `
+        <!-- Detection Thresholds -->
+        <div class="settings-card">
+            <h3>🎯 Detection Thresholds</h3>
+            <div class="setting-item">
+                <label for="fraudThreshold">Fraud Threshold</label>
+                <input type="range" id="fraudThreshold" min="0.5" max="1.0" step="0.1" value="0.7" />
+                <span class="threshold-value" id="fraudThresholdValue">0.7</span>
+            </div>
+            <div class="setting-item">
+                <label for="suspiciousThreshold">Suspicious Threshold</label>
+                <input type="range" id="suspiciousThreshold" min="0.1" max="0.7" step="0.1" value="0.4" />
+                <span class="threshold-value" id="suspiciousThresholdValue">0.4</span>
+            </div>
+            <button id="saveThresholds" class="primary-btn">💾 Save Thresholds</button>
+        </div>
+
+        <!-- Rule Configuration -->
+        <div class="settings-card">
+            <h3>⚙️ Detection Rules</h3>
+            <div class="rule-toggles">
+                <div class="rule-item">
+                    <label class="rule-label">
+                        <input type="checkbox" id="disposableEmailRule" checked>
+                        <span class="rule-name">Disposable Email Detection</span>
+                        <span class="rule-weight">Weight: 0.4</span>
+                    </label>
+                </div>
+                <div class="rule-item">
+                    <label class="rule-label">
+                        <input type="checkbox" id="suspiciousBinRule" checked>
+                        <span class="rule-name">Suspicious BIN Check</span>
+                        <span class="rule-weight">Weight: 0.5</span>
+                    </label>
+                </div>
+                <div class="rule-item">
+                    <label class="rule-label">
+                        <input type="checkbox" id="priceTamperingRule" checked>
+                        <span class="rule-name">Price Tampering Detection</span>
+                        <span class="rule-weight">Weight: 0.5</span>
+                    </label>
+                </div>
+            </div>
+            <button id="saveRules" class="primary-btn">💾 Save Rules</button>
+        </div>
+
+        <!-- System Health -->
+        <div class="settings-card">
+            <h3>💚 System Status</h3>
+            <div class="health-item">
+                <span class="health-label">API Status</span>
+                <span class="health-status online" id="apiHealth">
+                    <span class="status-indicator">🟢</span> Online
+                </span>
+            </div>
+            <div class="health-item">
+                <span class="health-label">Database</span>
+                <span class="health-status checking" id="dbHealth">
+                    <span class="status-indicator">🟡</span> Checking...
+                </span>
+            </div>
+            <div class="health-item">
+                <span class="health-label">Rule Engine</span>
+                <span class="health-status online" id="ruleEngineHealth">
+                    <span class="status-indicator">🟢</span> Active
+                </span>
+            </div>
+            <button id="healthCheck" class="secondary-btn">🔄 Refresh Status</button>
+        </div>
+
+        <!-- User Management -->
+        <div class="settings-card">
+            <h3>👥 User Management</h3>
+            <div class="stats-grid">
+                <div class="stat-display">
+                    <span class="stat-number" id="totalUsers">Loading...</span>
+                    <span class="stat-label">Total Users</span>
+                </div>
+                <div class="stat-display">
+                    <span class="stat-number" id="activeUsers">Loading...</span>
+                    <span class="stat-label">Active Today</span>
+                </div>
+            </div>
+            <button id="manageUsers" class="secondary-btn">👥 Manage Users</button>
+            <button id="exportUserData" class="secondary-btn">📊 Export Data</button>
+        </div>
+    `;
+
+    settingsGrid.insertAdjacentHTML('beforeend', adminSettingsHTML);
+    setupThresholdListeners();
+    loadUserStats();
+}
+
+function setupThresholdListeners() {
+    const fraudThreshold = document.getElementById('fraudThreshold');
+    const suspiciousThreshold = document.getElementById('suspiciousThreshold');
+    const fraudValue = document.getElementById('fraudThresholdValue');
+    const suspiciousValue = document.getElementById('suspiciousThresholdValue');
+
+    if (fraudThreshold && fraudValue) {
+        fraudThreshold.addEventListener('input', (e) => {
+            fraudValue.textContent = e.target.value;
+        });
+    }
+
+    if (suspiciousThreshold && suspiciousValue) {
+        suspiciousThreshold.addEventListener('input', (e) => {
+            suspiciousValue.textContent = e.target.value;
+        });
+    }
+}
+
+function addAdminBadge() {
+    const userRole = document.getElementById('userRole');
+    if (userRole && !userRole.querySelector('.admin-badge')) {
+        const badge = document.createElement('span');
+        badge.className = 'admin-badge';
+        badge.textContent = '👑';
+        badge.style.marginLeft = '8px';
+        badge.title = 'Administrator';
+        userRole.appendChild(badge);
+    }
+}
+
+// Setup event listeners for various components
+function setupSettingsEventListeners(isAdmin) {
+    // Profile save button
+    const saveProfileBtn = document.getElementById('saveProfile');
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', saveProfile);
+    }
+
+    // API key copy button
+    const copyApiKeyBtn = document.getElementById('copyUserApiKey');
+    if (copyApiKeyBtn) {
+        copyApiKeyBtn.addEventListener('click', copyApiKey);
+    }
+
+    // API key regenerate button
+    const regenerateApiKeyBtn = document.getElementById('regenerateApiKey');
+    if (regenerateApiKeyBtn) {
+        regenerateApiKeyBtn.addEventListener('click', regenerateApiKey);
+    }
+
+    if (isAdmin) {
+        // Admin-specific event listeners
+        setupAdminEventListeners();
+    }
+}
+
+function setupAdminEventListeners() {
+    // Save thresholds
+    const saveThresholdsBtn = document.getElementById('saveThresholds');
+    if (saveThresholdsBtn) {
+        saveThresholdsBtn.addEventListener('click', saveThresholds);
+    }
+
+    // Save rules
+    const saveRulesBtn = document.getElementById('saveRules');
+    if (saveRulesBtn) {
+        saveRulesBtn.addEventListener('click', saveRules);
+    }
+
+    // Health check
+    const healthCheckBtn = document.getElementById('healthCheck');
+    if (healthCheckBtn) {
+        healthCheckBtn.addEventListener('click', performHealthCheck);
+    }
+
+    // User management
+    const manageUsersBtn = document.getElementById('manageUsers');
+    if (manageUsersBtn) {
+        manageUsersBtn.addEventListener('click', openUserManagement);
+    }
+}
+
+// User menu functionality
+function setupUserMenu() {
+    const userMenuBtn = document.getElementById('userMenuBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    if (userMenuBtn && userDropdown) {
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userDropdown.contains(e.target) && !userMenuBtn.contains(e.target)) {
+                userDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            AuthManager.logout();
+        });
+    }
+}
+
+// API functionality
+async function loadUserStats() {
+    if (!AuthManager.isAdmin()) return;
+
+    try {
+        const response = await fetch('http://127.0.0.1:5001/auth/user-stats', {
+            headers: {
+                'Authorization': `Bearer ${AuthManager.getApiKey()}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                updateElement('totalUsers', data.data.total_users);
+                updateElement('activeUsers', data.data.active_today);
+            }
+        }
+    } catch (error) {
+        console.error('Failed to load user stats:', error);
+        updateElement('totalUsers', 'Error');
+        updateElement('activeUsers', 'Error');
+    }
+}
+
+async function saveProfile() {
+    const profileData = {
+        name: document.getElementById('profileName').value,
+        company: document.getElementById('profileCompany').value
+    };
+
+    try {
+        showToast('Saving...', 'Updating your profile information.', 'info');
+        
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Update session storage
+        const currentUser = AuthManager.getCurrentUser();
+        if (currentUser) {
+            currentUser.user.name = profileData.name;
+            currentUser.user.company = profileData.company;
+            sessionStorage.setItem('fraudshield_user', JSON.stringify(currentUser));
+            setupUserInterface(); // Refresh UI
+        }
+
+        showToast('Success', 'Profile updated successfully!', 'success');
+    } catch (error) {
+        console.error('Failed to save profile:', error);
+        showToast('Error', 'Failed to update profile. Please try again.', 'error');
+    }
+}
+
+async function copyApiKey() {
+    const apiKey = AuthManager.getApiKey();
+    
+    try {
+        await navigator.clipboard.writeText(apiKey);
+        showToast('Copied', 'API key copied to clipboard!', 'success');
+        
+        // Update button temporarily
+        const btn = document.getElementById('copyUserApiKey');
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Copied!';
+        setTimeout(() => {
+            btn.textContent = originalText;
+        }, 2000);
+    } catch (error) {
+        showToast('Error', 'Failed to copy API key.', 'error');
+    }
+}
+
+async function regenerateApiKey() {
+    if (!confirm('Are you sure you want to regenerate your API key? This will invalidate the current key.')) {
+        return;
+    }
+
+    try {
+        showToast('Generating...', 'Creating new API key.', 'info');
+        
+        // Simulate API call to regenerate key
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        const newApiKey = 'fsk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        
+        sessionStorage.setItem('fraudshield_api_key', newApiKey);
+        updateElement('userApiKey', newApiKey);
+        
+        showToast('Success', 'New API key generated successfully!', 'success');
+    } catch (error) {
+        console.error('Failed to regenerate API key:', error);
+        showToast('Error', 'Failed to generate new API key.', 'error');
+    }
+}
+
+async function saveThresholds() {
+    const fraudThreshold = document.getElementById('fraudThreshold').value;
+    const suspiciousThreshold = document.getElementById('suspiciousThreshold').value;
+
+    try {
+        showToast('Saving...', 'Updating detection thresholds.', 'info');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        showToast('Success', 'Thresholds updated successfully!', 'success');
+    } catch (error) {
+        showToast('Error', 'Failed to save thresholds.', 'error');
+    }
+}
+
+async function saveRules() {
+    try {
+        showToast('Saving...', 'Updating detection rules.', 'info');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        showToast('Success', 'Rules updated successfully!', 'success');
+    } catch (error) {
+        showToast('Error', 'Failed to save rules.', 'error');
+    }
+}
+
+async function performHealthCheck() {
+    try {
+        const btn = document.getElementById('healthCheck');
+        btn.disabled = true;
+        btn.textContent = '🔄 Checking...';
+
+        // Check API health
+        const response = await fetch('http://127.0.0.1:5000/health');
+        const dbHealth = document.getElementById('dbHealth');
+        
+        if (response.ok) {
+            dbHealth.innerHTML = '<span class="status-indicator">🟢</span> Online';
+            dbHealth.className = 'health-status online';
+        } else {
+            dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Offline';
+            dbHealth.className = 'health-status offline';
+        }
+
+        showToast('Health Check', 'System health check completed.', 'info');
+    } catch (error) {
+        const dbHealth = document.getElementById('dbHealth');
+        dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Error';
+        dbHealth.className = 'health-status offline';
+        
+        showToast('Error', 'Health check failed.', 'error');
+    } finally {
+        const btn = document.getElementById('healthCheck');
+        btn.disabled = false;
+        btn.textContent = '🔄 Refresh Status';
+    }
+}
+
+function openUserManagement() {
+    showToast('Coming Soon', 'User management interface is under development.', 'info');
+}
+
+// Log controls for admin
+function setupLogControls() {
+    const clearLogsBtn = document.getElementById('clearLogs');
+    const exportLogsBtn = document.getElementById('exportLogs');
+
+    if (clearLogsBtn) {
+        clearLogsBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear all logs?')) {
+                showToast('Cleared', 'Activity logs have been cleared.', 'info');
+            }
+        });
+    }
+
+    if (exportLogsBtn) {
+        exportLogsBtn.addEventListener('click', () => {
+            showToast('Export', 'Logs exported successfully.', 'success');
+        });
+    }
+}
 
 // ---------------------------------------------------------------------------
 // FIXED Bulk-Upload with Proper Button State Management
@@ -439,4 +1153,15 @@ document.addEventListener('DOMContentLoaded', () => {
       tabBtn.click();
     }
   };
+});
+
+// At the end of your file or after DOMContentLoaded
+document.addEventListener('DOMContentLoaded', function() {
+  // Set window.currentUser and window.apiKey from sessionStorage if available
+  const userData = sessionStorage.getItem('fraudshield_user');
+  const apiKey = sessionStorage.getItem('fraudshield_api_key');
+  if (userData) window.currentUser = JSON.parse(userData);
+  if (apiKey) window.apiKey = apiKey;
+
+  AuthManager.init();
 });

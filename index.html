@@ -16,30 +16,43 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="assets/favicon.png" />
   
-  <!-- Core Stylesheets - Order matters! -->
+  <!-- Core Stylesheets -->
   <link rel="stylesheet" href="css/base.css" />
   <link rel="stylesheet" href="css/utilities.css" />
   <link rel="stylesheet" href="css/header.css" />
-  
-  <!-- Page-specific Stylesheets - Loaded conditionally via JS or all at once -->
   <link rel="stylesheet" href="css/dashboard.css" />
   <link rel="stylesheet" href="css/bulk-analysis.css" />
   <link rel="stylesheet" href="css/logs.css" />
   <link rel="stylesheet" href="css/settings.css" />
   
-  <!-- Alternative: Load page-specific CSS conditionally 
-  <link rel="stylesheet" href="css/dashboard.css" id="dashboard-css" />
-  <link rel="stylesheet" href="css/bulk-analysis.css" id="bulk-css" disabled />
-  <link rel="stylesheet" href="css/logs.css" id="logs-css" disabled />
-  <link rel="stylesheet" href="css/settings.css" id="settings-css" disabled />
-  -->
-  
-  <!-- Scripts -->
-  <script src="index.js" defer></script>
+  <!-- Authentication Check Script -->
+  <script>
+    // Check authentication before page loads
+    (function() {
+      const userData = sessionStorage.getItem('fraudshield_user');
+      const apiKey = sessionStorage.getItem('fraudshield_api_key');
+      
+      if (!userData || !apiKey) {
+        // Redirect to login if not authenticated
+        window.location.href = '/user_auth/pages/login.html';
+        return;
+      }
+      
+      // Store user data globally for use in other scripts
+      try {
+        window.currentUser = JSON.parse(userData);
+        window.apiKey = apiKey;
+        console.log('🔐 Authenticated user:', window.currentUser.user.email, 'Role:', window.currentUser.user.role);
+      } catch (error) {
+        console.error('Failed to parse user data:', error);
+        window.location.href = '/user_auth/pages/login.html';
+      }
+    })();
+  </script>
 </head>
 
 <body>
-  <!-- Enhanced Header with Status Indicator -->
+  <!-- Enhanced Header with User Info -->
   <header>
     <div class="logo-section">
       <img src="assets/logo.png" alt="FraudShield Portal" />
@@ -58,15 +71,50 @@
         <span class="icon">📊</span>
         <span class="label">Bulk Analysis</span>
       </button>
-      <button class="tab-btn" data-tab="logs" aria-selected="false">
+      <button class="tab-btn" data-tab="logs" aria-selected="false" id="logsTab">
         <span class="icon">📋</span>
         <span class="label">Activity Logs</span>
       </button>
-      <button class="tab-btn" data-tab="settings" aria-selected="false">
+      <button class="tab-btn" data-tab="settings" aria-selected="false" id="settingsTab">
         <span class="icon">⚙️</span>
         <span class="label">Settings</span>
       </button>
     </nav>
+
+    <!-- User Profile Section -->
+    <div class="user-section">
+      <div class="user-info">
+        <span class="user-name" id="userName">Loading...</span>
+        <span class="user-role" id="userRole">User</span>
+      </div>
+      <div class="user-menu">
+        <button class="user-menu-btn" id="userMenuBtn" aria-label="User menu">
+          <span class="user-avatar" id="userAvatar">U</span>
+        </button>
+        <div class="user-dropdown hidden" id="userDropdown">
+          <div class="dropdown-header">
+            <div class="dropdown-user-info">
+              <span class="dropdown-name" id="dropdownName">User Name</span>
+              <span class="dropdown-email" id="dropdownEmail">user@example.com</span>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" id="profileBtn">
+            <span class="dropdown-icon">👤</span>
+            Profile Settings
+          </button>
+          <button class="dropdown-item" id="apiKeysBtn">
+            <span class="dropdown-icon">🔑</span>
+            API Keys
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item logout-btn" id="logoutBtn">
+            <span class="dropdown-icon">🚪</span>
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
   </header>
 
   <main role="main">
@@ -74,10 +122,10 @@
     <!-- Enhanced Home/Dashboard Tab -->
     <section id="home" class="tab-content active" role="tabpanel" aria-labelledby="home-tab">
       
-      <!-- Hero Section -->
+      <!-- Hero Section with User Welcome -->
       <div class="hero-section">
         <div class="hero-content">
-          <h1>Welcome to FraudShield</h1>
+          <h1 id="welcomeMessage">Welcome to FraudShield</h1>
           <p class="hero-subtitle">Advanced rule-based fraud detection with transparent, explainable results</p>
           <div class="hero-stats">
             <div class="stat-item">
@@ -94,6 +142,11 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Role-specific Content -->
+      <div id="roleSpecificContent">
+        <!-- Content will be loaded based on user role -->
       </div>
 
       <!-- What is FraudShield? -->
@@ -137,120 +190,7 @@
         </div>
       </div>
 
-      <!-- Why Choose FraudShield? -->
-      <div class="two-col right">
-        <div class="media">
-          <div class="benefits-showcase">
-            <div class="benefit-item">
-              <div class="benefit-icon">🚀</div>
-              <div class="benefit-content">
-                <h4>Lightning Fast</h4>
-                <p>Millisecond response times with deterministic results</p>
-              </div>
-            </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">🔍</div>
-              <div class="benefit-content">
-                <h4>Fully Transparent</h4>
-                <p>Every flag comes with clear reasons and rule explanations</p>
-              </div>
-            </div>
-            <div class="benefit-item">
-              <div class="benefit-icon">🎯</div>
-              <div class="benefit-content">
-                <h4>Precise Detection</h4>
-                <p>Fine-tuned rules minimize false positives</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="text">
-          <h3>🎯 Why Choose Rule-Based Detection</h3>
-          <ul class="premium-list">
-            <li>
-              <strong>Complete Transparency:</strong> Know exactly why each transaction was flagged
-            </li>
-            <li>
-              <strong>Proven Algorithms:</strong> Aho-Corasick, Z-Score analysis, Levenshtein distance, and more
-            </li>
-            <li>
-              <strong>No Black Box:</strong> Every decision is auditable and explainable to regulators
-            </li>
-            <li>
-              <strong>Instant Deployment:</strong> No training data required - works immediately
-            </li>
-            <li>
-              <strong>Easy Tuning:</strong> Adjust thresholds and rules in real-time
-            </li>
-          </ul>
-          <div class="future-note">
-            <p><em>🔮 Future Enhancement: Machine learning capabilities will be added to complement our rule-based foundation.</em></p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Detection Methods -->
-      <div class="two-col left">
-        <div class="text">
-          <h3>🔬 Advanced Detection Methods</h3>
-          <div class="detection-methods">
-            <div class="method-item">
-              <span class="method-icon">📧</span>
-              <div class="method-content">
-                <h4>Email Analysis</h4>
-                <p>Disposable email detection using pattern matching</p>
-              </div>
-            </div>
-            <div class="method-item">
-              <span class="method-icon">💳</span>
-              <div class="method-content">
-                <h4>BIN Validation</h4>
-                <p>Card issuer verification and geographic matching</p>
-              </div>
-            </div>
-            <div class="method-item">
-              <span class="method-icon">🌍</span>
-              <div class="method-content">
-                <h4>Geo-Location</h4>
-                <p>IP vs billing address distance calculation</p>
-              </div>
-            </div>
-            <div class="method-item">
-              <span class="method-icon">⏱️</span>
-              <div class="method-content">
-                <h4>Timing Analysis</h4>
-                <p>Bot detection through checkout speed analysis</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="media">
-          <div class="algorithm-showcase">
-            <div class="algorithm-item">
-              <h4>Current Algorithms</h4>
-              <div class="algo-list">
-                <span class="algo-tag">Aho-Corasick Pattern Matching</span>
-                <span class="algo-tag">Great-Circle Distance</span>
-                <span class="algo-tag">Z-Score Anomaly Detection</span>
-                <span class="algo-tag">Levenshtein String Distance</span>
-                <span class="algo-tag">Bloom Filter Tracking</span>
-              </div>
-            </div>
-            <div class="performance-metrics">
-              <div class="metric">
-                <span class="metric-value">< 100ms</span>
-                <span class="metric-label">Average Response</span>
-              </div>
-              <div class="metric">
-                <span class="metric-value">8+</span>
-                <span class="metric-label">Detection Rules</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Start Guide -->
+      <!-- Get Started Section -->
       <div class="two-col right">
         <div class="media">
           <div class="workflow-preview">
@@ -337,13 +277,11 @@
             <span class="btn-text">Analyze Transactions</span>
           </button>
 
-          <!-- Progress Bar -->
           <div class="upload-progress-bar hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100">
             <div class="upload-progress-bar-inner"></div>
             <span class="progress-text">Processing...</span>
           </div>
 
-          <!-- Quick Stats -->
           <div class="upload-stats">
             <div class="stat">
               <span class="stat-label">Max File Size:</span>
@@ -374,8 +312,18 @@
         <p class="page-subtitle">Monitor live fraud detection events and system activity</p>
       </div>
 
+      <!-- Role Access Check -->
+      <div id="logsAccessCheck" class="hidden">
+        <div class="access-denied">
+          <div class="access-denied-icon">🔒</div>
+          <h3>Access Restricted</h3>
+          <p>Activity logs are only available to administrators.</p>
+          <p>Contact your system administrator for access.</p>
+        </div>
+      </div>
+
       <!-- Log Controls -->
-      <div class="log-controls">
+      <div class="log-controls" id="logControls">
         <div class="control-group">
           <label for="logLevel">Log Level:</label>
           <select id="logLevel">
@@ -393,7 +341,7 @@
       </div>
 
       <!-- Live Log Feed -->
-      <div class="log-container">
+      <div class="log-container" id="logContainer">
         <div id="logOutput" class="log-output">
           <div class="log-placeholder">
             <div class="placeholder-icon">📋</div>
@@ -413,145 +361,61 @@
         <p class="page-subtitle">Configure fraud detection rules and system parameters</p>
       </div>
 
+      <!-- Role Access Check -->
+      <div id="settingsAccessCheck" class="hidden">
+        <div class="access-denied">
+          <div class="access-denied-icon">🔒</div>
+          <h3>Access Restricted</h3>
+          <p>System settings are only available to administrators.</p>
+          <p>Contact your system administrator to modify system configuration.</p>
+        </div>
+      </div>
+
       <!-- Settings Grid -->
-      <div class="settings-grid">
+      <div class="settings-grid" id="settingsGrid">
         
-        <!-- Detection Thresholds -->
+        <!-- User Profile Settings (Available to all users) -->
         <div class="settings-card">
-          <h3>🎯 Detection Thresholds</h3>
+          <h3>👤 Profile Settings</h3>
           <div class="setting-item">
-            <label for="fraudThreshold">Fraud Threshold</label>
-            <input type="range" id="fraudThreshold" min="0.5" max="1.0" step="0.1" value="0.7" />
-            <span class="threshold-value" id="fraudThresholdValue">0.7</span>
+            <label for="profileName">Full Name</label>
+            <input type="text" id="profileName" class="form-input" placeholder="Your full name">
           </div>
           <div class="setting-item">
-            <label for="suspiciousThreshold">Suspicious Threshold</label>
-            <input type="range" id="suspiciousThreshold" min="0.1" max="0.7" step="0.1" value="0.4" />
-            <span class="threshold-value" id="suspiciousThresholdValue">0.4</span>
+            <label for="profileEmail">Email Address</label>
+            <input type="email" id="profileEmail" class="form-input" placeholder="your@email.com" disabled>
           </div>
-          <button id="saveThresholds" class="primary-btn">💾 Save Thresholds</button>
+          <div class="setting-item">
+            <label for="profileCompany">Company</label>
+            <input type="text" id="profileCompany" class="form-input" placeholder="Your company">
+          </div>
+          <button id="saveProfile" class="primary-btn">💾 Save Profile</button>
         </div>
 
-        <!-- Rule Configuration -->
+        <!-- API Key Management (Available to all users) -->
         <div class="settings-card">
-          <h3>⚙️ Detection Rules</h3>
-          <div class="rule-toggles">
-            <div class="rule-item">
-              <label class="rule-label">
-                <input type="checkbox" id="disposableEmailRule" checked>
-                <span class="rule-name">Disposable Email Detection</span>
-                <span class="rule-weight">Weight: 0.4</span>
-              </label>
-            </div>
-            <div class="rule-item">
-              <label class="rule-label">
-                <input type="checkbox" id="suspiciousBinRule" checked>
-                <span class="rule-name">Suspicious BIN Check</span>
-                <span class="rule-weight">Weight: 0.5</span>
-              </label>
-            </div>
-            <div class="rule-item">
-              <label class="rule-label">
-                <input type="checkbox" id="priceTamperingRule" checked>
-                <span class="rule-name">Price Tampering Detection</span>
-                <span class="rule-weight">Weight: 0.5</span>
-              </label>
-            </div>
-            <div class="rule-item">
-              <label class="rule-label">
-                <input type="checkbox" id="geoMismatchRule" checked>
-                <span class="rule-name">Geographic Mismatch</span>
-                <span class="rule-weight">Weight: 0.6</span>
-              </label>
+          <h3>🔑 API Key Management</h3>
+          <div class="api-key-display">
+            <label>Your API Key</label>
+            <div class="api-key-box">
+              <code id="userApiKey" class="api-key-code">Loading...</code>
+              <button id="copyUserApiKey" class="copy-btn">📋 Copy</button>
             </div>
           </div>
-          <button id="saveRules" class="primary-btn">💾 Save Rules</button>
-        </div>
-
-        <!-- System Health -->
-        <div class="settings-card">
-          <h3>💚 System Status</h3>
-          <div class="health-item">
-            <span class="health-label">API Status</span>
-            <span class="health-status online" id="apiHealth">
-              <span class="status-indicator">🟢</span> Online
-            </span>
+          <div class="api-key-actions">
+            <button id="regenerateApiKey" class="secondary-btn">🔄 Regenerate Key</button>
+            <button id="downloadApiKey" class="secondary-btn">💾 Download</button>
           </div>
-          <div class="health-item">
-            <span class="health-label">Database</span>
-            <span class="health-status" id="dbHealth">
-              <span class="status-indicator">🟡</span> Checking...
-            </span>
-          </div>
-          <div class="health-item">
-            <span class="health-label">Rule Engine</span>
-            <span class="health-status" id="ruleEngineHealth">
-              <span class="status-indicator">🟢</span> Active
-            </span>
-          </div>
-          <div class="health-item">
-            <span class="health-label">Last Check</span>
-            <span class="health-status" id="lastUpdate">Just now</span>
-          </div>
-          <button id="healthCheck" class="secondary-btn">🔄 Refresh Status</button>
-        </div>
-
-        <!-- Live Statistics -->
-        <div class="settings-card">
-          <h3>📊 Live Statistics</h3>
-          <div class="stats-grid">
-            <div class="stat-display">
-              <span class="stat-number" id="todayChecks">0</span>
-              <span class="stat-label">Today's Checks</span>
+          <div class="api-warning">
+            <div class="warning-icon">⚠️</div>
+            <div class="warning-content">
+              <strong>Important:</strong> Keep your API key secure. It provides access to your FraudShield account.
             </div>
-            <div class="stat-display">
-              <span class="stat-number" id="weeklyFraud">0</span>
-              <span class="stat-label">Fraud This Week</span>
-            </div>
-            <div class="stat-display">
-              <span class="stat-number" id="avgResponseTime">85ms</span>
-              <span class="stat-label">Avg Response Time</span>
-            </div>
-            <div class="stat-display">
-              <span class="stat-number" id="totalRules">8</span>
-              <span class="stat-label">Active Rules</span>
-            </div>
-          </div>
-          <button id="refreshStats" class="secondary-btn">📈 Refresh Stats</button>
-        </div>
-
-        <!-- System Configuration -->
-        <div class="settings-card">
-          <h3>🔧 System Configuration</h3>
-          <div class="config-item">
-            <label for="maxFileSize">Max File Size (MB)</label>
-            <input type="number" id="maxFileSize" min="1" max="50" value="16" />
-          </div>
-          <div class="config-item">
-            <label for="maxRecords">Max Records per File</label>
-            <input type="number" id="maxRecords" min="100" max="10000" value="5000" />
-          </div>
-          <div class="config-item">
-            <label for="logRetention">Log Retention (Days)</label>
-            <input type="number" id="logRetention" min="1" max="365" value="30" />
-          </div>
-          <button id="saveConfig" class="primary-btn">💾 Save Configuration</button>
-        </div>
-
-        <!-- Export/Import -->
-        <div class="settings-card">
-          <h3>📥 Data Management</h3>
-          <div class="data-actions">
-            <button id="exportSettings" class="secondary-btn">📤 Export Settings</button>
-            <button id="importSettings" class="secondary-btn">📥 Import Settings</button>
-            <input type="file" id="settingsFile" accept=".json" style="display: none;">
-          </div>
-          <div class="backup-info">
-            <p>Last backup: <span id="lastBackup">Never</span></p>
-            <button id="createBackup" class="secondary-btn">💾 Create Backup</button>
           </div>
         </div>
 
+        <!-- Admin-only sections will be added dynamically -->
+        
       </div>
 
     </section>
@@ -566,6 +430,9 @@
     <div class="loading-spinner"></div>
     <p>Processing your request...</p>
   </div>
+
+  <!-- Scripts -->
+  <script src="index.js" defer></script>
 
 </body>
 </html>
