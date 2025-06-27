@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+FraudShield Registration Portal
+Author: FraudShield Team
+Location: user_auth/pages/registration.html
+About: Professional account registration with secure API key generation
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create your FraudShield account and get instant access to advanced fraud detection APIs">
+    <meta name="keywords" content="fraud detection, API, security, registration, account">
+    <meta name="author" content="FraudShield Security Solutions">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Title -->
+    <title>Create Account - FraudShield Security Platform</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="registration.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+
+<body>
+    <!-- Main Container -->
+    <main class="auth-container" role="main" aria-labelledby="registration-title">
+        
+        <!-- Header Section -->
+        <header class="brand-header" role="banner">
+            <div class="logo-container">
+                <i class="fas fa-shield-alt logo-icon" aria-hidden="true"></i>
+                <h1 id="registration-title">FraudShield</h1>
+            </div>
+            <p class="subtitle">Create Your Secure Account</p>
+            <div class="security-badge">
+                <i class="fas fa-lock" aria-hidden="true"></i>
+                <span>Enterprise-grade security</span>
+            </div>
+        </header>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressText">Step 1 of 2: Account Information</span>
+            </div>
+        </div>
+
+        <!-- Alert Messages -->
+        <div id="errorMessage" class="alert alert-error hidden" role="alert" aria-live="assertive">
+            <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+            <span class="alert-text"></span>
+        </div>
+        <div id="successMessage" class="alert alert-success hidden" role="status" aria-live="polite">
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            <span class="alert-text"></span>
+        </div>
+
+        <!-- Registration Form -->
+        <form id="registrationForm" novalidate aria-labelledby="registration-title" class="registration-form">
+            
+            <!-- Personal Information Section -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    Personal Information
+                </h2>
+                
+                <!-- Full Name Field -->
+                <div class="form-group">
+                    <label for="name" class="form-label required">Full Name</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            required 
+                            autocomplete="name"
+                            placeholder="Enter your full name"
+                            aria-describedby="name-error"
+                            maxlength="100"
+                            class="form-input"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email" class="form-label required">Email Address</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required 
+                            autocomplete="email"
+                            placeholder="Enter your email address"
+                            aria-describedby="email-error"
+                            maxlength="255"
+                            class="form-input"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Company Field -->
+                <div class="form-group">
+                    <label for="company" class="form-label">Company/Organization</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="company" 
+                            name="company" 
+                            autocomplete="organization"
+                            placeholder="Your company name (optional)"
+                            maxlength="100"
+                            class="form-input"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-building" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Section -->
+            <div class="form-section">
+                <h2 class="section-title">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    Account Security
+                </h2>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password" class="form-label required">Password</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required 
+                            autocomplete="new-password"
+                            placeholder="Create a strong password"
+                            aria-describedby="password-requirements password-error"
+                            minlength="8"
+                            maxlength="128"
+                            class="form-input password-input"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-key" aria-hidden="true"></i>
+                        </div>
+                        <button 
+                            type="button" 
+                            class="password-toggle" 
+                            aria-label="Show password"
+                            tabindex="0"
+                        >
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div id="password-requirements" class="password-requirements hidden">
+                        <div class="requirements-grid">
+                            <div class="requirement" data-requirement="length">
+                                <i class="fas fa-circle requirement-icon" aria-hidden="true"></i>
+                                <span>At least 8 characters</span>
+                            </div>
+                            <div class="requirement" data-requirement="uppercase">
+                                <i class="fas fa-circle requirement-icon" aria-hidden="true"></i>
+                                <span>One uppercase letter</span>
+                            </div>
+                            <div class="requirement" data-requirement="lowercase">
+                                <i class="fas fa-circle requirement-icon" aria-hidden="true"></i>
+                                <span>One lowercase letter</span>
+                            </div>
+                            <div class="requirement" data-requirement="number">
+                                <i class="fas fa-circle requirement-icon" aria-hidden="true"></i>
+                                <span>One number</span>
+                            </div>
+                            <div class="requirement" data-requirement="special">
+                                <i class="fas fa-circle requirement-icon" aria-hidden="true"></i>
+                                <span>One special character</span>
+                            </div>
+                        </div>
+                        <div class="strength-meter">
+                            <div class="strength-bar">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            <span class="strength-label" id="strengthLabel">Password Strength</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Field -->
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label required">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            required 
+                            autocomplete="new-password"
+                            placeholder="Confirm your password"
+                            aria-describedby="confirm-password-error"
+                            minlength="8"
+                            maxlength="128"
+                            class="form-input password-input"
+                        >
+                        <div class="input-icon">
+                            <i class="fas fa-check-double" aria-hidden="true"></i>
+                        </div>
+                        <button 
+                            type="button" 
+                            class="password-toggle" 
+                            aria-label="Show confirm password"
+                            tabindex="0"
+                        >
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terms and Privacy -->
+            <div class="form-section">
+                <div class="form-group">
+                    <label class="checkbox-wrapper">
+                        <input 
+                            type="checkbox" 
+                            id="terms" 
+                            name="terms" 
+                            required
+                            aria-describedby="terms-error"
+                            class="checkbox-input"
+                        >
+                        <span class="checkbox-custom">
+                            <i class="fas fa-check checkbox-icon" aria-hidden="true"></i>
+                        </span>
+                        <span class="checkbox-text">
+                            I agree to the <a href="/terms" target="_blank" rel="noopener" class="link">Terms of Service</a> 
+                            and <a href="/privacy" target="_blank" rel="noopener" class="link">Privacy Policy</a>
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" id="submitBtn" aria-describedby="submit-help">
+                <span class="btn-content">
+                    <i class="fas fa-user-plus btn-icon" aria-hidden="true"></i>
+                    <span id="submit-text">Create Account</span>
+                </span>
+                <div class="btn-loader hidden">
+                    <div class="spinner"></div>
+                </div>
+            </button>
+            
+            <div id="submit-help" class="submit-help">
+                By creating an account, you'll receive your unique API key instantly
+            </div>
+
+        </form>
+
+        <!-- Footer Links -->
+        <footer class="auth-footer" role="contentinfo">
+            <div class="footer-content">
+                <p>Already have an account?</p>
+                <a href="login.html" class="footer-link">
+                    <i class="fas fa-sign-in-alt" aria-hidden="true"></i>
+                    Sign In
+                </a>
+            </div>
+            <div class="security-info">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                <span>Your data is protected with enterprise-grade encryption</span>
+            </div>
+        </footer>
+
+        <!-- API Key Display Section -->
+        <section 
+            id="apiKeyDisplay" 
+            class="api-key-section hidden" 
+            role="region" 
+            aria-labelledby="api-key-title"
+            aria-live="polite"
+        >
+            <div class="success-animation">
+                <div class="success-icon">
+                    <i class="fas fa-check" aria-hidden="true"></i>
+                </div>
+            </div>
+            
+            <h3 id="api-key-title" class="api-title">
+                Welcome to FraudShield!
+            </h3>
+            
+            <p class="api-subtitle">Your account has been created successfully. Here's your API key:</p>
+            
+            <div class="api-key-container">
+                <div class="api-key-box">
+                    <code 
+                        id="apiKeyValue" 
+                        class="api-key-code" 
+                        aria-label="Your FraudShield API key"
+                        role="textbox" 
+                        readonly
+                    ></code>
+                    <button 
+                        id="copyApiKey" 
+                        class="copy-btn" 
+                        aria-label="Copy API key to clipboard"
+                        type="button"
+                    >
+                        <i class="fas fa-copy" aria-hidden="true"></i>
+                        Copy
+                    </button>
+                </div>
+            </div>
+            
+            <div class="api-warning">
+                <div class="warning-icon">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                </div>
+                <div class="warning-content">
+                    <strong>Important:</strong> Save this API key securely! You won't be able to see it again.
+                    <br>
+                    <small>This key provides access to your FraudShield account and should be kept confidential.</small>
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h4 class="next-steps-title">Next Steps:</h4>
+                <div class="steps-grid">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <strong>Save your API key</strong>
+                            <span>Store it in a secure location</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <strong>Verify your email</strong>
+                            <span>Check your inbox for verification</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <strong>Start integrating</strong>
+                            <span>Visit our <a href="/docs" target="_blank" rel="noopener" class="link">documentation</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-actions">
+                <a href="/docs" class="btn btn-primary" target="_blank" rel="noopener">
+                    <i class="fas fa-book" aria-hidden="true"></i>
+                    View Documentation
+                </a>
+                <a href="/dashboard" class="btn btn-secondary">
+                    <i class="fas fa-tachometer-alt" aria-hidden="true"></i>
+                    Go to Dashboard
+                </a>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="registration.js" defer></script>
+    
+    <!-- Error Tracking -->
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('Registration page error:', e.error);
+            // Add error tracking service here in production
+        });
+        
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            // Add error tracking service here in production
+        });
+    </script>
+
+</body>
+</html>

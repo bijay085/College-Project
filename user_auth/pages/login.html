@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+FraudShield Login Portal
+Author: FraudShield Team
+Location: user_auth/pages/login.html
+About: Secure login portal for FraudShield platform access
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sign in to your FraudShield account and access advanced fraud detection APIs">
+    <meta name="keywords" content="fraud detection, API, security, login, sign in">
+    <meta name="author" content="FraudShield Security Solutions">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <!-- Security Headers -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Title -->
+    <title>Sign In - FraudShield Security Platform</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+</head>
+
+<body>
+    <!-- Main Container -->
+    <main class="auth-container" role="main" aria-labelledby="login-title">
+        
+        <!-- Header Section -->
+        <header class="brand-header" role="banner">
+            <div class="logo-container">
+                <i class="fas fa-shield-alt logo-icon" aria-hidden="true"></i>
+                <h1 id="login-title">FraudShield</h1>
+            </div>
+            <p class="subtitle">Welcome Back</p>
+            <div class="security-badge">
+                <i class="fas fa-lock" aria-hidden="true"></i>
+                <span>Secure access portal</span>
+            </div>
+        </header>
+
+        <!-- Alert Messages -->
+        <div id="errorMessage" class="alert alert-error hidden" role="alert" aria-live="assertive">
+            <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+            <span class="alert-text"></span>
+        </div>
+        <div id="successMessage" class="alert alert-success hidden" role="status" aria-live="polite">
+            <i class="fas fa-check-circle" aria-hidden="true"></i>
+            <span class="alert-text"></span>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" novalidate aria-labelledby="login-title" class="login-form">
+            
+            <!-- Email Field -->
+            <div class="form-group">
+                <label for="email" class="form-label required">Email Address</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        autocomplete="email"
+                        placeholder="Enter your email address"
+                        aria-describedby="email-error"
+                        maxlength="255"
+                        class="form-input"
+                    >
+                    <div class="input-icon">
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password" class="form-label required">Password</label>
+                <div class="input-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        autocomplete="current-password"
+                        placeholder="Enter your password"
+                        aria-describedby="password-error"
+                        class="form-input password-input"
+                    >
+                    <div class="input-icon">
+                        <i class="fas fa-key" aria-hidden="true"></i>
+                    </div>
+                    <button 
+                        type="button" 
+                        class="password-toggle" 
+                        aria-label="Show password"
+                        tabindex="0"
+                    >
+                        <i class="fas fa-eye" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="form-options">
+                <label class="checkbox-wrapper">
+                    <input 
+                        type="checkbox" 
+                        id="remember" 
+                        name="remember"
+                        class="checkbox-input"
+                    >
+                    <span class="checkbox-custom">
+                        <i class="fas fa-check checkbox-icon" aria-hidden="true"></i>
+                    </span>
+                    <span class="checkbox-text">Remember me</span>
+                </label>
+                <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" id="submitBtn">
+                <span class="btn-content">
+                    <i class="fas fa-sign-in-alt btn-icon" aria-hidden="true"></i>
+                    <span id="submit-text">Sign In</span>
+                </span>
+                <div class="btn-loader hidden">
+                    <div class="spinner"></div>
+                </div>
+            </button>
+
+        </form>
+
+        <!-- Footer Links -->
+        <footer class="auth-footer" role="contentinfo">
+            <div class="footer-content">
+                <p>Don't have an account?</p>
+                <a href="registration.html" class="footer-link">
+                    <i class="fas fa-user-plus" aria-hidden="true"></i>
+                    Create Account
+                </a>
+            </div>
+            <div class="security-info">
+                <i class="fas fa-shield-alt" aria-hidden="true"></i>
+                <span>Your connection is secured with enterprise-grade encryption</span>
+            </div>
+        </footer>
+
+    </main>
+
+    <!-- Scripts -->
+    <script src="login.js" defer></script>
+    
+    <!-- Error Tracking -->
+    <script>
+        window.addEventListener('error', function(e) {
+            console.error('Login page error:', e.error);
+            // Add error tracking service here in production
+        });
+        
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('Unhandled promise rejection:', e.reason);
+            // Add error tracking service here in production
+        });
+    </script>
+
+</body>
+</html>
