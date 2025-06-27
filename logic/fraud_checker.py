@@ -1,4 +1,4 @@
-# logic/fraud_checker.py - Enhanced with Dynamic Thresholds
+# logic/fraud_checker.py - Enhanced with Metrics Tracking
 import sys
 import os
 import asyncio
@@ -17,12 +17,109 @@ from db.mongo import MongoManager
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+class MetricsTracker:
+    """Handle metrics tracking for fraud detection"""
+    
+    def __init__(self, mongo_manager):
+        self.mongo = mongo_manager
+        
+    async def increment_metric(self, metric_name: str, increment: int = 1):
+        """Increment a specific metric"""
+        try:
+            metrics_collection = self.mongo.get_collection("metrics")
+            
+            result = await metrics_collection.update_one(
+                {"_id": metric_name},
+                {
+                    "$inc": {"count": increment},
+                    "$set": {"last_updated": datetime.now()}
+                },
+                upsert=True
+            )
+            
+            logger.debug(f"Incremented {metric_name} by {increment}")
+            return True
+            
+        except Exception as e:
+            logger.error(f"Failed to increment metric {metric_name}: {e}")
+            return False
+    
+    async def get_metric(self, metric_name: str) -> int:
+        """Get current value of a metric"""
+        try:
+            metrics_collection = self.mongo.get_collection("metrics")
+            metric = await metrics_collection.find_one({"_id": metric_name})
+            return metric["count"] if metric else 0
+        except Exception as e:
+            logger.error(f"Failed to get metric {metric_name}: {e}")
+            return 0
+    
+    async def get_all_metrics(self) -> Dict[str, int]:
+        """Get all metrics as a dictionary"""
+        try:
+            metrics_collection = self.mongo.get_collection("metrics")
+            metrics = {}
+            
+            async for doc in metrics_collection.find():
+                metrics[doc["_id"]] = doc.get("count", 0)
+            
+            return metrics
+        except Exception as e:
+            logger.error(f"Failed to get all metrics: {e}")
+            return {}
+    
+    async def initialize_metrics(self):
+        """Initialize default metrics if they don't exist"""
+        try:
+            default_metrics = [
+                "total_checks",      # Total fraud checks performed
+                "fraud_blocked",     # Transactions marked as fraud
+                "suspicious_flagged", # Transactions marked as suspicious  
+                "clean_approved",    # Transactions marked as clean/safe
+                "bulk_analyses",     # Number of bulk analysis runs
+                "api_requests"       # Total API requests
+            ]
+            
+            metrics_collection = self.mongo.get_collection("metrics")
+            
+            for metric_name in default_metrics:
+                await metrics_collection.update_one(
+                    {"_id": metric_name},
+                    {
+                        "$setOnInsert": {
+                            "count": 0,
+                            "created_at": datetime.now(),
+                            "last_updated": datetime.now(),
+                            "description": self._get_metric_description(metric_name)
+                        }
+                    },
+                    upsert=True
+                )
+            
+            logger.info("✅ Metrics collection initialized")
+            
+        except Exception as e:
+            logger.error(f"Failed to initialize metrics: {e}")
+    
+    def _get_metric_description(self, metric_name: str) -> str:
+        """Get description for a metric"""
+        descriptions = {
+            "total_checks": "Total number of fraud checks performed",
+            "fraud_blocked": "Number of transactions blocked as fraud",
+            "suspicious_flagged": "Number of transactions flagged as suspicious",
+            "clean_approved": "Number of transactions approved as clean",
+            "bulk_analyses": "Number of bulk analysis operations",
+            "api_requests": "Total API requests processed"
+        }
+        return descriptions.get(metric_name, f"Metric: {metric_name}")
+
+
 class FraudChecker:
-    """Enhanced Fraud Checker with dynamic thresholds and better error handling"""
+    """Enhanced Fraud Checker with Metrics Tracking"""
     
     def __init__(self) -> None:
         """Initialize the fraud checker and load data from MongoDB"""
-        logger.info("Initializing FraudChecker...")
+        logger.info("Initializing FraudChecker with metrics tracking...")
         
         # Initialize sets for blacklists
         self.disposable_domains: Set[str] = set()
@@ -32,10 +129,6 @@ class FraudChecker:
         self.tampered_prices: Set[float] = set()
         self.rules: Dict[str, Dict] = {}
         
-        # Dynamic thresholds (can be updated via API)
-        self.fraud_threshold: float = 0.7
-        self.suspicious_threshold: float = 0.4
-        
         # MongoDB connection
         try:
             self.mongo = MongoManager()
@@ -43,6 +136,9 @@ class FraudChecker:
         except Exception as e:
             logger.error(f"Failed to connect to MongoDB: {e}")
             raise
+        
+        # Initialize metrics tracker
+        self.metrics = MetricsTracker(self.mongo)
         
         # Load data from MongoDB
         try:
@@ -53,30 +149,14 @@ class FraudChecker:
             logger.error(f"Failed to initialize FraudChecker: {e}")
             raise
 
-    def update_thresholds(self, fraud_threshold: float, suspicious_threshold: float) -> None:
-        """
-        Update fraud detection thresholds.
-        
-        Args:
-            fraud_threshold: New fraud threshold (0.0 to 1.0)
-            suspicious_threshold: New suspicious threshold (0.0 to 1.0)
-        """
-        if not (0 <= fraud_threshold <= 1) or not (0 <= suspicious_threshold <= 1):
-            raise ValueError("Thresholds must be between 0 and 1")
-        
-        if suspicious_threshold >= fraud_threshold:
-            raise ValueError("Suspicious threshold must be less than fraud threshold")
-        
-        self.fraud_threshold = fraud_threshold
-        self.suspicious_threshold = suspicious_threshold
-        
-        logger.info(f"Thresholds updated: fraud={fraud_threshold}, suspicious={suspicious_threshold}")
-
     async def _warm_cache(self):
         """Load blacklists and rules from MongoDB"""
         logger.info("Loading fraud detection data...")
         
         try:
+            # Initialize metrics first
+            await self.metrics.initialize_metrics()
+            
             # Load blacklists
             await self._load_blacklists()
             
@@ -156,7 +236,6 @@ class FraudChecker:
         logger.info(f"Reused fingerprints: {len(self.reused_fingerprints)}")
         logger.info(f"Tampered prices: {len(self.tampered_prices)}")
         logger.info(f"Active rules: {len(self.rules)}")
-        logger.info(f"Current thresholds: fraud={self.fraud_threshold}, suspicious={self.suspicious_threshold}")
         logger.info("================================")
 
     def _safe_get_rule_weight(self, rule_key: str) -> float:
@@ -170,9 +249,12 @@ class FraudChecker:
         
         return float(weight)
 
-    def analyze_transaction(self, tx: dict) -> dict:
-        """Analyze a single transaction for fraud indicators"""
+    async def analyze_transaction(self, tx: dict) -> dict:
+        """Analyze a single transaction for fraud indicators WITH METRICS TRACKING"""
         try:
+            # Increment total checks metric
+            await self.metrics.increment_metric("total_checks")
+            
             score = 0.0
             reasons = []
             
@@ -228,24 +310,23 @@ class FraudChecker:
             except (ValueError, TypeError):
                 logger.warning(f"Invalid price value: {tx.get('price')}")
             
-            # Determine decision based on current thresholds
-            if score >= self.fraud_threshold:
+            # Determine decision based on score
+            if score >= 0.7:
                 decision = "fraud"
-            elif score >= self.suspicious_threshold:
+                await self.metrics.increment_metric("fraud_blocked")
+            elif score >= 0.4:
                 decision = "suspicious"
+                await self.metrics.increment_metric("suspicious_flagged")
             else:
                 decision = "not_fraud"
+                await self.metrics.increment_metric("clean_approved")
             
             result = {
                 **tx,
                 "fraud_score": round(score, 2),
                 "decision": decision,
                 "triggered_rules": reasons,
-                "analysis_timestamp": datetime.now().isoformat(),
-                "thresholds_used": {
-                    "fraud_threshold": self.fraud_threshold,
-                    "suspicious_threshold": self.suspicious_threshold
-                }
+                "analysis_timestamp": datetime.now().isoformat()
             }
             
             logger.debug(f"Transaction analyzed: score={score}, decision={decision}")
@@ -265,71 +346,55 @@ class FraudChecker:
             "decision": "error",
             "triggered_rules": [],
             "error": error_msg,
-            "analysis_timestamp": datetime.now().isoformat(),
-            "thresholds_used": {
-                "fraud_threshold": self.fraud_threshold,
-                "suspicious_threshold": self.suspicious_threshold
-            }
+            "analysis_timestamp": datetime.now().isoformat()
         }
 
-    def analyze_bulk(self, file_obj, fraud_threshold=None, suspicious_threshold=None) -> List[dict]:
-        """Analyze multiple transactions from uploaded file with optional threshold override"""
+    async def analyze_bulk(self, file_obj) -> List[dict]:
+        """Analyze multiple transactions from uploaded file WITH METRICS TRACKING"""
         try:
             logger.info(f"Starting bulk analysis of file: {getattr(file_obj, 'filename', 'unknown')}")
             
-            # Temporarily override thresholds if provided
-            original_fraud_threshold = self.fraud_threshold
-            original_suspicious_threshold = self.suspicious_threshold
+            # Increment bulk analysis metric
+            await self.metrics.increment_metric("bulk_analyses")
             
-            if fraud_threshold is not None:
-                self.fraud_threshold = fraud_threshold
-            if suspicious_threshold is not None:
-                self.suspicious_threshold = suspicious_threshold
+            # Read file into DataFrame
+            df = self._read_file_to_dataframe(file_obj)
             
-            try:
-                # Read file into DataFrame
-                df = self._read_file_to_dataframe(file_obj)
-                
-                if df is None or df.empty:
-                    raise ValueError("File is empty or could not be read")
-                
-                logger.info(f"Processing {len(df)} transactions with thresholds: fraud={self.fraud_threshold}, suspicious={self.suspicious_threshold}")
-                
-                # Analyze each transaction
-                results = []
-                errors = 0
-                
-                for index, row in df.iterrows():
-                    try:
-                        # Convert pandas Series to dict and handle NaN values
-                        tx_dict = row.to_dict()
-                        
-                        # Replace NaN values with None or appropriate defaults
-                        tx_dict = self._clean_transaction_data(tx_dict)
-                        
-                        result = self.analyze_transaction(tx_dict)
-                        results.append(result)
-                        
-                        if result.get("decision") == "error":
-                            errors += 1
-                            
-                    except Exception as e:
-                        logger.error(f"Error processing row {index}: {e}")
-                        error_result = self._create_error_result(
-                            {"row_index": index}, 
-                            f"Row processing failed: {str(e)}"
-                        )
-                        results.append(error_result)
+            if df is None or df.empty:
+                raise ValueError("File is empty or could not be read")
+            
+            logger.info(f"Processing {len(df)} transactions")
+            
+            # Analyze each transaction
+            results = []
+            errors = 0
+            
+            for index, row in df.iterrows():
+                try:
+                    # Convert pandas Series to dict and handle NaN values
+                    tx_dict = row.to_dict()
+                    
+                    # Replace NaN values with None or appropriate defaults
+                    tx_dict = self._clean_transaction_data(tx_dict)
+                    
+                    result = await self.analyze_transaction(tx_dict)
+                    results.append(result)
+                    
+                    if result.get("decision") == "error":
                         errors += 1
-                
-                logger.info(f"Bulk analysis completed: {len(results)} processed, {errors} errors")
-                return results
-                
-            finally:
-                # Restore original thresholds
-                self.fraud_threshold = original_fraud_threshold
-                self.suspicious_threshold = original_suspicious_threshold
-                
+                        
+                except Exception as e:
+                    logger.error(f"Error processing row {index}: {e}")
+                    error_result = self._create_error_result(
+                        {"row_index": index}, 
+                        f"Row processing failed: {str(e)}"
+                    )
+                    results.append(error_result)
+                    errors += 1
+            
+            logger.info(f"Bulk analysis completed: {len(results)} processed, {errors} errors")
+            return results
+            
         except Exception as e:
             logger.error(f"Bulk analysis failed: {e}")
             logger.error(traceback.format_exc())
@@ -382,24 +447,55 @@ class FraudChecker:
         
         return cleaned
 
-    def get_stats(self) -> dict:
-        """Get fraud checker statistics"""
-        return {
-            "cache_stats": {
-                "disposable_domains": len(self.disposable_domains),
-                "flagged_ips": len(self.flagged_ips),
-                "suspicious_bins": len(self.suspicious_bins),
-                "reused_fingerprints": len(self.reused_fingerprints),
-                "tampered_prices": len(self.tampered_prices),
-                "active_rules": len(self.rules)
-            },
-            "current_thresholds": {
-                "fraud_threshold": self.fraud_threshold,
-                "suspicious_threshold": self.suspicious_threshold
-            },
-            "rules": {key: {"weight": rule.get("weight", 0)} for key, rule in self.rules.items()},
-            "last_updated": datetime.now().isoformat()
-        }
+    async def get_stats(self) -> dict:
+        """Get fraud checker statistics including real metrics"""
+        try:
+            # Get real metrics from database
+            real_metrics = await self.metrics.get_all_metrics()
+            
+            return {
+                "cache_stats": {
+                    "disposable_domains": len(self.disposable_domains),
+                    "flagged_ips": len(self.flagged_ips),
+                    "suspicious_bins": len(self.suspicious_bins),
+                    "reused_fingerprints": len(self.reused_fingerprints),
+                    "tampered_prices": len(self.tampered_prices),
+                    "active_rules": len(self.rules)
+                },
+                "detection_metrics": {
+                    "total_checks": real_metrics.get("total_checks", 0),
+                    "fraud_blocked": real_metrics.get("fraud_blocked", 0),
+                    "suspicious_flagged": real_metrics.get("suspicious_flagged", 0),
+                    "clean_approved": real_metrics.get("clean_approved", 0),
+                    "bulk_analyses": real_metrics.get("bulk_analyses", 0),
+                    "api_requests": real_metrics.get("api_requests", 0)
+                },
+                "rules": {key: {"weight": rule.get("weight", 0)} for key, rule in self.rules.items()},
+                "last_updated": datetime.now().isoformat()
+            }
+        except Exception as e:
+            logger.error(f"Failed to get stats: {e}")
+            # Return fallback stats
+            return {
+                "cache_stats": {
+                    "disposable_domains": len(self.disposable_domains),
+                    "flagged_ips": len(self.flagged_ips),
+                    "suspicious_bins": len(self.suspicious_bins),
+                    "reused_fingerprints": len(self.reused_fingerprints),
+                    "tampered_prices": len(self.tampered_prices),
+                    "active_rules": len(self.rules)
+                },
+                "detection_metrics": {
+                    "total_checks": 0,
+                    "fraud_blocked": 0,
+                    "suspicious_flagged": 0,
+                    "clean_approved": 0,
+                    "bulk_analyses": 0,
+                    "api_requests": 0
+                },
+                "rules": {key: {"weight": rule.get("weight", 0)} for key, rule in self.rules.items()},
+                "last_updated": datetime.now().isoformat()
+            }
 
 
 # ============================================================================
@@ -433,33 +529,35 @@ def test_file_analysis(file_path: str):
                 self._file.close()
         
         # Test the analysis
-        with FileWrapper(file_path) as file_obj:
-            results = checker.analyze_bulk(file_obj)
+        async def run_test():
+            with FileWrapper(file_path) as file_obj:
+                results = await checker.analyze_bulk(file_obj)
+            
+            # Print results
+            print("\n=== FRAUD ANALYSIS RESULTS ===")
+            print(f"Total transactions analyzed: {len(results)}")
+            
+            # Count decisions
+            decision_counts = {}
+            for result in results:
+                decision = result.get("decision", "unknown")
+                decision_counts[decision] = decision_counts.get(decision, 0) + 1
+            
+            print(f"Decision breakdown: {decision_counts}")
+            
+            # Show first 5 results
+            print(f"\nFirst {min(5, len(results))} results:")
+            print(json.dumps(results[:5], indent=2, default=str))
+            
+            if len(results) > 5:
+                print(f"\n... and {len(results) - 5} more")
+            
+            # Show statistics with real metrics
+            stats = await checker.get_stats()
+            print(f"\nFraud Checker Stats:")
+            print(json.dumps(stats, indent=2, default=str))
         
-        # Print results
-        print("\n=== FRAUD ANALYSIS RESULTS ===")
-        print(f"Total transactions analyzed: {len(results)}")
-        
-        # Count decisions
-        decision_counts = {}
-        for result in results:
-            decision = result.get("decision", "unknown")
-            decision_counts[decision] = decision_counts.get(decision, 0) + 1
-        
-        print(f"Decision breakdown: {decision_counts}")
-        print(f"Thresholds used: fraud={checker.fraud_threshold}, suspicious={checker.suspicious_threshold}")
-        
-        # Show first 5 results
-        print(f"\nFirst {min(5, len(results))} results:")
-        print(json.dumps(results[:5], indent=2, default=str))
-        
-        if len(results) > 5:
-            print(f"\n... and {len(results) - 5} more")
-        
-        # Show statistics
-        stats = checker.get_stats()
-        print(f"\nFraud Checker Stats:")
-        print(json.dumps(stats["cache_stats"], indent=2))
+        asyncio.run(run_test())
         
     except Exception as e:
         logger.error(f"Test failed: {e}")
