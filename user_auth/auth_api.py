@@ -16,6 +16,9 @@ import threading
 import time
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple, Union
+from functools import wraps, lru_cache
+import hashlib
+import json
 
 import bcrypt
 import pymongo
@@ -24,7 +27,6 @@ from bson import ObjectId
 from flask import Flask, jsonify, request, g, make_response
 from flask_cors import CORS
 from collections import defaultdict
-from functools import wraps
 
 app: Flask = Flask(__name__)
 
@@ -43,11 +45,66 @@ DatabaseResponse = Optional[Dict[str, Any]]
 # Enhanced rate limiting for different endpoints
 endpoint_rate_limits = defaultdict(lambda: defaultdict(float))
 RATE_LIMITS = {
-    'admin_stats': 300,      # 60 seconds
+    'admin_stats': 60,      # 60 seconds
     'login': 5,             # 5 seconds between login attempts
     'register': 30,         # 30 seconds between registrations
-    'fraud_api_health': 60  # 10 seconds for fraud API health checks
+    'fraud_api_health': 60  # 60 seconds for fraud API health checks
 }
+
+# ============================================================================
+# CACHING SYSTEM
+# ============================================================================
+
+class CacheManager:
+    """Simple in-memory cache with TTL support"""
+    
+    def __init__(self):
+        self._cache = {}
+        self._timestamps = {}
+    
+    def get(self, key: str, default=None):
+        """Get value from cache if not expired"""
+        if key in self._cache:
+            timestamp = self._timestamps.get(key, 0)
+            if time.time() - timestamp < self.get_ttl(key):
+                return self._cache[key]
+            else:
+                # Expired, remove it
+                del self._cache[key]
+                del self._timestamps[key]
+        return default
+    
+    def set(self, key: str, value: Any, ttl: int = 300):
+        """Set value in cache with TTL in seconds"""
+        self._cache[key] = value
+        self._timestamps[key] = time.time()
+    
+    def get_ttl(self, key: str) -> int:
+        """Get TTL for specific cache keys"""
+        if 'admin_stats' in key:
+            return 300  # 5 minutes for admin stats
+        elif 'fraud_health' in key:
+            return 60   # 1 minute for health checks
+        elif 'user_stats' in key:
+            return 180  # 3 minutes for user stats
+        elif 'fraud_detection_stats' in key:
+            return 120  # 2 minutes for fraud stats
+        return 300  # Default 5 minutes
+    
+    def clear(self):
+        """Clear all cache"""
+        self._cache.clear()
+        self._timestamps.clear()
+    
+    def invalidate(self, pattern: str):
+        """Invalidate cache entries matching pattern"""
+        keys_to_remove = [k for k in self._cache.keys() if pattern in k]
+        for key in keys_to_remove:
+            del self._cache[key]
+            del self._timestamps[key]
+
+# Initialize cache manager
+cache_manager = CacheManager()
 
 # ============================================================================
 # CONFIGURATION CLASS
@@ -129,19 +186,33 @@ def log_error(message, extra=None):
     logger.error(f"[ERROR] {message} | Extra: {extra}")
 
 # ============================================================================
-# ENHANCED RATE LIMITING DECORATOR
+# ENHANCED RATE LIMITING WITH REQUEST DEDUPLICATION
 # ============================================================================
 
-def rate_limit(endpoint: str, limit_seconds: int = 0):
-    """Enhanced rate limiting decorator for different endpoints"""
+pending_requests = {}  # Track pending requests
+
+def enhanced_rate_limit(endpoint: str, limit_seconds: int = 0):
+    """Enhanced rate limiting with request deduplication"""
     def decorator(f):
-        def rate_limited_function(*args, **kwargs):  # Changed from decorated_function
+        @wraps(f)
+        def rate_limited_function(*args, **kwargs):
             if limit_seconds == 0:
                 seconds = RATE_LIMITS.get(endpoint, 60)
             else:
                 seconds = limit_seconds
             
-            # Use IP + endpoint as key for rate limiting
+            # Create request signature for deduplication
+            request_data = request.get_json() if request.method == 'POST' else {}
+            request_sig = hashlib.md5(
+                f"{endpoint}:{request.method}:{json.dumps(request_data, sort_keys=True)}".encode()
+            ).hexdigest()
+            
+            # Check if identical request is already pending
+            if request_sig in pending_requests:
+                logger.info(f"Deduplicating request for {endpoint}")
+                return pending_requests[request_sig]
+            
+            # Rate limiting check
             client_key = f"{request.remote_addr}:{endpoint}"
             now = time.time()
             last_access = endpoint_rate_limits[endpoint].get(client_key, 0)
@@ -156,9 +227,21 @@ def rate_limit(endpoint: str, limit_seconds: int = 0):
                 }), 429
             
             endpoint_rate_limits[endpoint][client_key] = now
-            return f(*args, **kwargs)
+            
+            # Execute request and store result temporarily
+            try:
+                pending_requests[request_sig] = f(*args, **kwargs)
+                result = pending_requests[request_sig]
+                # Clean up after a short delay
+                def cleanup():
+                    time.sleep(0.5)
+                    pending_requests.pop(request_sig, None)
+                threading.Thread(target=cleanup, daemon=True).start()
+                return result
+            except Exception as e:
+                pending_requests.pop(request_sig, None)
+                raise
         
-        rate_limited_function.__name__ = f"{f.__name__}_rate_limited"  # Ensure unique names
         return rate_limited_function
     return decorator
 
@@ -524,34 +607,54 @@ def detect_login_anomalies(email: str, ip_address: str, user_agent: str) -> Tupl
 # ============================================================================
 
 def check_fraud_api_health() -> Dict[str, Any]:
-    """Check the health of the fraud detection API."""
+    """Check the health of the fraud detection API with caching."""
+    # Check cache first
+    cached_health = cache_manager.get('fraud_health')
+    if cached_health:
+        return cached_health
+    
     try:
         import requests
         response = requests.get(f"{AuthConfig.FRAUD_API_URL}/health", timeout=5)
         if response.status_code == 200:
             data = response.json()
-            return {
+            result = {
                 "status": "online",
                 "algorithm_info": data.get("algorithm_info", {}),
                 "cache_status": data.get("algorithm_info", {}).get("cache_status", {})
             }
+            # Cache for 1 minute
+            cache_manager.set('fraud_health', result, 60)
+            return result
         else:
-            return {"status": "degraded", "error": f"HTTP {response.status_code}"}
+            result = {"status": "degraded", "error": f"HTTP {response.status_code}"}
+            cache_manager.set('fraud_health', result, 30)  # Cache errors for 30 seconds
+            return result
     except Exception as e:
-        return {"status": "offline", "error": str(e)}
+        result = {"status": "offline", "error": str(e)}
+        cache_manager.set('fraud_health', result, 30)  # Cache errors for 30 seconds
+        return result
 
 def get_fraud_detection_stats() -> Dict[str, Any]:
-    """Get fraud detection statistics from the fraud API."""
+    """Get fraud detection statistics from the fraud API with caching."""
+    # Check cache first
+    cached_stats = cache_manager.get('fraud_detection_stats')
+    if cached_stats:
+        return cached_stats
+    
     try:
         import requests
         response = requests.get(f"{AuthConfig.FRAUD_API_URL}/real-stats", timeout=10)
         if response.status_code == 200:
-            return response.json().get("data", {})
+            stats = response.json().get("data", {})
+            # Cache for 2 minutes
+            cache_manager.set('fraud_detection_stats', stats, 120)
+            return stats
         else:
-            return {}
+            return cache_manager.get('fraud_detection_stats') or {}  # Return cached version if available, ensure dict
     except Exception as e:
         logger.error(f"Failed to get fraud detection stats: {e}")
-        return {}
+        return cache_manager.get('fraud_detection_stats') or {}  # Return cached version if available, ensure dict
 
 # ============================================================================
 # SESSION MANAGEMENT FUNCTIONS (Enhanced)
@@ -863,7 +966,7 @@ def log_auth_attempt(email: str, success: bool, ip_address: str, user_agent: Opt
 # ============================================================================
 
 @app.route("/auth/health", methods=["GET"])
-@rate_limit("health", 10)
+@enhanced_rate_limit("health", 10)
 def health_check() -> ResponseTuple:
     """
     Enhanced health check endpoint with fraud API integration.
@@ -918,7 +1021,7 @@ def health_check() -> ResponseTuple:
         return create_error_response("Health check failed", 503)
 
 @app.route("/auth/register", methods=["POST"])
-@rate_limit("register", 30)
+@enhanced_rate_limit("register", 30)
 def register() -> ResponseTuple:
     """
     Enhanced user registration endpoint with advanced validation.
@@ -1033,6 +1136,10 @@ def register() -> ResponseTuple:
         # Log successful registration
         log_auth_attempt(email, True, request.remote_addr or "", request.headers.get('User-Agent'), 0.0, [])
         
+        # Invalidate cache
+        cache_manager.invalidate('admin_stats')
+        cache_manager.invalidate('user_stats')
+        
         logger.info(f"User registered successfully: {email}")
         
         response_data: Dict[str, Any] = {
@@ -1054,7 +1161,7 @@ def register() -> ResponseTuple:
         return create_error_response("Registration failed. Please try again.", 500)
 
 @app.route("/auth/login", methods=["POST"])
-@rate_limit("login", 5)
+@enhanced_rate_limit("login", 5)
 def login() -> ResponseTuple:
     """
     Enhanced user login endpoint with behavioral analysis and anomaly detection.
@@ -1138,11 +1245,11 @@ def login() -> ResponseTuple:
         # Create session
         session_id = create_session(user["_id"], remember)
         
-        # Create session
-        session_id = create_session(user["_id"], remember)
-        
         # Cleanup old sessions
         cleanup_sessions()
+        
+        # Invalidate cache
+        cache_manager.invalidate('admin_stats')
         
         log_auth_attempt(email, True, ip_address, user_agent, risk_score, anomalies)
         
@@ -1261,6 +1368,12 @@ def get_user_stats() -> ResponseTuple:
         JSON response with comprehensive user statistics
     """
     try:
+        # Check cache first
+        cache_key = "user_stats"
+        cached_stats = cache_manager.get(cache_key)
+        if cached_stats:
+            return create_success_response(cached_stats, "User statistics retrieved (cached)")
+        
         db = db_manager.get_database()
         if db is None:
             return create_error_response("Database unavailable", 503)
@@ -1305,6 +1418,9 @@ def get_user_stats() -> ResponseTuple:
             "high_risk_logins_7d": high_risk_logins,
             "security_score": round(((total_users - locked_accounts) / total_users * 100) if total_users > 0 else 100, 1)
         }
+        
+        # Cache for 3 minutes
+        cache_manager.set(cache_key, stats, 180)
         
         return create_success_response(stats, "User statistics retrieved")
         
@@ -1365,7 +1481,8 @@ def validate_api_key() -> ResponseTuple:
 def require_admin_auth():
     """Enhanced decorator to require admin authentication"""
     def decorator(f):
-        def admin_auth_wrapper(*args, **kwargs):  # Changed from decorated_function
+        @wraps(f)
+        def admin_auth_wrapper(*args, **kwargs):
             try:
                 # Get authorization header
                 auth_header = request.headers.get('Authorization')
@@ -1399,7 +1516,6 @@ def require_admin_auth():
                 logger.error(f"Admin auth check failed: {e}")
                 return create_error_response("Authentication failed", 401)
         
-        admin_auth_wrapper.__name__ = f"{f.__name__}_admin_auth"  # Ensure unique names
         return admin_auth_wrapper
     return decorator
 
@@ -1507,15 +1623,19 @@ def get_all_users() -> ResponseTuple:
         logger.error(f"Get users error: {e}")
         return create_error_response("Failed to retrieve users", 500)
 
-# Continue with other endpoints...
-# [The rest of the endpoints follow the same pattern with enhancements]
-
 @app.route("/auth/admin/stats", methods=["GET"])
 @require_admin_auth()
-@rate_limit("admin_stats", 60)
+@enhanced_rate_limit("admin_stats", 60)
 def get_admin_stats() -> ResponseTuple:
-    """Enhanced admin statistics with fraud detection integration"""
+    """Enhanced admin statistics with caching and fraud detection integration"""
     try:
+        # Check cache first
+        cache_key = f"admin_stats:{g.current_user['_id']}"
+        cached_stats = cache_manager.get(cache_key)
+        if cached_stats:
+            logger.info("Returning cached admin stats")
+            return create_success_response(cached_stats, "Admin statistics retrieved (cached)")
+        
         db = db_manager.get_database()
         if db is None:
             return create_error_response("Database unavailable", 503)
@@ -1570,7 +1690,7 @@ def get_admin_stats() -> ResponseTuple:
             })
         }
         
-        # NEW: Enhanced security and fraud detection stats
+        # Enhanced security and fraud detection stats
         if hasattr(db, 'login_attempts'):
             stats.update({
                 "login_attempts_today": db.login_attempts.count_documents({
@@ -1586,7 +1706,7 @@ def get_admin_stats() -> ResponseTuple:
                 })
             })
         
-        # NEW: Get fraud detection API stats
+        # Get fraud detection API stats (cached)
         fraud_stats = get_fraud_detection_stats()
         if fraud_stats:
             stats["fraud_detection"] = {
@@ -1610,6 +1730,9 @@ def get_admin_stats() -> ResponseTuple:
                 user['last_login'] = user['last_login'].isoformat()
         
         stats['recent_users'] = recent_users
+        
+        # Cache the results for 5 minutes
+        cache_manager.set(cache_key, stats, 300)
         
         return create_success_response(stats, "Enhanced admin statistics retrieved")
         
@@ -1730,18 +1853,22 @@ def update_algorithm_settings() -> ResponseTuple:
             upsert=True
         )
         
+        # Invalidate cache
+        cache_manager.invalidate('fraud')
+        
         # Get updated settings
         updated_settings = db.system_settings.find_one({"_id": "advanced_algorithms"})
         
         response_data = {
-        "algorithm_settings": {
-            "enabled": updated_settings.get("enabled", True) if updated_settings else True,
-            "algorithm_weights": updated_settings.get("algorithm_weights", {}) if updated_settings else {},
-            "login_anomaly_detection": updated_settings.get("login_anomaly_detection", True) if updated_settings else True,
-            "behavioral_tracking": updated_settings.get("behavioral_tracking", True) if updated_settings else True,
-            "updated_at": updated_settings.get("updated_at").isoformat() if updated_settings and updated_settings.get("updated_at") else None
+            "algorithm_settings": {
+                "enabled": updated_settings.get("enabled", True) if updated_settings else True,
+                "algorithm_weights": updated_settings.get("algorithm_weights", {}) if updated_settings else {},
+                "login_anomaly_detection": updated_settings.get("login_anomaly_detection", True) if updated_settings else True,
+                "behavioral_tracking": updated_settings.get("behavioral_tracking", True) if updated_settings else True,
+                "updated_at": updated_settings.get("updated_at").isoformat() if updated_settings and updated_settings.get("updated_at") else None
+            }
         }
-        }
+        
         logger.info(f"Algorithm settings updated by admin: {g.current_user.get('email')}")
         return create_success_response(response_data, "Algorithm settings updated successfully")
         
@@ -1975,7 +2102,7 @@ def update_fraud_thresholds() -> ResponseTuple:
 
 @app.route("/auth/settings/system-health", methods=["GET"])
 @require_admin_auth()
-@rate_limit("fraud_api_health", 10)
+@enhanced_rate_limit("fraud_api_health", 60)
 def get_system_health() -> ResponseTuple:
     """Get comprehensive system health status"""
     try:
@@ -2269,10 +2396,40 @@ def generate_health_report() -> None:
         logger.error(f"Failed to generate health report: {e}")
 
 def maintenance_worker() -> None:
-    """Enhanced background worker for maintenance tasks."""
+    """Enhanced background worker with less frequent runs."""
+    maintenance_run_count = 0
     while True:
-        time.sleep(3600)  # Run every hour
-        run_maintenance()
+        # Run different tasks at different intervals
+        maintenance_run_count += 1
+        
+        # Every hour: basic cleanup
+        if maintenance_run_count % 1 == 0:
+            try:
+                cleanup_sessions()
+                logger.info("Hourly session cleanup completed")
+            except Exception as e:
+                logger.error(f"Session cleanup failed: {e}")
+        
+        # Every 6 hours: security score updates
+        if maintenance_run_count % 6 == 0:
+            try:
+                update_user_security_scores()
+                logger.info("6-hourly security score update completed")
+            except Exception as e:
+                logger.error(f"Security score update failed: {e}")
+        
+        # Every 24 hours: full maintenance
+        if maintenance_run_count % 24 == 0:
+            try:
+                run_maintenance()
+                # Clear old cache entries
+                cache_manager.clear()
+                logger.info("Daily full maintenance completed")
+            except Exception as e:
+                logger.error(f"Full maintenance failed: {e}")
+        
+        # Sleep for 1 hour
+        time.sleep(3600)
 
 # ============================================================================
 # CORS PREFLIGHT HANDLER

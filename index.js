@@ -1,6 +1,56 @@
 // Enhanced index.js with FIXED Authentication and Session Management
 // Now supports both authenticated and anonymous users
 
+// API Call Manager to prevent spam and coordinate requests
+class ApiCallManager {
+    static pendingRequests = new Map();
+    static lastCallTime = new Map();
+    static MIN_CALL_INTERVAL = {
+        '/user-logs': 30000,     // 30 seconds minimum between calls
+        '/real-stats': 60000,    // 60 seconds minimum between calls
+        '/health': 60000,        // 60 seconds minimum between calls
+        '/auth/admin/stats': 300000  // 5 minutes for admin stats
+    };
+    
+    // Debounce function with request deduplication
+    static async makeRequest(url, options = {}, forceRefresh = false) {
+        const fullUrl = url.includes('?') ? url.split('?')[0] : url;
+        const cacheKey = `${fullUrl}_${JSON.stringify(options.headers || {})}`;
+        
+        // Check if we're calling too frequently
+        if (!forceRefresh) {
+            const lastCall = this.lastCallTime.get(fullUrl);
+            const minInterval = this.MIN_CALL_INTERVAL[fullUrl] || 10000;
+            
+            if (lastCall && (Date.now() - lastCall) < minInterval) {
+                console.log(`⏳ Skipping ${fullUrl} - called too recently (${Math.round((Date.now() - lastCall) / 1000)}s ago)`);
+                return null;
+            }
+        }
+        
+        // Check if request is already pending
+        if (this.pendingRequests.has(cacheKey)) {
+            console.log(`🔄 Reusing pending request for ${fullUrl}`);
+            return this.pendingRequests.get(cacheKey);
+        }
+        
+        // Make the request
+        const requestPromise = fetch(url, options)
+            .then(response => {
+                this.lastCallTime.set(fullUrl, Date.now());
+                this.pendingRequests.delete(cacheKey);
+                return response;
+            })
+            .catch(error => {
+                this.pendingRequests.delete(cacheKey);
+                throw error;
+            });
+        
+        this.pendingRequests.set(cacheKey, requestPromise);
+        return requestPromise;
+    }
+}
+
 // Tab Navigation
 const tabs = document.querySelectorAll('.tab-btn');
 const contents = document.querySelectorAll('.tab-content');
@@ -33,6 +83,8 @@ class AuthManager {
     static lastHealthCheck = 0;
     static HEALTH_CHECK_COOLDOWN = 60000; // 1 minute cooldown
     static hasShownMetricsError = false;
+    static lastMetricsLoad = 0;
+    static isLoadingMetrics = false;
 
     static getCurrentUser() {
         try {
@@ -685,10 +737,16 @@ class AuthManager {
         try {
             const apiStatus = document.getElementById('apiStatus');
             if (!apiStatus) return;
+            
+            const response = await ApiCallManager.makeRequest('http://127.0.0.1:5000/health', {
+                method: 'GET'
+            });
+            
+            if (!response) return; // Request was skipped
+            
             const statusText = apiStatus.querySelector('.status-text');
             const statusDot = apiStatus.querySelector('.status-dot');
-            // Check main API
-            const response = await fetch('http://127.0.0.1:5000/health');
+            
             if (response.ok) {
                 statusText.textContent = 'API Online';
                 statusDot.style.backgroundColor = '#10b981';
@@ -933,89 +991,60 @@ class AuthManager {
     }
 
     static async loadRealMetrics() {
+        // Prevent concurrent loads
+        if (this.isLoadingMetrics) {
+            console.log('📊 Metrics already loading, skipping...');
+            return null;
+        }
+        
+        // Check if we loaded recently
+        const timeSinceLastLoad = Date.now() - this.lastMetricsLoad;
+        if (timeSinceLastLoad < 30000) { // 30 seconds minimum
+            console.log(`📊 Metrics loaded ${Math.round(timeSinceLastLoad / 1000)}s ago, using cache`);
+            return null;
+        }
+        
         try {
+            this.isLoadingMetrics = true;
             console.log('📊 Loading real metrics from API...');
-
-            const response = await fetch('http://127.0.0.1:5000/real-stats', {
+            
+            const response = await ApiCallManager.makeRequest('http://127.0.0.1:5000/real-stats', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
-
-            if (response.status === 429) {
-                console.warn('⚠️ Rate limit hit for real-stats, skipping update');
-                return;
+            
+            if (!response) {
+                return null; // Request was skipped due to rate limiting
             }
-
+            
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
             }
-
+            
             const result = await response.json();
-
+            
             if (result.success) {
+                this.lastMetricsLoad = Date.now();
                 this.updateDashboardMetrics(result.data);
                 console.log('✅ Real metrics loaded successfully');
                 return result.data;
             } else {
                 throw new Error(result.error || 'Failed to load metrics');
             }
-
+            
         } catch (error) {
             console.error('❌ Failed to load real metrics:', error);
-            // Show fallback metrics
-            this.updateDashboardMetrics(this.getFallbackMetrics());
-
-            // Only show toast for first-time errors, not repeated ones
+            
             if (!this.hasShownMetricsError) {
                 this.hasShownMetricsError = true;
                 showToast('Metrics', 'Using cached metrics. Backend may be offline.', 'warning');
             }
-
-            return null;
-        }
-    }
-
-    /**
-     * Load real metrics from the API and update dashboard
-     */
-    static async loadRealMetrics() {
-        try {
-            console.log('📊 Loading real metrics from API...');
-            
-            const response = await fetch('http://127.0.0.1:5000/real-stats', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`API error: ${response.status}`);
-            }
-
-            const result = await response.json();
-            
-            if (result.success) {
-                this.updateDashboardMetrics(result.data);
-                console.log('✅ Real metrics loaded successfully');
-                return result.data;
-            } else {
-                throw new Error(result.error || 'Failed to load metrics');
-            }
-            
-        } catch (error) {
-            console.error('❌ Failed to load real metrics:', error);
-            // Show fallback metrics
-            this.updateDashboardMetrics(this.getFallbackMetrics());
-            
-            // Show toast notification
-            if (typeof showToast === 'function') {
-                showToast('Metrics', 'Using cached metrics. Backend may be offline.', 'warning');
-            }
             
             return null;
+        } finally {
+            this.isLoadingMetrics = false;
         }
     }
 
@@ -1183,37 +1212,6 @@ class AuthManager {
             }
         };
     }
-
-    /**
-     * Start periodic metrics refresh
-     */
-    static startMetricsRefresh() {
-        // Load metrics immediately
-        this.loadRealMetrics();
-        
-        // Set up periodic refresh every 2 minutes
-        setInterval(() => {
-            this.loadRealMetrics();
-        }, 120000);
-        
-        console.log('📊 Started periodic metrics refresh (every 2 minutes)');
-    }
-
-    /**
-     * Enhanced initialization that includes metrics loading
-     */
-    static init() {
-        // Existing initialization
-        this.restorePersistentSession();
-        this.setupUserInterface();
-        this.setupRoleBasedAccess();
-        this.setupUserMenu();
-        this.loadUserProfile();
-        this.checkApiConnection();
-        
-        // Start loading real metrics
-        this.startMetricsRefresh();
-    }
 }
 
 // ============================================================================
@@ -1230,6 +1228,8 @@ class ActivityLogsManager {
         this.isLoading = false;
         this.currentLogs = [];
         this.autoRefreshInterval = null;
+        this.lastLoadTime = 0;
+        this.minLoadInterval = 30000; // 30 seconds minimum between loads
     }
 
     static init() {
@@ -1270,62 +1270,77 @@ class ActivityLogsManager {
     }
 
     setupAutoRefresh() {
-        // Auto-refresh logs every 10 seconds if user is on logs tab
+        // Auto-refresh logs every 60 seconds instead of 10
         this.autoRefreshInterval = setInterval(() => {
             const logsTab = document.getElementById('logs');
             if (logsTab && logsTab.classList.contains('active')) {
                 this.loadUserLogs(false); // Silent refresh
             }
-        }, 10000);
+        }, 60000); // 60 seconds instead of 10
     }
 
     async loadUserLogs(showLoading = true) {
+        // Check if we're loading too frequently
+        const timeSinceLastLoad = Date.now() - this.lastLoadTime;
+        if (!showLoading && timeSinceLastLoad < this.minLoadInterval) {
+            console.log(`📋 Logs loaded ${Math.round(timeSinceLastLoad / 1000)}s ago, skipping auto-refresh`);
+            return;
+        }
+        
         // Check if user is authenticated
         if (!AuthManager.isAuthenticated()) {
             this.showAuthRequired();
             return;
         }
-
+        
         if (this.isLoading) return;
-
+        
         try {
             this.isLoading = true;
+            this.lastLoadTime = Date.now();
             
             if (showLoading) {
                 this.showLoadingState();
             }
-
+            
             const apiKey = AuthManager.getApiKey();
             if (!apiKey) {
                 throw new Error('No API key found');
             }
-
-            // FIXED: Get log level filter properly
+            
             const logLevelSelect = document.getElementById('logLevel');
             const logLevel = logLevelSelect ? logLevelSelect.value : 'all';
             
             console.log('🔧 Loading logs with filter:', logLevel);
-
-            // Build query parameters
+            
             const params = new URLSearchParams({
                 limit: '50',
                 skip: '0',
                 level: logLevel
             });
-
-            const response = await fetch(`http://127.0.0.1:5000/user-logs?${params}`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${apiKey}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
+            
+            const response = await ApiCallManager.makeRequest(
+                `http://127.0.0.1:5000/user-logs?${params}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json'
+                    }
+                },
+                showLoading // Force refresh if user initiated
+            );
+            
+            if (!response) {
+                console.log('📋 Log request skipped due to rate limiting');
+                return;
+            }
+            
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.error || `API error: ${response.status}`);
             }
-
+            
             const result = await response.json();
             
             if (result.success) {
@@ -1345,7 +1360,6 @@ class ActivityLogsManager {
             } else {
                 throw new Error(result.error || 'Failed to load logs');
             }
-
         } catch (error) {
             console.error('Failed to load user logs:', error);
             this.showErrorState(error.message);
@@ -1617,6 +1631,7 @@ class ActivityLogsManager {
         }
     }
 }
+
 // FIXED: Check tab accessibility based on user authentication and role
 function isTabAccessible(tabName) {
     // Home and bulk are always accessible (public)
@@ -1640,11 +1655,17 @@ function trackTabUsage(tabName) {
     console.log(`📊 Tab accessed: ${tabName} by ${userType} user`);
 }
 
-// Enhanced Toast Notification System
+// Enhanced Toast Notification System with Proper Timing
 function showToast(title, message, type = 'info') {
     // Remove existing toasts of the same type to prevent spam
     const existingToasts = document.querySelectorAll(`.toast.${type}`);
-    existingToasts.forEach(toast => toast.remove());
+    existingToasts.forEach(toast => {
+        // Clear any existing timeouts to prevent interference
+        if (toast.hideTimeout) {
+            clearTimeout(toast.hideTimeout);
+        }
+        toast.remove();
+    });
     
     // Create toast container if it doesn't exist
     let container = document.getElementById('toastContainer');
@@ -1680,6 +1701,9 @@ function showToast(title, message, type = 'info') {
         display: flex;
         align-items: flex-start;
         gap: 12px;
+        opacity: 1;
+        transform: translateX(0);
+        transition: opacity 0.3s ease, transform 0.3s ease;
     `;
     
     // Set border color based on type
@@ -1699,21 +1723,41 @@ function showToast(title, message, type = 'info') {
         info: 'ℹ️'
     };
     
+    // Create close button handler
+    const closeToast = () => {
+        if (toast.hideTimeout) {
+            clearTimeout(toast.hideTimeout);
+        }
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 300);
+    };
+    
     toast.innerHTML = `
         <span style="font-size: 18px; flex-shrink: 0;">${icons[type] || icons.info}</span>
         <div style="flex: 1;">
             <div style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">${title}</div>
             <div style="color: #6b7280; font-size: 14px;">${message}</div>
         </div>
-        <button onclick="this.parentElement.remove()" 
-                style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; border-radius: 4px; flex-shrink: 0;"
+        <button class="toast-close-btn"
+                style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; border-radius: 4px; flex-shrink: 0; font-size: 16px; line-height: 1;"
                 title="Close">✕</button>
     `;
+    
+    // Add close button listener
+    const closeBtn = toast.querySelector('.toast-close-btn');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeToast);
+    }
     
     // Add to container
     container.appendChild(toast);
     
-    // FIXED: Increased delay based on type and message length
+    // Calculate display duration
     const baseDelay = {
         error: 10000,    // 10 seconds for errors
         warning: 8000,   // 8 seconds for warnings
@@ -1727,11 +1771,12 @@ function showToast(title, message, type = 'info') {
     
     const delay = (baseDelay[type] || 5000) + extraTime;
     
-    setTimeout(() => {
-        if (toast.parentNode) {
-            toast.style.animation = 'slideOut 0.3s ease-in forwards';
-            setTimeout(() => toast.remove(), 300);
-        }
+    // Debug log
+    console.log(`🔔 Toast shown: "${title}" - Will hide in ${delay/1000} seconds`);
+    
+    // Set timeout for auto-hide
+    toast.hideTimeout = setTimeout(() => {
+        closeToast();
     }, delay);
     
     // Add CSS animations if not already added
@@ -1740,20 +1785,61 @@ function showToast(title, message, type = 'info') {
         style.id = 'toast-animations';
         style.textContent = `
             @keyframes slideIn {
-                from { opacity: 0; transform: translateX(100%); }
-                to { opacity: 1; transform: translateX(0); }
+                from { 
+                    opacity: 0; 
+                    transform: translateX(100%); 
+                }
+                to { 
+                    opacity: 1; 
+                    transform: translateX(0); 
+                }
             }
-            @keyframes slideOut {
-                from { opacity: 1; transform: translateX(0); }
-                to { opacity: 0; transform: translateX(100%); }
-            }
+            
             .toast-container > .toast {
                 transition: all 0.3s ease;
+            }
+            
+            .toast-close-btn:hover {
+                background-color: rgba(0, 0, 0, 0.05) !important;
             }
         `;
         document.head.appendChild(style);
     }
+    
+    // Return the toast element for testing purposes
+    return toast;
 }
+
+// Optional: Add a function to manually clear all toasts
+function clearAllToasts() {
+    const container = document.getElementById('toastContainer');
+    if (container) {
+        const toasts = container.querySelectorAll('.toast');
+        toasts.forEach(toast => {
+            if (toast.hideTimeout) {
+                clearTimeout(toast.hideTimeout);
+            }
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        });
+    }
+}
+
+// Optional: Add a function to show a persistent toast (no auto-hide)
+function showPersistentToast(title, message, type = 'info') {
+    const toast = showToast(title, message, type);
+    if (toast && toast.hideTimeout) {
+        clearTimeout(toast.hideTimeout);
+        toast.hideTimeout = null;
+    }
+    return toast;
+}
+
+// Export functions for global use
+window.showToast = showToast;
+window.clearAllToasts = clearAllToasts;
+window.showPersistentToast = showPersistentToast;
 
 // Utility function for tab switching
 window.switchToTab = function(tabName) {
@@ -2205,9 +2291,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Make functions globally available for console testing
   window.AuthManager = AuthManager;
   window.showToast = showToast;
+  window.ApiCallManager = ApiCallManager;
   
-  console.log('🔧 FraudShield Dashboard Loaded');
-  console.log('🔍 Debug functions available: AuthManager, showToast()');
+  console.log('🔧 FraudShield Dashboard Loaded (Optimized)');
+  console.log('📊 API calls are now throttled to prevent spam');
+  console.log('🔍 Debug functions available: AuthManager, showToast(), ApiCallManager');
   
   const isAuth = AuthManager.isAuthenticated();
   console.log(`👤 User status: ${isAuth ? 'Authenticated' : 'Anonymous'}`);
@@ -2216,23 +2304,38 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('👑 Admin user detected - all features available');
   }
 
-  // Initialize activity logs if user is authenticated
+  // Initialize activity logs if user is authenticated with delay
   if (isAuth) {
     setTimeout(() => {
       if (window.activityLogsManager) {
         window.activityLogsManager.destroy();
       }
       window.activityLogsManager = ActivityLogsManager.init();
-    }, 1000);
+    }, 2000); // 2 second delay to prevent initial spam
   }
 
-  // Ensure log level filter always refreshes logs on change
+  // Ensure log level filter always refreshes logs on change with debounce
   const logLevelSelect = document.getElementById('logLevel');
   if (logLevelSelect) {
+    let changeTimeout;
     logLevelSelect.addEventListener('change', function() {
-      if (window.activityLogsManager) {
-        window.activityLogsManager.loadUserLogs(true);
-      }
+      clearTimeout(changeTimeout);
+      changeTimeout = setTimeout(() => {
+        if (window.activityLogsManager) {
+          window.activityLogsManager.loadUserLogs(true);
+        }
+      }, 500); // 500ms debounce
     });
+  }
+});
+
+// Add cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  // Clear all intervals
+  if (AuthManager.metricsRefreshInterval) {
+    clearInterval(AuthManager.metricsRefreshInterval);
+  }
+  if (window.activityLogsManager && window.activityLogsManager.autoRefreshInterval) {
+    clearInterval(window.activityLogsManager.autoRefreshInterval);
   }
 });
