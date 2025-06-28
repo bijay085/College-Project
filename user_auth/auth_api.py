@@ -43,10 +43,10 @@ DatabaseResponse = Optional[Dict[str, Any]]
 # Enhanced rate limiting for different endpoints
 endpoint_rate_limits = defaultdict(lambda: defaultdict(float))
 RATE_LIMITS = {
-    'admin_stats': 60,      # 60 seconds
+    'admin_stats': 300,      # 60 seconds
     'login': 5,             # 5 seconds between login attempts
     'register': 30,         # 30 seconds between registrations
-    'fraud_api_health': 10  # 10 seconds for fraud API health checks
+    'fraud_api_health': 60  # 10 seconds for fraud API health checks
 }
 
 # ============================================================================

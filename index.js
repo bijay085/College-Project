@@ -25,6 +25,15 @@ tabs.forEach(btn => {
 
 // FIXED: Authentication and Role Management
 class AuthManager {
+    // Add static properties for caching
+    static statsCache = null;
+    static statsCacheTime = null;
+    static STATS_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+    static metricsRefreshInterval = null;
+    static lastHealthCheck = 0;
+    static HEALTH_CHECK_COOLDOWN = 60000; // 1 minute cooldown
+    static hasShownMetricsError = false;
+
     static getCurrentUser() {
         try {
             // Check sessionStorage first
@@ -135,13 +144,16 @@ class AuthManager {
     }
 
     static init() {
-        // Check for persistent session on page load
+        // Existing initialization
         this.restorePersistentSession();
         this.setupUserInterface();
         this.setupRoleBasedAccess();
         this.setupUserMenu();
         this.loadUserProfile();
         this.checkApiConnection();
+
+        // FIXED: Use cached metrics loading with longer intervals
+        this.startMetricsRefresh();
     }
 
     static restorePersistentSession() {
@@ -531,32 +543,152 @@ class AuthManager {
         }
     }
 
-    static loadUserProfile() {
-        if (!window.currentUser) return;
+    static async saveProfile() {
+        const profileData = {
+            name: document.getElementById('profileName')?.value || '',
+            company: document.getElementById('profileCompany')?.value || ''
+        };
 
-        const user = window.currentUser.user;
+        try {
+            showToast('Saving...', 'Updating your profile information.', 'info');
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Update session storage
+            const currentUser = this.getCurrentUser();
+            if (currentUser) {
+                currentUser.user.name = profileData.name;
+                currentUser.user.company = profileData.company;
+                sessionStorage.setItem('fraudshield_user', JSON.stringify(currentUser));
+                // Also update persistent storage if it exists
+                const persistentUser = localStorage.getItem('fraudshield_persistent_user');
+                if (persistentUser) {
+                    localStorage.setItem('fraudshield_persistent_user', JSON.stringify(currentUser));
+                }
+                window.currentUser = currentUser; // Update global variable
+                this.setupUserInterface(); // Refresh UI
+            }
+            showToast('Success', 'Profile updated successfully!', 'success');
+        } catch (error) {
+            console.error('Failed to save profile:', error);
+            showToast('Error', 'Failed to update profile. Please try again.', 'error');
+        }
+    }
+
+    static async copyApiKey() {
+        const apiKey = this.getApiKey();
+        if (!apiKey) {
+            showToast('Error', 'No API key found.', 'error');
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(apiKey);
+            showToast('Copied', 'API key copied to clipboard!', 'success');
+            // Update button temporarily
+            const btn = document.getElementById('copyUserApiKey');
+            if (btn) {
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }
+        } catch (error) {
+            showToast('Error', 'Failed to copy API key.', 'error');
+        }
+    }
+
+    static async regenerateApiKey() {
+        if (!confirm('Are you sure you want to regenerate your API key? This will invalidate the current key.')) {
+            return;
+        }
+        try {
+            showToast('Generating...', 'Creating new API key.', 'info');
+            // Simulate API call to regenerate key
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const newApiKey = 'fsk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            sessionStorage.setItem('fraudshield_api_key', newApiKey);
+            // Also update persistent storage if it exists
+            const persistentApiKey = localStorage.getItem('fraudshield_persistent_api_key');
+            if (persistentApiKey) {
+                localStorage.setItem('fraudshield_persistent_api_key', newApiKey);
+            }
+            window.apiKey = newApiKey; // Update global variable
+            const userApiKey = document.getElementById('userApiKey');
+            if (userApiKey) userApiKey.textContent = newApiKey;
+            showToast('Success', 'New API key generated successfully!', 'success');
+        } catch (error) {
+            console.error('Failed to regenerate API key:', error);
+            showToast('Error', 'Failed to generate new API key.', 'error');
+        }
+    }
+
+    static async saveThresholds() {
+        try {
+            showToast('Saving...', 'Updating detection thresholds.', 'info');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            showToast('Success', 'Thresholds updated successfully!', 'success');
+        } catch (error) {
+            showToast('Error', 'Failed to save thresholds.', 'error');
+        }
+    }
+
+    static async exportUserData() {
+        if (!this.isAdmin()) {
+            showToast('Access Denied', 'Administrator privileges required.', 'error');
+            return;
+        }
+        try {
+            showToast('Exporting...', 'Preparing user data export.', 'info');
+            // Create sample CSV data
+            const userData = [
+                ['Name', 'Email', 'Role', 'Company', 'Created At', 'Last Login', 'Status'],
+                ['John Doe', 'john@example.com', 'admin', 'TechCorp', '2025-06-20', '2025-06-26', 'Active'],
+                ['Jane Smith', 'jane@company.com', 'user', 'StartupInc', '2025-06-18', '2025-06-25', 'Active']
+            ];
+            // Convert to CSV
+            const csvContent = userData.map(row =>
+                row.map(field => `"${field}"`).join(',')
+            ).join('\n');
+            // Create and download file
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `fraudshield_users_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('Success', 'User data exported successfully!', 'success');
+        } catch (error) {
+            console.error('Export failed:', error);
+            showToast('Error', 'Failed to export user data.', 'error');
+        }
+    }
+
+    static loadUserProfile() {
+        const currentUser = this.getCurrentUser();
+        if (!currentUser) return;
+        const user = currentUser.user;
         const profileName = document.getElementById('profileName');
         const profileEmail = document.getElementById('profileEmail');
         const profileCompany = document.getElementById('profileCompany');
         const userApiKey = document.getElementById('userApiKey');
-
         if (profileName) profileName.value = user.name || '';
         if (profileEmail) profileEmail.value = user.email || '';
         if (profileCompany) profileCompany.value = user.company || '';
-        if (userApiKey) userApiKey.textContent = window.apiKey || 'Loading...';
+        if (userApiKey) userApiKey.textContent = this.getApiKey() || 'Loading...';
     }
 
     static async checkApiConnection() {
         try {
             const apiStatus = document.getElementById('apiStatus');
             if (!apiStatus) return;
-
             const statusText = apiStatus.querySelector('.status-text');
             const statusDot = apiStatus.querySelector('.status-dot');
-
             // Check main API
             const response = await fetch('http://127.0.0.1:5000/health');
-            
             if (response.ok) {
                 statusText.textContent = 'API Online';
                 statusDot.style.backgroundColor = '#10b981';
@@ -580,21 +712,37 @@ class AuthManager {
         // Profile save button
         const saveProfileBtn = document.getElementById('saveProfile');
         if (saveProfileBtn) {
-            saveProfileBtn.addEventListener('click', this.saveProfile.bind(this));
+            saveProfileBtn.addEventListener('click', () => this.saveProfile());
         }
-
         // API key copy button
         const copyApiKeyBtn = document.getElementById('copyUserApiKey');
         if (copyApiKeyBtn) {
-            copyApiKeyBtn.addEventListener('click', this.copyApiKey.bind(this));
+            copyApiKeyBtn.addEventListener('click', () => this.copyApiKey());
         }
-
         // API key regenerate button
         const regenerateApiKeyBtn = document.getElementById('regenerateApiKey');
         if (regenerateApiKeyBtn) {
-            regenerateApiKeyBtn.addEventListener('click', this.regenerateApiKey.bind(this));
+            regenerateApiKeyBtn.addEventListener('click', () => this.regenerateApiKey());
         }
-
+        // API key download button
+        const downloadApiKeyBtn = document.getElementById('downloadApiKey');
+        if (downloadApiKeyBtn) {
+            downloadApiKeyBtn.addEventListener('click', () => {
+                const apiKey = this.getApiKey();
+                if (apiKey) {
+                    const blob = new Blob([apiKey], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'fraudshield_api_key.txt';
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    showToast('Success', 'API key downloaded!', 'success');
+                } else {
+                    showToast('Error', 'No API key found.', 'error');
+                }
+            });
+        }
         if (isAdmin) {
             this.setupAdminEventListeners();
         }
@@ -635,17 +783,37 @@ class AuthManager {
     static async loadUserStats() {
         if (!this.isAdmin()) return;
 
+        // Check if we have cached stats
+        if (this.statsCache && this.statsCacheTime &&
+            (Date.now() - this.statsCacheTime < this.STATS_CACHE_DURATION)) {
+            console.log('📊 Using cached user stats');
+            this.updateStatDisplay(this.statsCache);
+            return;
+        }
+
         try {
-            // Use the correct protocol (http) and handle fetch errors
-            const url = window.location.protocol === "https:" 
-                ? "http://127.0.0.1:5001/auth/admin/stats"
-                : "http://127.0.0.1:5001/auth/admin/stats";
-            const response = await fetch(url, {
+            const apiKey = this.getApiKey();
+            if (!apiKey) {
+                throw new Error('No API key found');
+            }
+
+            console.log('📊 Loading fresh user stats from API...');
+
+            const response = await fetch('http://127.0.0.1:5001/auth/admin/stats', {
                 headers: {
-                    'Authorization': `Bearer ${this.getApiKey()}`
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
                 },
                 mode: 'cors'
             });
+
+            if (response.status === 429) {
+                console.warn('⚠️ Rate limit hit for admin stats, using cached data');
+                if (this.statsCache) {
+                    this.updateStatDisplay(this.statsCache);
+                }
+                return;
+            }
 
             if (!response.ok) {
                 throw new Error(`API error: ${response.status}`);
@@ -653,122 +821,59 @@ class AuthManager {
 
             const data = await response.json();
             if (data.success) {
-                const totalUsers = document.getElementById('totalUsers');
-                const activeUsers = document.getElementById('activeUsers');
-                
-                if (totalUsers) totalUsers.textContent = data.data.total_users || 0;
-                if (activeUsers) activeUsers.textContent = data.data.active_today || 0;
+                // Cache the stats
+                this.statsCache = data.data;
+                this.statsCacheTime = Date.now();
+
+                this.updateStatDisplay(data.data);
+                console.log('✅ User stats loaded and cached successfully');
             } else {
                 throw new Error(data.error || "Unknown error");
             }
         } catch (error) {
             console.error('Failed to load user stats:', error);
-            // Show toast if it's a network error
-            if (error instanceof TypeError) {
-                showToast('Network Error', 'Cannot connect to admin stats API. Is the backend running at http://127.0.0.1:5001?', 'error');
+
+            // Use cached data if available
+            if (this.statsCache) {
+                console.log('📊 Using cached stats due to error');
+                this.updateStatDisplay(this.statsCache);
             } else {
-                showToast('Error', 'Failed to load user stats.', 'error');
+                // Show specific error messages
+                if (error.message.includes('Failed to fetch')) {
+                    showToast('Connection Error', 'Cannot connect to authentication API. Make sure the auth API is running on port 5001.', 'error');
+                } else {
+                    showToast('Error', 'Failed to load user stats: ' + error.message, 'error');
+                }
+
+                // Set fallback values
+                const totalUsers = document.getElementById('totalUsers');
+                const activeUsers = document.getElementById('activeUsers');
+
+                if (totalUsers) totalUsers.textContent = 'Error';
+                if (activeUsers) activeUsers.textContent = 'Error';
             }
-            const totalUsers = document.getElementById('totalUsers');
-            const activeUsers = document.getElementById('activeUsers');
-            
-            if (totalUsers) totalUsers.textContent = 'Error';
-            if (activeUsers) activeUsers.textContent = 'Error';
         }
     }
 
-    static async saveProfile() {
-        const profileData = {
-            name: document.getElementById('profileName')?.value || '',
-            company: document.getElementById('profileCompany')?.value || ''
-        };
+    static updateStatDisplay(stats) {
+        const totalUsers = document.getElementById('totalUsers');
+        const activeUsers = document.getElementById('activeUsers');
 
-        try {
-            showToast('Saving...', 'Updating your profile information.', 'info');
-            
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            // Update session storage
-            const currentUser = this.getCurrentUser();
-            if (currentUser) {
-                currentUser.user.name = profileData.name;
-                currentUser.user.company = profileData.company;
-                sessionStorage.setItem('fraudshield_user', JSON.stringify(currentUser));
-                window.currentUser = currentUser; // Update global variable
-                this.setupUserInterface(); // Refresh UI
-            }
-
-            showToast('Success', 'Profile updated successfully!', 'success');
-        } catch (error) {
-            console.error('Failed to save profile:', error);
-            showToast('Error', 'Failed to update profile. Please try again.', 'error');
-        }
-    }
-
-    static async copyApiKey() {
-        const apiKey = this.getApiKey();
-        
-        if (!apiKey) {
-            showToast('Error', 'No API key found.', 'error');
-            return;
-        }
-        
-        try {
-            await navigator.clipboard.writeText(apiKey);
-            showToast('Copied', 'API key copied to clipboard!', 'success');
-            
-            // Update button temporarily
-            const btn = document.getElementById('copyUserApiKey');
-            if (btn) {
-                const originalText = btn.textContent;
-                btn.textContent = '✅ Copied!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            }
-        } catch (error) {
-            showToast('Error', 'Failed to copy API key.', 'error');
-        }
-    }
-
-    static async regenerateApiKey() {
-        if (!confirm('Are you sure you want to regenerate your API key? This will invalidate the current key.')) {
-            return;
-        }
-
-        try {
-            showToast('Generating...', 'Creating new API key.', 'info');
-            
-            // Simulate API call to regenerate key
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            const newApiKey = 'fsk_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            
-            sessionStorage.setItem('fraudshield_api_key', newApiKey);
-            window.apiKey = newApiKey; // Update global variable
-            
-            const userApiKey = document.getElementById('userApiKey');
-            if (userApiKey) userApiKey.textContent = newApiKey;
-            
-            showToast('Success', 'New API key generated successfully!', 'success');
-        } catch (error) {
-            console.error('Failed to regenerate API key:', error);
-            showToast('Error', 'Failed to generate new API key.', 'error');
-        }
-    }
-
-    static async saveThresholds() {
-        try {
-            showToast('Saving...', 'Updating detection thresholds.', 'info');
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            showToast('Success', 'Thresholds updated successfully!', 'success');
-        } catch (error) {
-            showToast('Error', 'Failed to save thresholds.', 'error');
-        }
+        if (totalUsers) totalUsers.textContent = stats.total_users || 0;
+        if (activeUsers) activeUsers.textContent = stats.active_today || 0;
     }
 
     static async performHealthCheck() {
+        // Check cooldown
+        const now = Date.now();
+        if (now - this.lastHealthCheck < this.HEALTH_CHECK_COOLDOWN) {
+            const remainingTime = Math.ceil((this.HEALTH_CHECK_COOLDOWN - (now - this.lastHealthCheck)) / 1000);
+            showToast('Cooldown Active', `Please wait ${remainingTime} seconds before checking again.`, 'warning');
+            return;
+        }
+
+        this.lastHealthCheck = now;
+
         try {
             const btn = document.getElementById('healthCheck');
             if (btn) {
@@ -779,7 +884,7 @@ class AuthManager {
             // Check API health
             const response = await fetch('http://127.0.0.1:5000/health');
             const dbHealth = document.getElementById('dbHealth');
-            
+
             if (response.ok && dbHealth) {
                 dbHealth.innerHTML = '<span class="status-indicator">🟢</span> Online';
                 dbHealth.className = 'health-status online';
@@ -795,7 +900,7 @@ class AuthManager {
                 dbHealth.innerHTML = '<span class="status-indicator">🔴</span> Error';
                 dbHealth.className = 'health-status offline';
             }
-            
+
             showToast('Error', 'Health check failed.', 'error');
         } finally {
             const btn = document.getElementById('healthCheck');
@@ -806,47 +911,69 @@ class AuthManager {
         }
     }
 
-    static async exportUserData() {
-        if (!this.isAdmin()) {
-            showToast('Access Denied', 'Administrator privileges required.', 'error');
-            return;
+    static startMetricsRefresh() {
+        // Load metrics immediately
+        this.loadRealMetrics();
+
+        // Clear any existing interval
+        if (this.metricsRefreshInterval) {
+            clearInterval(this.metricsRefreshInterval);
         }
-        
+
+        // FIXED: Set up periodic refresh every 2 minutes instead of 30 seconds
+        this.metricsRefreshInterval = setInterval(() => {
+            // Only refresh if the dashboard tab is active
+            const homeTab = document.getElementById('home');
+            if (homeTab && homeTab.classList.contains('active')) {
+                this.loadRealMetrics();
+            }
+        }, 120000); // 2 minutes
+
+        console.log('📊 Started periodic metrics refresh (every 2 minutes)');
+    }
+
+    static async loadRealMetrics() {
         try {
-            showToast('Exporting...', 'Preparing user data export.', 'info');
-            
-            // Create sample CSV data
-            const userData = [
-                ['Name', 'Email', 'Role', 'Company', 'Created At', 'Last Login', 'Status'],
-                ['John Doe', 'john@example.com', 'admin', 'TechCorp', '2025-06-20', '2025-06-26', 'Active'],
-                ['Jane Smith', 'jane@company.com', 'user', 'StartupInc', '2025-06-18', '2025-06-25', 'Active']
-            ];
-            
-            // Convert to CSV
-            const csvContent = userData.map(row => 
-                row.map(field => `"${field}"`).join(',')
-            ).join('\n');
-            
-            // Create and download file
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', `fraudshield_users_${new Date().toISOString().split('T')[0]}.csv`);
-            link.style.visibility = 'hidden';
-            
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            URL.revokeObjectURL(url);
-            
-            showToast('Success', 'User data exported successfully!', 'success');
-            
+            console.log('📊 Loading real metrics from API...');
+
+            const response = await fetch('http://127.0.0.1:5000/real-stats', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 429) {
+                console.warn('⚠️ Rate limit hit for real-stats, skipping update');
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error(`API error: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                this.updateDashboardMetrics(result.data);
+                console.log('✅ Real metrics loaded successfully');
+                return result.data;
+            } else {
+                throw new Error(result.error || 'Failed to load metrics');
+            }
+
         } catch (error) {
-            console.error('Export failed:', error);
-            showToast('Error', 'Failed to export user data.', 'error');
+            console.error('❌ Failed to load real metrics:', error);
+            // Show fallback metrics
+            this.updateDashboardMetrics(this.getFallbackMetrics());
+
+            // Only show toast for first-time errors, not repeated ones
+            if (!this.hasShownMetricsError) {
+                this.hasShownMetricsError = true;
+                showToast('Metrics', 'Using cached metrics. Backend may be offline.', 'warning');
+            }
+
+            return null;
         }
     }
 
@@ -1064,12 +1191,12 @@ class AuthManager {
         // Load metrics immediately
         this.loadRealMetrics();
         
-        // Set up periodic refresh every 30 seconds
+        // Set up periodic refresh every 2 minutes
         setInterval(() => {
             this.loadRealMetrics();
-        }, 30000);
+        }, 120000);
         
-        console.log('📊 Started periodic metrics refresh (every 30 seconds)');
+        console.log('📊 Started periodic metrics refresh (every 2 minutes)');
     }
 
     /**
@@ -1550,6 +1677,9 @@ function showToast(title, message, type = 'info') {
         pointer-events: auto;
         max-width: 100%;
         word-wrap: break-word;
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
     `;
     
     // Set border color based on type
@@ -1570,23 +1700,33 @@ function showToast(title, message, type = 'info') {
     };
     
     toast.innerHTML = `
-        <div style="display: flex; align-items: flex-start; gap: 12px;">
-            <span style="font-size: 18px; flex-shrink: 0;">${icons[type] || icons.info}</span>
-            <div style="flex: 1;">
-                <div style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">${title}</div>
-                <div style="color: #6b7280; font-size: 14px;">${message}</div>
-            </div>
-            <button onclick="this.parentElement.parentElement.remove()" 
-                    style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; border-radius: 4px; flex-shrink: 0;"
-                    title="Close">✕</button>
+        <span style="font-size: 18px; flex-shrink: 0;">${icons[type] || icons.info}</span>
+        <div style="flex: 1;">
+            <div style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">${title}</div>
+            <div style="color: #6b7280; font-size: 14px;">${message}</div>
         </div>
+        <button onclick="this.parentElement.remove()" 
+                style="background: none; border: none; color: #9ca3af; cursor: pointer; padding: 4px; border-radius: 4px; flex-shrink: 0;"
+                title="Close">✕</button>
     `;
     
     // Add to container
     container.appendChild(toast);
     
-    // Auto remove after delay
-    const delay = type === 'error' ? 8000 : 5000;
+    // FIXED: Increased delay based on type and message length
+    const baseDelay = {
+        error: 10000,    // 10 seconds for errors
+        warning: 8000,   // 8 seconds for warnings
+        success: 6000,   // 6 seconds for success
+        info: 5000       // 5 seconds for info
+    };
+    
+    // Add extra time for longer messages
+    const messageLength = title.length + message.length;
+    const extraTime = Math.min(messageLength * 50, 5000); // Max 5 extra seconds
+    
+    const delay = (baseDelay[type] || 5000) + extraTime;
+    
     setTimeout(() => {
         if (toast.parentNode) {
             toast.style.animation = 'slideOut 0.3s ease-in forwards';
@@ -1606,6 +1746,9 @@ function showToast(title, message, type = 'info') {
             @keyframes slideOut {
                 from { opacity: 1; transform: translateX(0); }
                 to { opacity: 0; transform: translateX(100%); }
+            }
+            .toast-container > .toast {
+                transition: all 0.3s ease;
             }
         `;
         document.head.appendChild(style);
@@ -1810,7 +1953,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return value || '';
           }).join(','))
         ].join('\n');
-        
+
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const url  = URL.createObjectURL(blob);
         const a    = document.createElement('a');
