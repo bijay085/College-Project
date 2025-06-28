@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule Management - FraudShield Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="rule-management.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="header-left">
+            <h1>🛡️ FraudShield Admin</h1>
+            <nav class="breadcrumb">
+                <a href="../index.html">Dashboard</a>
+                <span>/</span>
+                <span>Rule Management</span>
+            </nav>
+        </div>
+        <div class="header-right">
+            <span id="adminName" class="admin-name">Loading...</span>
+            <button id="logoutBtn" class="btn-logout">Logout</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="page-header">
+            <h2>Fraud Detection Rules</h2>
+            <div class="header-actions">
+                <button id="refreshBtn" class="btn btn-secondary">
+                    <span class="icon">🔄</span> Refresh
+                </button>
+                <button id="saveAllBtn" class="btn btn-primary" disabled>
+                    <span class="icon">💾</span> Save Changes
+                </button>
+            </div>
+        </div>
+
+        <!-- Rule Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalRules">0</div>
+                <div class="stat-label">Total Rules</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="enabledRules">0</div>
+                <div class="stat-label">Enabled Rules</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="basicRules">0</div>
+                <div class="stat-label">Basic Rules</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="advancedRules">0</div>
+                <div class="stat-label">Advanced Rules</div>
+            </div>
+        </div>
+
+        <!-- Rules Container -->
+        <div id="rulesContainer" class="rules-container">
+            <div class="loading-spinner">Loading rules...</div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="rule-management.js"></script>
+</body>
+</html>

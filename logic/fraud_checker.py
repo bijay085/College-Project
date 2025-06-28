@@ -1,5 +1,4 @@
 # logic/fraud_checker.py - ENHANCED VERSION WITH ADVANCED ALGORITHMS
-
 import sys
 import os
 import asyncio
@@ -29,6 +28,7 @@ class SyncMetricsTracker:
     
     def __init__(self):
         """Initialize with synchronous MongoDB connection"""
+
         print("🔧 DEBUG: Initializing SyncMetricsTracker")
         try:
             # Use synchronous pymongo instead of motor for metrics
@@ -43,7 +43,7 @@ class SyncMetricsTracker:
             self.client = None
             self.db = None
             self.metrics_collection = None
-        
+
     def increment_metric(self, metric_name: str, increment: int = 1):
         """Synchronously increment a metric - WITH DEBUG"""
         print(f"🔧 CALLED: increment_metric({metric_name}, {increment})")
@@ -112,7 +112,8 @@ class SyncMetricsTracker:
                 ("velocity_alerts", "Velocity-based fraud alerts"),
                 ("pattern_anomalies", "Pattern anomaly detections"),
                 ("geo_anomalies", "Geographic anomaly detections"),
-                ("behavioral_alerts", "Behavioral pattern alerts")
+                ("behavioral_alerts", "Behavioral pattern alerts"),
+                ("auto_blacklisted_cards", "Number of cards auto-blacklisted for suspicious usage")  # <-- Added
             ]
             
             for metric_name, description in default_metrics:
@@ -138,7 +139,6 @@ class SyncMetricsTracker:
             logger.error(f"Failed to initialize metrics: {e}")
             return False
 
-
 class FraudChecker:
     """Enhanced Fraud Checker with ADVANCED ALGORITHMS and DEBUG LOGGING"""
     
@@ -163,17 +163,9 @@ class FraudChecker:
         self.behavioral_profiles: Dict[str, Dict] = {}
         self.geo_patterns: Dict[str, List[Tuple]] = defaultdict(list)
         
-        # Risk scoring weights for advanced algorithms
-        self.advanced_weights = {
-            'velocity_abuse': 0.3,
-            'suspicious_patterns': 0.25,
-            'geo_anomaly': 0.2,
-            'behavioral_deviation': 0.15,
-            'network_analysis': 0.1,
-            'time_pattern_anomaly': 0.1,
-            'amount_clustering': 0.05
-        }
-        
+        # Risk scoring weights for advanced algorithms (will be loaded from DB)
+        self.advanced_weights = {}  
+
         # MongoDB connection for async operations (data loading)
         try:
             self.mongo = MongoManager()
@@ -189,6 +181,12 @@ class FraudChecker:
         self.metrics = SyncMetricsTracker()
         self.metrics.initialize_metrics()
         
+        # Track card usage patterns for auto-blacklisting (initialize here to avoid attribute errors)
+        self.card_to_locations = {}  # card_hash -> set of IPs/locations
+        self.card_to_devices = {}    # card_hash -> set of fingerprints
+        self.bin_to_locations = {}   # BIN -> set of IPs/locations
+        self.bin_to_devices = {}     # BIN -> set of fingerprints
+
         # Load data from MongoDB
         try:
             asyncio.run(self._warm_cache())
@@ -255,10 +253,14 @@ class FraudChecker:
                 setattr(self, attr_name, set())  # Empty set as fallback
 
     async def _load_rules(self):
-        """Load fraud detection rules"""
+        """Load fraud detection rules and build weights dynamically"""
         try:
             rule_docs = await self.mongo.get_collection("rules").find({"enabled": True}).to_list(None)
             self.rules = {}
+            self.advanced_weights = {}  # Reset advanced weights
+            
+            # Categories that belong to advanced algorithms
+            advanced_categories = ['advanced', 'card_patterns']
             
             for rule in rule_docs:
                 rule_key = rule.get("rule_key")
@@ -271,13 +273,43 @@ class FraudChecker:
                         rule["weight"] = 0.0
                     
                     self.rules[rule_key] = rule
+                    
+                    # Build advanced_weights from rules based on category
+                    category = rule.get("category", "")
+                    if category in advanced_categories:
+                        self.advanced_weights[rule_key] = rule["weight"]
             
             logger.info(f"Loaded {len(self.rules)} fraud detection rules")
+            logger.info(f"Advanced weights loaded from DB: {self.advanced_weights}")
             
+            # Fallback weights if no advanced rules found
+            if not self.advanced_weights:
+                logger.warning("No advanced rules found in DB, using fallback weights")
+                self.advanced_weights = {
+                    'velocity_abuse': 0.3,
+                    'suspicious_patterns': 0.25,
+                    'geo_anomaly': 0.2,
+                    'behavioral_deviation': 0.15,
+                    'network_analysis': 0.1,
+                    'time_pattern_anomaly': 0.1,
+                    'amount_clustering': 0.05,
+                    'phone_mismatch': 0.15
+                }
+                
         except Exception as e:
             logger.error(f"Failed to load rules: {e}")
             self.rules = {}
-
+            # Use fallback weights on error
+            self.advanced_weights = {
+                'velocity_abuse': 0.3,
+                'suspicious_patterns': 0.25,
+                'geo_anomaly': 0.2,
+                'behavioral_deviation': 0.15,
+                'network_analysis': 0.1,
+                'time_pattern_anomaly': 0.1,
+                'amount_clustering': 0.05,
+                'phone_mismatch': 0.15
+            }
     async def _load_transaction_history(self):
         """Load recent transaction history for advanced pattern analysis"""
         try:
@@ -577,6 +609,52 @@ class FraudChecker:
         
         return score, reasons
 
+    # ADD THE NEW METHOD HERE:
+    def _analyze_phone_country_mismatch(self, tx: dict) -> Tuple[float, List[str]]:
+        """Check if phone number country code matches billing country"""
+        reasons = []
+        score = 0.0
+        
+        phone = str(tx.get("phone", "")).strip()
+        billing_country = str(tx.get("billing_country", "")).strip()
+        
+        if not phone or not billing_country:
+            return score, reasons
+        
+        # Only check if phone has country code
+        if phone.startswith('+'):
+            try:
+                import phonenumbers
+                
+                # Parse phone number with country code
+                parsed = phonenumbers.parse(phone, None)
+                
+                if phonenumbers.is_valid_number(parsed):
+                    # Get phone's country
+                    phone_country = phonenumbers.region_code_for_number(parsed)
+                    
+                    # Check if matches billing country
+                    if phone_country != billing_country:
+                        score += 0.15
+                        reasons.append("phone_country_mismatch")
+                        print(f"🔧 DEBUG: Phone country ({phone_country}) != Billing country ({billing_country})")
+                        logger.debug(f"Phone/billing country mismatch: {phone_country} != {billing_country}")
+                else:
+                    # Invalid phone number format
+                    score += 0.1
+                    reasons.append("invalid_phone_format")
+                    print(f"🔧 DEBUG: Invalid phone format: {phone}")
+                    
+            except Exception as e:
+                # Couldn't parse - minor flag
+                score += 0.05
+                reasons.append("phone_parse_error")
+                print(f"🔧 DEBUG: Couldn't parse phone: {phone}, error: {e}")
+        
+        # No country code = no penalty (score stays 0)
+        
+        return score, reasons
+
     def _calculate_composite_risk_score(self, base_score: float, advanced_scores: Dict[str, float]) -> float:
         """Calculate composite risk score using weighted combination"""
         total_advanced_score = 0.0
@@ -670,6 +748,115 @@ class FraudChecker:
             except (ValueError, TypeError):
                 logger.warning(f"Invalid price value: {tx.get('price')}")
             
+            # === NEW: CHECK SAME CARD DIFFERENT EMAILS ===
+            if card_number and len(card_number) >= 6 and email:
+                # Use card hash for security
+                card_hash = hashlib.sha256(card_number.encode()).hexdigest()
+                
+                # Initialize if first time seeing this card
+                if not hasattr(self, 'card_to_emails'):
+                    self.card_to_emails = {}
+                
+                if card_hash not in self.card_to_emails:
+                    self.card_to_emails[card_hash] = set()
+                
+                # Add email to this card's set
+                self.card_to_emails[card_hash].add(email)
+                
+                # Check if multiple emails
+                email_count = len(self.card_to_emails[card_hash])
+                if email_count > 1:
+                    weight = self._safe_get_rule_weight("same_card_multiple_emails")
+                    if weight == 0:  # Fallback if not in DB
+                        weight = 0.3 if email_count == 2 else 0.5
+                    base_score += weight
+                    reasons.append(f"same_card_multiple_emails_{email_count}")
+                    print(f"🔧 DEBUG: Same card used with {email_count} different emails, weight: {weight}")
+                    logger.debug(f"Same card used with {email_count} different emails")
+            
+            # === NEW: AUTO-BLACKLIST SUSPICIOUS CARD PATTERNS ===
+            if card_number and len(card_number) >= 6:
+                card_hash = hashlib.sha256(card_number.encode()).hexdigest()
+                bin_number = card_number[:6]
+                current_location = ip  # Using IP as location identifier
+                current_device = fingerprint
+
+                # Initialize tracking if needed
+                if card_hash not in self.card_to_locations:
+                    self.card_to_locations[card_hash] = set()
+                    self.card_to_devices[card_hash] = set()
+
+                if bin_number not in self.bin_to_locations:
+                    self.bin_to_locations[bin_number] = set()
+                    self.bin_to_devices[bin_number] = set()
+
+                # Track current usage
+                if current_location:
+                    self.card_to_locations[card_hash].add(current_location)
+                    self.bin_to_locations[bin_number].add(current_location)
+
+                if current_device:
+                    self.card_to_devices[card_hash].add(current_device)
+                    self.bin_to_devices[bin_number].add(current_device)
+
+                # Check for suspicious patterns
+                auto_blacklist = False
+                blacklist_reason = ""
+
+                # Pattern 1: Same card from multiple locations
+                if len(self.card_to_locations[card_hash]) >= 3:
+                    auto_blacklist = True
+                    blacklist_reason = f"card_used_from_{len(self.card_to_locations[card_hash])}_different_locations"
+                    weight = self._safe_get_rule_weight("card_location_abuse")
+                    if weight == 0:  # Fallback
+                        weight = 0.4
+                    base_score += weight
+                    reasons.append(blacklist_reason)
+                    print(f"🚨 ALERT: Card used from {len(self.card_to_locations[card_hash])} different IPs!")
+
+                # Pattern 2: Same card from multiple devices
+                elif len(self.card_to_devices[card_hash]) >= 3:
+                    auto_blacklist = True
+                    blacklist_reason = f"card_used_from_{len(self.card_to_devices[card_hash])}_different_devices"
+                    weight = self._safe_get_rule_weight("card_device_abuse")
+                    if weight == 0:  # Fallback
+                        weight = 0.4
+                    base_score += weight
+                    reasons.append(blacklist_reason)
+                    print(f"🚨 ALERT: Card used from {len(self.card_to_devices[card_hash])} different devices!")
+
+                # Pattern 3: BIN used from many locations (card testing gang)
+                elif len(self.bin_to_locations[bin_number]) >= 5:
+                    auto_blacklist = True
+                    blacklist_reason = f"bin_used_from_{len(self.bin_to_locations[bin_number])}_different_locations"
+                    weight = self._safe_get_rule_weight("bin_location_abuse")
+                    if weight == 0:  # Fallback
+                        weight = 0.35
+                    base_score += weight
+                    reasons.append(blacklist_reason)
+                    print(f"🚨 ALERT: BIN {bin_number} used from {len(self.bin_to_locations[bin_number])} different IPs!")
+
+                # Pattern 4: Rapid location changes (impossible travel)
+                if current_location and card_hash in self.card_to_locations:
+                    # Simple check: if same card appears from different location within this session
+                    if len(self.card_to_locations[card_hash]) > 1 and current_location not in self.card_to_locations[card_hash]:
+                        # This is a new location for this card in the same session
+                        auto_blacklist = True
+                        blacklist_reason = "rapid_location_change_same_card"
+                        weight = self._safe_get_rule_weight("rapid_location_change")
+                        if weight == 0:  # Fallback
+                            weight = 0.5
+                        base_score += weight
+                        reasons.append(blacklist_reason)
+                        print(f"🚨 ALERT: Rapid location change detected for same card!")
+
+                # Execute auto-blacklisting if triggered
+                if auto_blacklist:
+                    # Run async blacklisting in background
+                    asyncio.create_task(self._auto_blacklist_suspicious_cards(card_hash, bin_number, blacklist_reason))
+                    # Also increment metrics
+                    self.metrics.increment_metric("auto_blacklisted_cards")
+
             # === ADVANCED ALGORITHM CHECKS ===
             
             print("🔧 DEBUG: Running advanced fraud algorithms...")
@@ -713,6 +900,12 @@ class FraudChecker:
             if amount_score > 0:
                 advanced_scores['amount_clustering'] = amount_score
                 all_advanced_reasons.extend(amount_reasons)
+
+            # 7. Phone Country Mismatch Analysis
+            phone_score, phone_reasons = self._analyze_phone_country_mismatch(tx)
+            if phone_score > 0:
+                advanced_scores['phone_mismatch'] = phone_score
+                all_advanced_reasons.extend(phone_reasons)
             
             # Calculate composite risk score
             composite_score = self._calculate_composite_risk_score(base_score, advanced_scores)
@@ -761,7 +954,7 @@ class FraudChecker:
             logger.error(f"Error analyzing transaction: {e}")
             logger.error(traceback.format_exc())
             return self._create_error_result(tx, f"Analysis failed: {str(e)}")
-
+        
     def _create_error_result(self, tx: dict, error_msg: str) -> dict:
         """Create error result for failed analysis"""
         base_tx = tx if isinstance(tx, dict) else {}
@@ -1010,6 +1203,61 @@ class FraudChecker:
                 "last_updated": datetime.now().isoformat()
             }
 
+    async def _auto_blacklist_suspicious_cards(self, card_hash: str, bin_number: str, reason: str):
+        """Automatically add suspicious cards/BINs to database blacklists"""
+        try:
+            # Add to suspicious cards collection
+            if card_hash:
+                suspicious_card = {
+                    "card_hash": card_hash,
+                    "reason": reason,
+                    "detected_at": datetime.now(),
+                    "auto_blacklisted": True
+                }
+                await self.mongo.get_collection("suspicious_cards").update_one(
+                    {"card_hash": card_hash},
+                    {"$set": suspicious_card},
+                    upsert=True
+                )
+                logger.info(f"Auto-blacklisted card hash: {card_hash[:16]}... Reason: {reason}")
+                print(f"🚨 AUTO-BLACKLIST: Card added to suspicious_cards - {reason}")
+
+            # Add to suspicious BINs collection
+            if bin_number:
+                suspicious_bin = {
+                    "bin": bin_number,
+                    "reason": reason,
+                    "detected_at": datetime.now(),
+                    "auto_blacklisted": True,
+                    "detection_count": 1
+                }
+                result = await self.mongo.get_collection("suspicious_bins").update_one(
+                    {"bin": bin_number},
+                    {
+                        "$set": suspicious_bin,
+                        "$inc": {"detection_count": 1}
+                    },
+                    upsert=True
+                )
+                # Add to in-memory cache immediately
+                self.suspicious_bins.add(bin_number)
+                logger.info(f"Auto-blacklisted BIN: {bin_number} Reason: {reason}")
+                print(f"🚨 AUTO-BLACKLIST: BIN {bin_number} added to suspicious_bins - {reason}")
+
+        except Exception as e:
+            logger.error(f"Failed to auto-blacklist: {e}")
+
+    async def refresh_blacklists(self):
+        """Refresh in-memory blacklists from database"""
+        try:
+            # Refresh suspicious BINs
+            suspicious_bins_docs = await self.mongo.get_collection("suspicious_bins").find().to_list(None)
+            for doc in suspicious_bins_docs:
+                if doc.get("bin"):
+                    self.suspicious_bins.add(doc["bin"])
+            logger.info(f"Refreshed blacklists: {len(self.suspicious_bins)} suspicious BINs")
+        except Exception as e:
+            logger.error(f"Failed to refresh blacklists: {e}")
 
 # ============================================================================
 # CLI Test Tool

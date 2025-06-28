@@ -236,6 +236,10 @@ class AuthManager {
                             <span class="dropdown-icon">👥</span>
                             User Management
                         </button>
+                        <button class="dropdown-item" id="ruleManagementShortcut">
+                            <span class="dropdown-icon">📏</span>
+                            Rule Management
+                        </button>
                         ` : ''}
                         <div class="dropdown-divider"></div>
                         <button class="dropdown-item logout-btn" id="logoutBtn">
@@ -506,6 +510,19 @@ class AuthManager {
             userManagementShortcut.addEventListener('click', () => {
                 if (this.isAdmin()) {
                     window.open('/admindashboard/user-management.html', '_blank');
+                } else {
+                    showToast('Access Denied', 'Administrator privileges required.', 'error');
+                }
+                userDropdown.classList.add('hidden');
+            });
+        }
+
+        // Rule Management shortcut (admin only)
+        const ruleManagementShortcut = document.getElementById('ruleManagementShortcut');
+        if (ruleManagementShortcut) {
+            ruleManagementShortcut.addEventListener('click', () => {
+                if (this.isAdmin()) {
+                    window.open('/admindashboard/rule-management.html', '_blank');
                 } else {
                     showToast('Access Denied', 'Administrator privileges required.', 'error');
                 }

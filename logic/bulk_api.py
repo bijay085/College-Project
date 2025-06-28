@@ -945,7 +945,141 @@ def get_algorithm_status():
     except Exception as e:
         app.logger.error(f"Algorithm status error: {e}")
         return create_error_response("Failed to get algorithm status", 500)
+# ============================================================================
+# Rule management admin
+# ============================================================================
+@app.route("/admin/rules", methods=["GET"])
+@require_api_key
+def get_all_rules():
+    """Get all rules for admin management"""
+    try:
+        # Check if user is admin
+        user_info = getattr(request, 'user_info', None)
+        if not user_info or user_info.get('role') != 'admin':
+            return create_error_response("Admin access required", 403)
+        
+        # Check if auth_db is available
+        if auth_db is None:
+            return create_error_response("Rules database unavailable", 503)
+        
+        # Get all rules from database
+        rules = list(auth_db.rules.find())
+        
+        # Convert ObjectId to string
+        for rule in rules:
+            rule['_id'] = str(rule['_id'])
+        
+        return jsonify({
+            "success": True,
+            "rules": rules
+        })
+        
+    except Exception as e:
+        app.logger.error(f"Failed to get rules: {e}")
+        return create_error_response("Failed to retrieve rules", 500)
 
+@app.route("/admin/rules/<rule_id>", methods=["PUT"])
+@require_api_key
+def update_rule(rule_id):
+    """Update a single rule"""
+    try:
+        # Check if user is admin
+        user_info = getattr(request, 'user_info', None)
+        if not user_info or user_info.get('role') != 'admin':
+            return create_error_response("Admin access required", 403)
+        
+        # Check if auth_db is available
+        if auth_db is None:
+            return create_error_response("Rules database unavailable", 503)
+        
+        data = request.get_json()
+        
+        # Update rule
+        from bson import ObjectId
+        result = auth_db.rules.update_one(
+            {"_id": ObjectId(rule_id)},
+            {"$set": {
+                "enabled": data.get("enabled"),
+                "weight": float(data.get("weight", 0)),
+                "updated_at": datetime.now(),
+                "updated_by": user_info.get("email")
+            }}
+        )
+        
+        if result.modified_count > 0:
+            # Log the change
+            log_activity(
+                user_info,
+                "rule_updated",
+                {
+                    "rule_id": rule_id,
+                    "changes": data
+                }
+            )
+            
+            return jsonify({
+                "success": True,
+                "message": "Rule updated successfully"
+            })
+        else:
+            return create_error_response("Rule not found or no changes made", 404)
+            
+    except Exception as e:
+        app.logger.error(f"Failed to update rule: {e}")
+        return create_error_response("Failed to update rule", 500)
+
+@app.route("/admin/rules/batch", methods=["PUT"])
+@require_api_key
+def batch_update_rules():
+    """Update multiple rules at once"""
+    try:
+        # Check if user is admin
+        user_info = getattr(request, 'user_info', None)
+        if not user_info or user_info.get('role') != 'admin':
+            return create_error_response("Admin access required", 403)
+        
+        data = request.get_json()
+        updates = data.get("updates", [])
+        
+        success_count = 0
+        from bson import ObjectId
+        
+        # Check if auth_db is available
+        if auth_db is None:
+            return create_error_response("Rules database unavailable", 503)
+
+        for update in updates:
+            result = auth_db.rules.update_one(
+                {"_id": ObjectId(update["_id"])},
+                {"$set": {
+                    "enabled": update.get("enabled"),
+                    "weight": float(update.get("weight", 0)),
+                    "updated_at": datetime.now(),
+                    "updated_by": user_info.get("email")
+                }}
+            )
+            if result.modified_count > 0:
+                success_count += 1
+        
+        # Log the batch update
+        log_activity(
+            user_info,
+            "rules_batch_updated",
+            {
+                "total_updates": len(updates),
+                "successful": success_count
+            }
+        )
+        
+        return jsonify({
+            "success": True,
+            "message": f"Updated {success_count} out of {len(updates)} rules"
+        })
+        
+    except Exception as e:
+        app.logger.error(f"Failed to batch update rules: {e}")
+        return create_error_response("Failed to update rules", 500)
+    
 # ============================================================================
 # ERROR HANDLERS
 # ============================================================================
