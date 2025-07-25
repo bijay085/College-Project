@@ -1,33 +1,33 @@
 /* css/base.css - Core Variables, Reset & Typography */
 
 :root {
-  /* Professional Color Palette - Sophisticated Whites & Creams */
-  --bg: linear-gradient(135deg, #fefefe 0%, #f8f9fb 50%, #f1f4f8 100%);
+  /* Professional Color Palette - Modern Neutrals */
+  --bg: linear-gradient(135deg, #ffffff 0%, #fafbfc 50%, #f5f7fa 100%);
   --surface: #ffffff;
-  --surface-alt: #fafbfc;
+  --surface-alt: #fafbfd;
   --surface-elevated: #ffffff;
-  --surface-cream: #fefcf9;
-  --surface-warm: #fdf9f5;
+  --surface-cream: #fffefb;
+  --surface-warm: #fefaf6;
   
-  /* Text Colors - Professional Hierarchy */
+  /* Text Colors - Enhanced Contrast */
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
   --text-light: #94a3b8;
   --text-inverse: #ffffff;
   
-  /* Brand Colors - Enterprise Grade */
+  /* Brand Colors - Modern Blue Accent */
   --primary: #2563eb;
   --primary-light: #3b82f6;
   --primary-dark: #1d4ed8;
-  --secondary: #7c3aed;
-  --secondary-light: #8b5cf6;
-  --accent: #0ea5e9;
+  --secondary: #6366f1;
+  --secondary-light: #818cf8;
+  --accent: #06b6d4;
   
-  /* Status Colors - Professional */
+  /* Status Colors - Balanced Palette */
   --success: #059669;
   --success-light: #10b981;
-  --success-bg: #ecfdf5;
+  --success-bg: #f0fdf4;
   --warning: #d97706;
   --warning-light: #f59e0b;
   --warning-bg: #fffbeb;
@@ -38,29 +38,29 @@
   --info-light: #0ea5e9;
   --info-bg: #f0f9ff;
   
-  /* Neutral Palette - Sophisticated Grays */
-  --gray-50: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-300: #cbd5e1;
-  --gray-400: #94a3b8;
-  --gray-500: #64748b;
-  --gray-600: #475569;
-  --gray-700: #334155;
-  --gray-800: #1e293b;
-  --gray-900: #0f172a;
+  /* Neutral Palette - Refined Grays */
+  --gray-50: #fafbfc;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
   
-  /* Shadows - Professional Depth */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.15);
-  --shadow-warm: 0 8px 32px rgba(251, 146, 60, 0.1);
+  /* Shadows - Subtle Depth */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  --shadow-glow: 0 0 20px rgba(37, 99, 235, 0.1);
+  --shadow-warm: 0 8px 24px rgba(251, 146, 60, 0.08);
   
-  /* Spacing & Layout - Professional Design Standards */
+  /* Spacing & Layout - Consistent Scale */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -76,7 +76,7 @@
   --spacing-2xl: 48px;
   --spacing-3xl: 64px;
   
-  /* Animations - Subtle & Professional */
+  /* Animations - Smooth Transitions */
   --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -112,13 +112,13 @@ main {
   padding: var(--spacing-3xl) var(--spacing-xl);
   max-width: 1400px;
   margin: 0 auto;
-  animation: fadeInUp 1s var(--ease-out);
+  animation: fadeInUp 0.8s var(--ease-out);
 }
 
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(40px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -132,17 +132,17 @@ main {
 
 .tab-content.active {
   display: block;
-  animation: fadeInScale 0.6s var(--ease-out);
+  animation: fadeInScale 0.5s var(--ease-out);
 }
 
 @keyframes fadeInScale {
   from {
     opacity: 0;
-    transform: scale(0.98);
+    transform: scale(0.98) translateY(10px);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 }
 
@@ -157,11 +157,44 @@ main {
   font-weight: 700;
   color: var(--text-primary);
   margin-bottom: var(--spacing-lg);
+  letter-spacing: -0.02em;
 }
 
 .page-subtitle {
-  font-size: 1.1rem;
+  font-size: 1.125rem;
   color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Modern Card Styles */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--gray-100);
+  transition: all var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--gray-200);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .page-header h2 {
+    font-size: 1.875rem;
+  }
+  
+  .page-subtitle {
+    font-size: 1rem;
+  }
+  
+  main {
+    padding: var(--spacing-2xl) var(--spacing);
+  }
 }
