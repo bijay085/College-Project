@@ -1,4 +1,3 @@
-// Rule Management System - Updated for Optimized Database Structure
 class RuleManager {
     constructor() {
         this.rules = [];
@@ -10,18 +9,16 @@ class RuleManager {
     }
 
     async init() {
-        // Check authentication
         if (!this.checkAuth()) {
             window.location.href = '../user_auth/pages/login.html';
             return;
         }
 
-        // Setup event listeners
         this.setupEventListeners();
-        
-        // Load rules and system health
         await this.loadRules();
         await this.checkSystemHealth();
+        await this.loadDashboardMetrics();
+        this.startPeriodicRefresh();
     }
 
     checkAuth() {
@@ -29,7 +26,6 @@ class RuleManager {
         const apiKey = sessionStorage.getItem('fraudshield_api_key');
         
         if (!userData || !apiKey) {
-            // Check persistent storage
             const persistentUser = localStorage.getItem('fraudshield_persistent_user');
             const persistentKey = localStorage.getItem('fraudshield_persistent_api_key');
             
@@ -60,7 +56,9 @@ class RuleManager {
         document.getElementById('saveAllBtn').addEventListener('click', () => this.saveAllChanges());
         document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
         
-        // Session monitoring
+        document.getElementById('searchRules')?.addEventListener('input', (e) => this.filterRules(e.target.value));
+        document.getElementById('categoryFilter')?.addEventListener('change', (e) => this.filterByCategory(e.target.value));
+        
         window.addEventListener('storage', (e) => {
             if (e.key === 'fraudshield_user' || e.key === 'fraudshield_api_key') {
                 if (!e.newValue) {
@@ -69,12 +67,42 @@ class RuleManager {
             }
         });
         
-        // Periodic auth check
         setInterval(() => {
             if (!this.checkAuth()) {
                 window.location.href = '../user_auth/pages/login.html';
             }
-        }, 60000); // Check every minute
+        }, 60000);
+    }
+
+    async loadDashboardMetrics() {
+        try {
+            const apiKey = sessionStorage.getItem('fraudshield_api_key');
+            
+            const metricsResponse = await fetch(`${this.apiUrl}/real-stats`, {
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`
+                }
+            });
+
+            if (metricsResponse.ok) {
+                const stats = await metricsResponse.json();
+                this.updateDashboardStats(stats.data);
+            }
+        } catch (error) {
+            console.error('Failed to load dashboard metrics:', error);
+        }
+    }
+
+    updateDashboardStats(stats) {
+        if (stats.detailed_metrics) {
+            document.getElementById('totalTransactions').textContent = stats.detailed_metrics.total_checks || 0;
+            document.getElementById('fraudBlocked').textContent = stats.detailed_metrics.fraud_blocked || 0;
+            
+            const fraudRate = stats.detailed_metrics.total_checks > 0 
+                ? ((stats.detailed_metrics.fraud_blocked / stats.detailed_metrics.total_checks) * 100).toFixed(1)
+                : 0;
+            document.getElementById('fraudRate').textContent = fraudRate + '%';
+        }
     }
 
     async loadRules() {
@@ -98,7 +126,6 @@ class RuleManager {
             this.originalRules = {};
             this.modifiedRules.clear();
             
-            // Store original values
             this.rules.forEach(rule => {
                 this.originalRules[rule._id] = {
                     enabled: rule.enabled,
@@ -110,6 +137,8 @@ class RuleManager {
             this.updateStats();
             this.disableSaveButton();
             
+            await this.trackAdminActivity('rules_loaded', { count: this.rules.length });
+            
         } catch (error) {
             console.error('Failed to load rules:', error);
             this.showToast('Failed to load rules', 'error');
@@ -117,16 +146,55 @@ class RuleManager {
         }
     }
 
-    renderRules() {
+    renderRules(rulesFilter = null) {
         const container = document.getElementById('rulesContainer');
         const categories = this.groupRulesByCategory();
         
         container.innerHTML = '';
 
-        Object.entries(categories).forEach(([category, rules]) => {
+        const rulesToRender = rulesFilter || this.rules;
+        const filteredCategories = {};
+        
+        rulesToRender.forEach(rule => {
+            const category = rule.category || 'uncategorized';
+            if (!filteredCategories[category]) {
+                filteredCategories[category] = [];
+            }
+            filteredCategories[category].push(rule);
+        });
+
+        Object.entries(filteredCategories).forEach(([category, rules]) => {
             const section = this.createCategorySection(category, rules);
             container.appendChild(section);
         });
+
+        if (Object.keys(filteredCategories).length === 0) {
+            container.innerHTML = '<div class="no-results">No rules found matching your criteria.</div>';
+        }
+    }
+
+    filterRules(searchTerm) {
+        if (!searchTerm) {
+            this.renderRules();
+            return;
+        }
+
+        const filtered = this.rules.filter(rule => 
+            rule.rule_key.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            rule.description.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        this.renderRules(filtered);
+    }
+
+    filterByCategory(category) {
+        if (!category || category === 'all') {
+            this.renderRules();
+            return;
+        }
+
+        const filtered = this.rules.filter(rule => rule.category === category);
+        this.renderRules(filtered);
     }
 
     groupRulesByCategory() {
@@ -140,7 +208,6 @@ class RuleManager {
             categories[category].push(rule);
         });
 
-        // Sort categories by priority
         const sortedCategories = {};
         ['critical', 'behavioral', 'medium', 'low', 'experimental'].forEach(cat => {
             if (categories[cat]) {
@@ -148,7 +215,6 @@ class RuleManager {
             }
         });
 
-        // Add any remaining categories
         Object.keys(categories).forEach(cat => {
             if (!sortedCategories[cat]) {
                 sortedCategories[cat] = categories[cat];
@@ -178,11 +244,13 @@ class RuleManager {
             'experimental': 'Experimental (Disabled)'
         };
 
+        const enabledCount = rules.filter(r => r.enabled).length;
+
         section.innerHTML = `
             <div class="category-header">
                 <span class="category-icon">${categoryIcons[category] || '📋'}</span>
                 <h3 class="category-title">${categoryNames[category] || category}</h3>
-                <span class="category-count">${rules.length} rules</span>
+                <span class="category-count">${rules.length} rules (${enabledCount} active)</span>
             </div>
         `;
 
@@ -202,6 +270,11 @@ class RuleManager {
         const ruleDiv = document.createElement('div');
         ruleDiv.className = 'rule-item';
         ruleDiv.id = `rule-${rule._id}`;
+
+        const thresholds = rule.thresholds ? 
+            `<div class="rule-thresholds" title="${JSON.stringify(rule.thresholds, null, 2)}">
+                <i class="fas fa-info-circle"></i>
+            </div>` : '';
 
         ruleDiv.innerHTML = `
             <label class="rule-toggle">
@@ -230,6 +303,8 @@ class RuleManager {
                 </span>
             </div>
             
+            ${thresholds}
+            
             <div class="rule-actions">
                 <button class="btn btn-save-rule" onclick="ruleManager.saveRule('${rule._id}')" style="display: none;">
                     Save
@@ -249,6 +324,7 @@ class RuleManager {
             rule.enabled = !rule.enabled;
             this.markAsModified(ruleId);
             this.updateRuleUI(ruleId);
+            this.updateStats();
         }
     }
 
@@ -282,7 +358,6 @@ class RuleManager {
         const rule = this.rules.find(r => r._id === ruleId);
         
         if (ruleElement && rule) {
-            // Update modified state
             if (this.modifiedRules.has(ruleId)) {
                 ruleElement.classList.add('modified');
                 ruleElement.querySelector('.btn-save-rule').style.display = 'inline-flex';
@@ -293,7 +368,6 @@ class RuleManager {
                 ruleElement.querySelector('.btn-reset-rule').style.display = 'none';
             }
 
-            // Update status
             const statusElement = ruleElement.querySelector('.rule-status span');
             statusElement.className = rule.enabled ? 'status-enabled' : 'status-disabled';
             statusElement.textContent = rule.enabled ? 'Enabled' : 'Disabled';
@@ -322,7 +396,6 @@ class RuleManager {
                 throw new Error('Failed to save rule');
             }
 
-            // Update original values
             this.originalRules[ruleId] = {
                 enabled: rule.enabled,
                 weight: rule.weight
@@ -332,6 +405,12 @@ class RuleManager {
             this.updateRuleUI(ruleId);
             this.updateSaveButton();
             this.showToast(`Rule "${rule.rule_key}" saved successfully`, 'success');
+            
+            await this.trackAdminActivity('rule_saved', { 
+                rule_key: rule.rule_key,
+                enabled: rule.enabled,
+                weight: rule.weight
+            });
             
         } catch (error) {
             console.error('Failed to save rule:', error);
@@ -347,7 +426,6 @@ class RuleManager {
             rule.enabled = original.enabled;
             rule.weight = original.weight;
             
-            // Update UI
             const ruleElement = document.getElementById(`rule-${ruleId}`);
             if (ruleElement) {
                 const checkbox = ruleElement.querySelector('input[type="checkbox"]');
@@ -358,6 +436,7 @@ class RuleManager {
             }
             
             this.markAsModified(ruleId);
+            this.updateStats();
         }
     }
 
@@ -396,7 +475,6 @@ class RuleManager {
                 throw new Error('Failed to save changes');
             }
 
-            // Update original values
             this.modifiedRules.forEach(ruleId => {
                 const rule = this.rules.find(r => r._id === ruleId);
                 if (rule) {
@@ -410,6 +488,8 @@ class RuleManager {
             this.modifiedRules.clear();
             this.renderRules();
             this.showToast(`${updates.length} rules updated successfully`, 'success');
+            
+            await this.trackAdminActivity('rules_batch_saved', { count: updates.length });
             
         } catch (error) {
             console.error('Failed to save changes:', error);
@@ -454,11 +534,9 @@ class RuleManager {
         try {
             const apiKey = sessionStorage.getItem('fraudshield_api_key');
             
-            // Check fraud API health
             const fraudHealthResponse = await fetch(`${this.apiUrl}/health`);
             const fraudHealth = await fraudHealthResponse.json();
             
-            // Check auth API health
             const authHealthResponse = await fetch(`${this.authApiUrl}/health`, {
                 headers: {
                     'Authorization': `Bearer ${apiKey}`
@@ -466,15 +544,52 @@ class RuleManager {
             });
             const authHealth = await authHealthResponse.json();
             
-            // Update UI based on health status
             if (fraudHealth.status === 'online' && authHealth.status === 'healthy') {
                 console.log('✅ All systems operational');
             } else {
                 console.warn('⚠️ System health degraded', { fraudHealth, authHealth });
             }
             
+            this.updateHealthIndicator(fraudHealth, authHealth);
+            
         } catch (error) {
             console.error('Failed to check system health:', error);
+            this.updateHealthIndicator({ status: 'offline' }, { status: 'offline' });
+        }
+    }
+
+    updateHealthIndicator(fraudHealth, authHealth) {
+        const indicator = document.getElementById('healthIndicator');
+        if (!indicator) return;
+
+        const isHealthy = fraudHealth.status === 'online' && authHealth.status === 'healthy';
+        indicator.className = `health-indicator ${isHealthy ? 'healthy' : 'degraded'}`;
+        indicator.title = `Fraud API: ${fraudHealth.status}, Auth API: ${authHealth.status}`;
+    }
+
+    async trackAdminActivity(action, metadata = {}) {
+        try {
+            const apiKey = sessionStorage.getItem('fraudshield_api_key');
+            const user = JSON.parse(sessionStorage.getItem('fraudshield_user'));
+            
+            await fetch(`${this.authApiUrl}/track-activity`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    action: `admin_${action}`,
+                    page: 'rule_management',
+                    metadata: {
+                        ...metadata,
+                        admin_email: user?.user?.email,
+                        timestamp: new Date().toISOString()
+                    }
+                })
+            });
+        } catch (error) {
+            console.error('Failed to track admin activity:', error);
         }
     }
 
@@ -488,8 +603,14 @@ class RuleManager {
         }, 3000);
     }
 
+    startPeriodicRefresh() {
+        setInterval(() => {
+            this.checkSystemHealth();
+            this.loadDashboardMetrics();
+        }, 60000);
+    }
+
     logout() {
-        // Clear session
         sessionStorage.clear();
         localStorage.removeItem('fraudshield_persistent_user');
         localStorage.removeItem('fraudshield_persistent_api_key');
@@ -501,7 +622,6 @@ class RuleManager {
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.ruleManager = new RuleManager();
 });
