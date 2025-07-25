@@ -1,4 +1,239 @@
-// Enhanced User Management with Optimized Database Integration
+class ApiService {
+    constructor(baseUrl, headers) {
+        this.baseUrl = baseUrl;
+        this.headers = headers;
+    }
+
+    async request(endpoint, options = {}) {
+        const response = await fetch(`${this.baseUrl}${endpoint}`, {
+            ...options,
+            headers: { ...this.headers(), ...options.headers }
+        });
+        
+        if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: `HTTP ${response.status}` }));
+            throw new Error(error.error || error.message || `HTTP ${response.status}`);
+        }
+        
+        return response.json();
+    }
+
+    get(endpoint, params) {
+        const url = params ? `${endpoint}?${new URLSearchParams(params)}` : endpoint;
+        return this.request(url);
+    }
+
+    post(endpoint, data) {
+        return this.request(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    put(endpoint, data) {
+        return this.request(endpoint, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
+    }
+
+    delete(endpoint) {
+        return this.request(endpoint, { method: 'DELETE' });
+    }
+}
+
+class AuthManager {
+    static keys = {
+        user: 'fraudshield_user',
+        apiKey: 'fraudshield_api_key',
+        persistentUser: 'fraudshield_persistent_user',
+        persistentKey: 'fraudshield_persistent_api_key'
+    };
+
+    static getAuth() {
+        let user = sessionStorage.getItem(this.keys.user);
+        let apiKey = sessionStorage.getItem(this.keys.apiKey);
+        
+        if (!user || !apiKey) {
+            user = localStorage.getItem(this.keys.persistentUser);
+            apiKey = localStorage.getItem(this.keys.persistentKey);
+            
+            if (user && apiKey) {
+                sessionStorage.setItem(this.keys.user, user);
+                sessionStorage.setItem(this.keys.apiKey, apiKey);
+            }
+        }
+        
+        return { user: user ? JSON.parse(user) : null, apiKey };
+    }
+
+    static requireAdmin() {
+        const { user, apiKey } = this.getAuth();
+        
+        if (!user || !apiKey) {
+            window.location.href = `/user_auth/pages/login.html?redirect=${encodeURIComponent(window.location.pathname)}`;
+            return null;
+        }
+        
+        if (user.user.role !== 'admin') {
+            alert('Admin access required');
+            window.location.href = '/index.html';
+            return null;
+        }
+        
+        return { user: user.user, apiKey };
+    }
+}
+
+class UIRenderer {
+    static escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    static formatDate(dateString) {
+        if (!dateString) return 'Never';
+        
+        const date = new Date(dateString);
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return 'Today';
+        if (diffDays === 1) return 'Yesterday';
+        if (diffDays <= 7) return `${diffDays} days ago`;
+        
+        return date.toLocaleDateString();
+    }
+
+    static getUserStatus(user) {
+        if (user.locked_until && new Date(user.locked_until) > new Date()) return 'locked';
+        if (!user.last_login) return 'pending';
+        
+        const lastLogin = new Date(user.last_login);
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        
+        return lastLogin < thirtyDaysAgo ? 'inactive' : 'active';
+    }
+
+    static getStatusText(status) {
+        const statusMap = { active: 'Active', inactive: 'Inactive', pending: 'Pending', locked: 'Locked' };
+        return statusMap[status] || status.charAt(0).toUpperCase() + status.slice(1);
+    }
+
+    static userRow(user, management) {
+        const status = this.getUserStatus(user);
+        
+        return `
+            <tr data-user-id="${user.id}">
+                <td>
+                    <div class="user-info">
+                        <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                        <div class="user-details">
+                            <h4>${this.escapeHtml(user.name)}</h4>
+                            <p>ID: ${user.id}</p>
+                        </div>
+                    </div>
+                </td>
+                <td>${this.escapeHtml(user.email)}</td>
+                <td><span class="role-badge role-${user.role}">${user.role === 'admin' ? 'Administrator' : 'User'}</span></td>
+                <td>${this.escapeHtml(user.company || '-')}</td>
+                <td>${this.formatDate(user.last_login)}</td>
+                <td><span class="status-badge status-${status}"><i class="fas fa-circle"></i> ${this.getStatusText(status)}</span></td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="btn-icon btn-edit" data-user-id="${user.id}" title="Edit User"><i class="fas fa-edit"></i></button>
+                        <button class="btn-icon btn-view" data-user-id="${user.id}" title="View Details"><i class="fas fa-eye"></i></button>
+                        <button class="btn-icon danger btn-delete" data-user-id="${user.id}" title="Delete User"><i class="fas fa-trash"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    static userDetailsModal(user, management) {
+        const status = this.getUserStatus(user);
+        
+        return `
+            <div class="modal-overlay" id="detailsModal">
+                <div class="modal user-details-modal">
+                    <div class="modal-header">
+                        <div class="user-header-info">
+                            <div class="user-avatar-large">${user.name.charAt(0).toUpperCase()}</div>
+                            <div class="user-title-info">
+                                <h2>${this.escapeHtml(user.name)}</h2>
+                                <p class="user-email">${this.escapeHtml(user.email)}</p>
+                                <span class="role-badge role-${user.role}">${user.role === 'admin' ? 'Administrator' : 'User'}</span>
+                            </div>
+                        </div>
+                        <button class="close-btn" onclick="userManagement.closeDetailsModal()"><i class="fas fa-times"></i></button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div class="details-grid">
+                            <div class="detail-section">
+                                <h3><i class="fas fa-user"></i> Account Information</h3>
+                                ${this.detailRow('User ID', user.id)}
+                                ${this.detailRow('Company', this.escapeHtml(user.company || 'Not specified'))}
+                                ${this.detailRow('Created', user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown')}
+                                ${this.detailRow('Last Login', this.formatDate(user.last_login))}
+                                ${this.detailRow('Status', `<span class="status-badge status-${status}">${this.getStatusText(status)}</span>`)}
+                            </div>
+                            
+                            <div class="detail-section">
+                                <h3><i class="fas fa-shield-alt"></i> Security Information</h3>
+                                ${this.detailRow('Email Verified', `<span class="${user.is_verified ? 'text-success' : ''}">${user.is_verified ? 'Yes' : 'No'}</span>`)}
+                                ${this.detailRow('Login Attempts', user.login_attempts || 0)}
+                                ${this.detailRow('Security Score', user.security_score ? `${(user.security_score * 100).toFixed(0)}%` : 'N/A')}
+                                ${this.detailRow('Last IP', `<span class="mono">${user.last_ip || 'Unknown'}</span>`)}
+                            </div>
+                            
+                            <div class="detail-section full-width">
+                                <h3><i class="fas fa-key"></i> API Access</h3>
+                                <div class="api-key-container">
+                                    <label class="detail-label">API Key</label>
+                                    <div class="api-key-display">${user.api_key ? user.api_key.substring(0, 20) + '...' : 'No API key'}</div>
+                                    ${user.api_key ? `<button class="copy-api-btn" onclick="userManagement.copyUserApiKey('${user.api_key}')">Copy</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" onclick="userManagement.closeDetailsModal()"><i class="fas fa-times"></i> Close</button>
+                        <button class="btn btn-primary" onclick="userManagement.editUser('${user.id}'); userManagement.closeDetailsModal();"><i class="fas fa-edit"></i> Edit User</button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    static detailRow(label, value) {
+        return `<div class="detail-row"><span class="detail-label">${label}</span><span class="detail-value">${value}</span></div>`;
+    }
+}
+
+class ToastManager {
+    static show(message, type = 'info') {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        
+        const icons = { success: 'check-circle', error: 'exclamation-circle', info: 'info-circle' };
+        toast.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-${icons[type] || icons.info}"></i>
+                <span>${UIRenderer.escapeHtml(message)}</span>
+            </div>
+        `;
+        
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 5000);
+    }
+}
+
 class UserManagement {
     constructor() {
         this.API_BASE_URL = 'http://127.0.0.1:5001/auth';
@@ -7,136 +242,77 @@ class UserManagement {
         this.filteredUsers = [];
         this.currentUser = null;
         this.currentEditUserId = null;
-        this.pagination = {
-            page: 1,
-            limit: 50,
-            total: 0,
-            pages: 0
-        };
+        this.pagination = { page: 1, limit: 50, total: 0, pages: 0 };
         
         this.init();
     }
 
     init() {
-        this.checkAuthAndInit();
-    }
-
-    checkAuthAndInit() {
-        // Check if user is authenticated and is admin
-        const userData = sessionStorage.getItem('fraudshield_user');
-        const apiKey = sessionStorage.getItem('fraudshield_api_key');
+        const auth = AuthManager.requireAdmin();
+        if (!auth) return;
         
-        if (!userData || !apiKey) {
-            // Check persistent storage
-            const persistentUser = localStorage.getItem('fraudshield_persistent_user');
-            const persistentKey = localStorage.getItem('fraudshield_persistent_api_key');
-            
-            if (persistentUser && persistentKey) {
-                sessionStorage.setItem('fraudshield_user', persistentUser);
-                sessionStorage.setItem('fraudshield_api_key', persistentKey);
-                return this.checkAuthAndInit();
-            }
-            
-            console.error('❌ No authentication found');
-            window.location.href = '/user_auth/pages/login.html?redirect=' + encodeURIComponent(window.location.pathname);
-            return;
-        }
-
-        try {
-            const user = JSON.parse(userData);
-            if (user.user.role !== 'admin') {
-                console.error('❌ Admin access required');
-                alert('Admin access required for user management');
-                window.location.href = '/index.html';
-                return;
-            }
-
-            this.currentApiKey = apiKey;
-            this.currentUser = user.user;
-            this.setupEventListeners();
-            this.loadUsers();
-            this.loadStats();
-            this.startPeriodicRefresh();
-            
-            console.log('✅ User Management initialized for admin:', user.user.email);
-        } catch (error) {
-            console.error('❌ Invalid user data:', error);
-            window.location.href = '/user_auth/pages/login.html';
-        }
-    }
-
-    getAuthHeaders() {
-        return {
+        this.currentApiKey = auth.apiKey;
+        this.currentUser = auth.user;
+        
+        this.api = new ApiService(this.API_BASE_URL, () => ({
             'Authorization': `Bearer ${this.currentApiKey}`,
             'Content-Type': 'application/json'
-        };
+        }));
+        
+        this.setupEventListeners();
+        this.loadUsers();
+        this.loadStats();
+        this.startPeriodicRefresh();
     }
 
     setupEventListeners() {
-        // Search
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            this.filterUsers();
-        });
+        const els = {
+            searchInput: document.getElementById('searchInput'),
+            roleFilter: document.getElementById('roleFilter'),
+            refreshBtn: document.getElementById('refreshBtn'),
+            createUserBtn: document.getElementById('createUserBtn'),
+            closeModalBtn: document.getElementById('closeModalBtn'),
+            userModal: document.getElementById('userModal'),
+            userForm: document.getElementById('userForm'),
+            deleteUserBtn: document.getElementById('deleteUserBtn'),
+            cancelBtn: document.getElementById('cancelBtn'),
+            regenerateApiBtn: document.getElementById('regenerateApiBtn'),
+            copyApiBtn: document.getElementById('copyApiBtn'),
+            usersTableBody: document.getElementById('usersTableBody')
+        };
 
-        // Filter by role
-        document.getElementById('roleFilter').addEventListener('change', () => {
-            this.filterUsers();
-        });
+        els.searchInput?.addEventListener('input', () => this.filterUsers());
+        els.roleFilter?.addEventListener('change', () => this.filterUsers());
+        els.refreshBtn?.addEventListener('click', () => { this.loadUsers(); this.loadStats(); });
+        els.createUserBtn?.addEventListener('click', () => this.openUserModal());
+        els.closeModalBtn?.addEventListener('click', () => this.closeModal());
+        els.userModal?.addEventListener('click', (e) => { if (e.target.id === 'userModal') this.closeModal(); });
+        els.userForm?.addEventListener('submit', (e) => { e.preventDefault(); this.saveUser(); });
+        els.deleteUserBtn?.addEventListener('click', () => this.deleteUser());
+        els.cancelBtn?.addEventListener('click', () => this.closeModal());
+        els.regenerateApiBtn?.addEventListener('click', () => this.regenerateApiKey());
+        els.copyApiBtn?.addEventListener('click', () => this.copyApiKey());
 
-        // Refresh button
-        document.getElementById('refreshBtn').addEventListener('click', () => {
-            this.loadUsers();
-            this.loadStats();
-        });
+        // Event delegation for table action buttons
+        els.usersTableBody?.addEventListener('click', (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
 
-        // Create user button
-        document.getElementById('createUserBtn').addEventListener('click', () => {
-            this.openUserModal();
-        });
+            const userId = btn.dataset.userId;
+            if (!userId) return;
 
-        // Modal close
-        document.getElementById('closeModalBtn').addEventListener('click', () => {
-            this.closeModal();
-        });
-
-        // Modal overlay click
-        document.getElementById('userModal').addEventListener('click', (e) => {
-            if (e.target.id === 'userModal') {
-                this.closeModal();
+            if (btn.classList.contains('btn-edit')) {
+                this.editUser(userId);
+            } else if (btn.classList.contains('btn-view')) {
+                this.viewUserDetails(userId);
+            } else if (btn.classList.contains('btn-delete')) {
+                this.confirmDeleteUser(userId);
             }
         });
 
-        // User form submit
-        document.getElementById('userForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.saveUser();
-        });
-
-        // Delete user
-        document.getElementById('deleteUserBtn').addEventListener('click', () => {
-            this.deleteUser();
-        });
-
-        // Cancel button
-        document.getElementById('cancelBtn').addEventListener('click', () => {
-            this.closeModal();
-        });
-
-        // API key actions
-        document.getElementById('regenerateApiBtn').addEventListener('click', () => {
-            this.regenerateApiKey();
-        });
-
-        document.getElementById('copyApiBtn').addEventListener('click', () => {
-            this.copyApiKey();
-        });
-
-        // Session monitoring
         window.addEventListener('storage', (e) => {
-            if (e.key === 'fraudshield_user' || e.key === 'fraudshield_api_key') {
-                if (!e.newValue) {
-                    window.location.href = '/user_auth/pages/login.html';
-                }
+            if ((e.key === AuthManager.keys.user || e.key === AuthManager.keys.apiKey) && !e.newValue) {
+                window.location.href = '/user_auth/pages/login.html';
             }
         });
     }
@@ -145,50 +321,29 @@ class UserManagement {
         try {
             this.showLoading(true);
             
+            const params = {
+                page: this.pagination.page.toString(),
+                limit: this.pagination.limit.toString()
+            };
+            
             const searchTerm = document.getElementById('searchInput').value.trim();
             const roleFilter = document.getElementById('roleFilter').value;
             
-            // Build query parameters
-            const params = new URLSearchParams({
-                page: this.pagination.page.toString(),
-                limit: this.pagination.limit.toString()
-            });
+            if (searchTerm) params.search = searchTerm;
+            if (roleFilter) params.role = roleFilter;
             
-            if (searchTerm) {
-                params.append('search', searchTerm);
-            }
-            
-            if (roleFilter) {
-                params.append('role', roleFilter);
-            }
-            
-            console.log('📡 Loading users from database...');
-            
-            const response = await fetch(`${this.API_BASE_URL}/users?${params}`, {
-                method: 'GET',
-                headers: this.getAuthHeaders()
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const result = await response.json();
+            const result = await this.api.get('/users', params);
             
             if (result.success) {
                 this.users = result.data.users || [];
                 this.pagination = result.data.pagination || this.pagination;
                 this.filteredUsers = [...this.users];
-                
-                console.log(`✅ Loaded ${this.users.length} users from database`);
                 this.renderUsers();
             } else {
                 throw new Error(result.error || 'Failed to load users');
             }
-            
         } catch (error) {
-            console.error('❌ Failed to load users:', error);
-            this.showToast('Failed to load users: ' + error.message, 'error');
+            ToastManager.show(`Failed to load users: ${error.message}`, 'error');
             this.users = [];
             this.filteredUsers = [];
             this.renderUsers();
@@ -199,164 +354,92 @@ class UserManagement {
 
     async loadStats() {
         try {
-            console.log('📊 Loading user statistics...');
-            
-            const response = await fetch(`${this.API_BASE_URL}/admin/stats`, {
-                method: 'GET',
-                headers: this.getAuthHeaders()
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const result = await response.json();
+            const result = await this.api.get('/admin/stats');
             
             if (result.success) {
                 const stats = result.data;
-                
-                // Update stat displays
                 document.getElementById('totalUsers').textContent = stats.total_users || 0;
                 document.getElementById('activeUsers').textContent = stats.active_today || 0;
                 document.getElementById('adminUsers').textContent = stats.admin_users || 0;
                 document.getElementById('newUsers').textContent = stats.new_this_week || 0;
                 
-                console.log('✅ Statistics loaded:', stats);
+                console.log('📊 Stats loaded:', {
+                    total_users: stats.total_users,
+                    active_today: stats.active_today,
+                    admin_users: stats.admin_users,
+                    new_this_week: stats.new_this_week,
+                    raw_response: stats
+                });
             } else {
                 throw new Error(result.error || 'Failed to load stats');
             }
-            
         } catch (error) {
-            console.error('❌ Failed to load stats:', error);
-            // Set fallback values
+            console.error('❌ Stats loading error:', error);
+            
+            // Calculate stats from loaded users as fallback
+            const now = new Date();
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            
+            const activeToday = this.users.filter(u => {
+                if (!u.last_login) return false;
+                const lastLogin = new Date(u.last_login);
+                return lastLogin >= today;
+            }).length;
+            
+            const newThisWeek = this.users.filter(u => {
+                if (!u.created_at) return false;
+                const created = new Date(u.created_at);
+                return created >= weekAgo;
+            }).length;
+            
             document.getElementById('totalUsers').textContent = this.users.length;
-            document.getElementById('activeUsers').textContent = '0';
+            document.getElementById('activeUsers').textContent = activeToday;
             document.getElementById('adminUsers').textContent = this.users.filter(u => u.role === 'admin').length;
-            document.getElementById('newUsers').textContent = '0';
+            document.getElementById('newUsers').textContent = newThisWeek;
+            
+            console.log('📊 Calculated stats from users:', {
+                total: this.users.length,
+                activeToday,
+                adminCount: this.users.filter(u => u.role === 'admin').length,
+                newThisWeek,
+                today: today.toISOString(),
+                weekAgo: weekAgo.toISOString()
+            });
         }
     }
 
     filterUsers() {
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const roleFilter = document.getElementById('roleFilter').value;
-
+        
         this.filteredUsers = this.users.filter(user => {
             const matchesSearch = !searchTerm || 
                 user.name.toLowerCase().includes(searchTerm) ||
                 user.email.toLowerCase().includes(searchTerm) ||
                 (user.company && user.company.toLowerCase().includes(searchTerm));
-
+            
             const matchesRole = !roleFilter || user.role === roleFilter;
-
+            
             return matchesSearch && matchesRole;
         });
-
+        
         this.renderUsers();
     }
 
     renderUsers() {
         const tbody = document.getElementById('usersTableBody');
         const emptyState = document.getElementById('emptyState');
-
+        
         if (this.filteredUsers.length === 0) {
             tbody.innerHTML = '';
             emptyState.classList.remove('hidden');
             return;
         }
-
+        
         emptyState.classList.add('hidden');
-
-        tbody.innerHTML = this.filteredUsers.map(user => {
-            const status = this.getUserStatus(user);
-            
-            return `
-                <tr>
-                    <td>
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                ${user.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="user-details">
-                                <h4>${this.escapeHtml(user.name)}</h4>
-                                <p>ID: ${user.id}</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td>${this.escapeHtml(user.email)}</td>
-                    <td>
-                        <span class="role-badge role-${user.role}">
-                            ${user.role === 'admin' ? 'Administrator' : 'User'}
-                        </span>
-                    </td>
-                    <td>${this.escapeHtml(user.company || '-')}</td>
-                    <td>${this.formatDate(user.last_login)}</td>
-                    <td>
-                        <span class="status-badge status-${status}">
-                            <i class="fas fa-circle"></i>
-                            ${this.getStatusText(status)}
-                        </span>
-                    </td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn-icon" onclick="userManagement.editUser('${user.id}')" title="Edit User">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button class="btn-icon" onclick="userManagement.viewUserDetails('${user.id}')" title="View Details">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn-icon danger" onclick="userManagement.confirmDeleteUser('${user.id}')" title="Delete User">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    getUserStatus(user) {
-        if (user.locked_until && new Date(user.locked_until) > new Date()) {
-            return 'locked';
-        }
-        
-        if (!user.last_login) {
-            return 'pending';
-        }
-        
-        const lastLogin = new Date(user.last_login);
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-        
-        if (lastLogin < thirtyDaysAgo) {
-            return 'inactive';
-        }
-        
-        return 'active';
-    }
-
-    getStatusText(status) {
-        const statusMap = {
-            'active': 'Active',
-            'inactive': 'Inactive',
-            'pending': 'Pending',
-            'locked': 'Locked'
-        };
-        return statusMap[status] || status.charAt(0).toUpperCase() + status.slice(1);
-    }
-
-    formatDate(dateString) {
-        if (!dateString) return 'Never';
-        
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        if (diffDays === 0) return 'Today';
-        if (diffDays === 1) return 'Yesterday';
-        if (diffDays <= 7) return `${diffDays} days ago`;
-        
-        return date.toLocaleDateString();
+        tbody.innerHTML = this.filteredUsers.map(user => UIRenderer.userRow(user, this)).join('');
     }
 
     openUserModal(userId = null) {
@@ -366,7 +449,7 @@ class UserManagement {
         const modal = document.getElementById('userModal');
         const title = document.getElementById('modalTitle');
         const deleteBtn = document.getElementById('deleteUserBtn');
-
+        
         if (user) {
             title.innerHTML = '<i class="fas fa-user-edit"></i> Edit User';
             this.populateForm(user);
@@ -376,7 +459,7 @@ class UserManagement {
             this.clearForm();
             deleteBtn.style.display = 'none';
         }
-
+        
         modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
@@ -412,69 +495,44 @@ class UserManagement {
                 role: document.getElementById('userRole').value,
                 locked: document.getElementById('accountLocked').checked
             };
-
+            
             const password = document.getElementById('newPassword').value.trim();
-            if (password) {
-                formData.password = password;
-            }
-
-            // Validation
-            if (!formData.name || formData.name.length < 2) {
-                throw new Error('Name must be at least 2 characters');
-            }
-
-            if (!formData.email || !this.isValidEmail(formData.email)) {
-                throw new Error('Valid email address is required');
-            }
-
-            if (!this.currentEditUserId && !password) {
-                throw new Error('Password is required for new users');
-            }
-
-            if (password && password.length < 8) {
-                throw new Error('Password must be at least 8 characters');
-            }
-
-            let response;
-            let successMessage;
-
-            if (this.currentEditUserId) {
-                // Update existing user
-                response = await fetch(`${this.API_BASE_URL}/users/${this.currentEditUserId}`, {
-                    method: 'PUT',
-                    headers: this.getAuthHeaders(),
-                    body: JSON.stringify(formData)
-                });
-                successMessage = 'User updated successfully';
-            } else {
-                // Create new user
-                response = await fetch(`${this.API_BASE_URL}/users`, {
-                    method: 'POST',
-                    headers: this.getAuthHeaders(),
-                    body: JSON.stringify(formData)
-                });
-                successMessage = 'User created successfully';
-            }
-
-            if (!response.ok) {
-                const errorResult = await response.json();
-                throw new Error(errorResult.error || `HTTP ${response.status}`);
-            }
-
-            const result = await response.json();
+            if (password) formData.password = password;
+            
+            this.validateUserData(formData, password);
+            
+            const result = this.currentEditUserId
+                ? await this.api.put(`/users/${this.currentEditUserId}`, formData)
+                : await this.api.post('/users', formData);
             
             if (result.success) {
-                this.showToast(successMessage, 'success');
+                ToastManager.show(`User ${this.currentEditUserId ? 'updated' : 'created'} successfully`, 'success');
                 this.closeModal();
                 this.loadUsers();
                 this.loadStats();
             } else {
                 throw new Error(result.error || 'Operation failed');
             }
-
         } catch (error) {
-            console.error('❌ Failed to save user:', error);
-            this.showToast('Failed to save user: ' + error.message, 'error');
+            ToastManager.show(`Failed to save user: ${error.message}`, 'error');
+        }
+    }
+
+    validateUserData(formData, password) {
+        if (!formData.name || formData.name.length < 2) {
+            throw new Error('Name must be at least 2 characters');
+        }
+        
+        if (!formData.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            throw new Error('Valid email address is required');
+        }
+        
+        if (!this.currentEditUserId && !password) {
+            throw new Error('Password is required for new users');
+        }
+        
+        if (password && password.length < 8) {
+            throw new Error('Password must be at least 8 characters');
         }
     }
 
@@ -482,127 +540,52 @@ class UserManagement {
         this.openUserModal(userId);
     }
 
-    async viewUserDetails(userId) {
+    viewUserDetails(userId) {
         const user = this.users.find(u => u.id === userId);
         if (!user) return;
-
-        // Create and show detailed modal
-        const modalHtml = `
-            <div class="modal-overlay" id="detailsModal">
-                <div class="modal user-details-modal">
-                    <div class="modal-header">
-                        <div class="user-header-info">
-                            <div class="user-avatar-large">
-                                ${user.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div class="user-title-info">
-                                <h2>${this.escapeHtml(user.name)}</h2>
-                                <p class="user-email">${this.escapeHtml(user.email)}</p>
-                                <span class="role-badge role-${user.role}">
-                                    ${user.role === 'admin' ? 'Administrator' : 'User'}
-                                </span>
-                            </div>
-                        </div>
-                        <button class="close-btn" onclick="userManagement.closeDetailsModal()">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                    
-                    <div class="modal-body">
-                        <div class="details-grid">
-                            <div class="detail-section">
-                                <h3><i class="fas fa-user"></i> Account Information</h3>
-                                <div class="detail-row">
-                                    <span class="detail-label">User ID</span>
-                                    <span class="detail-value">${user.id}</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Company</span>
-                                    <span class="detail-value">${this.escapeHtml(user.company || 'Not specified')}</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Created</span>
-                                    <span class="detail-value">${user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Last Login</span>
-                                    <span class="detail-value">${this.formatDate(user.last_login)}</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Status</span>
-                                    <span class="detail-value">
-                                        <span class="status-badge status-${this.getUserStatus(user)}">
-                                            ${this.getStatusText(this.getUserStatus(user))}
-                                        </span>
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-section">
-                                <h3><i class="fas fa-shield-alt"></i> Security Information</h3>
-                                <div class="detail-row">
-                                    <span class="detail-label">Email Verified</span>
-                                    <span class="detail-value ${user.is_verified ? 'text-success' : ''}">${user.is_verified ? 'Yes' : 'No'}</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Login Attempts</span>
-                                    <span class="detail-value">${user.login_attempts || 0}</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Security Score</span>
-                                    <span class="detail-value">${user.security_score ? (user.security_score * 100).toFixed(0) + '%' : 'N/A'}</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Last IP</span>
-                                    <span class="detail-value mono">${user.last_ip || 'Unknown'}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="detail-section full-width">
-                                <h3><i class="fas fa-key"></i> API Access</h3>
-                                <div class="api-key-container">
-                                    <label class="detail-label">API Key</label>
-                                    <div class="api-key-display">${user.api_key ? user.api_key.substring(0, 20) + '...' : 'No API key'}</div>
-                                    ${user.api_key ? '<button class="copy-api-btn" onclick="userManagement.copyUserApiKey(\'' + user.api_key + '\')">Copy</button>' : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" onclick="userManagement.closeDetailsModal()">
-                            <i class="fas fa-times"></i> Close
-                        </button>
-                        <button class="btn btn-primary" onclick="userManagement.editUser('${user.id}'); userManagement.closeDetailsModal();">
-                            <i class="fas fa-edit"></i> Edit User
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Add modal to body
+        
         const modalDiv = document.createElement('div');
-        modalDiv.innerHTML = modalHtml;
-        document.body.appendChild(modalDiv.firstElementChild);
+        modalDiv.innerHTML = UIRenderer.userDetailsModal(user, this);
+        const modal = modalDiv.firstElementChild;
+        document.body.appendChild(modal);
         document.body.style.overflow = 'hidden';
+        
+        // Add event listeners for details modal
+        modal.addEventListener('click', (e) => {
+            if (e.target.classList.contains('close-details-modal') || e.target.closest('.close-details-modal')) {
+                this.closeDetailsModal();
+            }
+            
+            if (e.target.classList.contains('edit-from-details')) {
+                const userId = e.target.dataset.userId;
+                this.closeDetailsModal();
+                this.editUser(userId);
+            }
+            
+            if (e.target.classList.contains('copy-user-api')) {
+                const apiKey = e.target.dataset.apiKey;
+                this.copyUserApiKey(apiKey);
+            }
+            
+            if (e.target.id === 'detailsModal') {
+                this.closeDetailsModal();
+            }
+        });
     }
 
     closeDetailsModal() {
-        const modal = document.getElementById('detailsModal');
-        if (modal) {
-            modal.remove();
-            document.body.style.overflow = '';
-        }
+        document.getElementById('detailsModal')?.remove();
+        document.body.style.overflow = '';
     }
 
     async copyUserApiKey(apiKey) {
+        if (!apiKey) return;
+        
         try {
             await navigator.clipboard.writeText(apiKey);
-            this.showToast('API key copied to clipboard', 'success');
+            ToastManager.show('API key copied to clipboard', 'success');
         } catch (error) {
-            console.error('❌ Failed to copy API key:', error);
-            this.showToast('Failed to copy API key', 'error');
+            ToastManager.show('Failed to copy API key', 'error');
         }
     }
 
@@ -625,65 +608,36 @@ class UserManagement {
 
     async deleteUserById(userId) {
         try {
-            console.log('🗑️ Deleting user:', userId);
-            
-            const response = await fetch(`${this.API_BASE_URL}/users/${userId}`, {
-                method: 'DELETE',
-                headers: this.getAuthHeaders()
-            });
-
-            if (!response.ok) {
-                const errorResult = await response.json();
-                throw new Error(errorResult.error || `HTTP ${response.status}`);
-            }
-
-            const result = await response.json();
+            const result = await this.api.delete(`/users/${userId}`);
             
             if (result.success) {
-                this.showToast('User deleted successfully', 'success');
+                ToastManager.show('User deleted successfully', 'success');
                 this.loadUsers();
                 this.loadStats();
             } else {
                 throw new Error(result.error || 'Delete failed');
             }
-
         } catch (error) {
-            console.error('❌ Failed to delete user:', error);
-            this.showToast('Failed to delete user: ' + error.message, 'error');
+            ToastManager.show(`Failed to delete user: ${error.message}`, 'error');
         }
     }
 
     async regenerateApiKey() {
         if (this.currentEditUserId && confirm('Are you sure you want to regenerate the API key? The old key will become invalid.')) {
             try {
-                const response = await fetch(`${this.API_BASE_URL}/users/${this.currentEditUserId}/regenerate-api-key`, {
-                    method: 'POST',
-                    headers: this.getAuthHeaders()
-                });
-
-                if (!response.ok) {
-                    const errorResult = await response.json();
-                    throw new Error(errorResult.error || `HTTP ${response.status}`);
-                }
-
-                const result = await response.json();
+                const result = await this.api.post(`/users/${this.currentEditUserId}/regenerate-api-key`);
                 
                 if (result.success && result.data.api_key) {
                     document.getElementById('apiKey').value = result.data.api_key;
-                    this.showToast('API key regenerated successfully', 'success');
+                    ToastManager.show('API key regenerated successfully', 'success');
                     
-                    // Update local user data
                     const user = this.users.find(u => u.id === this.currentEditUserId);
-                    if (user) {
-                        user.api_key = result.data.api_key;
-                    }
+                    if (user) user.api_key = result.data.api_key;
                 } else {
                     throw new Error(result.error || 'Failed to regenerate API key');
                 }
-
             } catch (error) {
-                console.error('❌ Failed to regenerate API key:', error);
-                this.showToast('Failed to regenerate API key: ' + error.message, 'error');
+                ToastManager.show(`Failed to regenerate API key: ${error.message}`, 'error');
             }
         }
     }
@@ -693,10 +647,9 @@ class UserManagement {
         if (apiKey) {
             try {
                 await navigator.clipboard.writeText(apiKey);
-                this.showToast('API key copied to clipboard', 'success');
+                ToastManager.show('API key copied to clipboard', 'success');
             } catch (error) {
-                console.error('❌ Failed to copy API key:', error);
-                this.showToast('Failed to copy API key', 'error');
+                ToastManager.show('Failed to copy API key', 'error');
             }
         }
     }
@@ -713,58 +666,20 @@ class UserManagement {
         }
     }
 
-    showToast(message, type = 'info') {
-        const container = document.getElementById('toastContainer');
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                <span>${this.escapeHtml(message)}</span>
-            </div>
-        `;
-
-        container.appendChild(toast);
-
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 5000);
-    }
-
-    // Utility methods
-    escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-
     startPeriodicRefresh() {
-        // Refresh stats every 60 seconds
-        setInterval(() => {
-            this.loadStats();
-        }, 60000);
-
+        // Refresh stats every 5 minutes (increased from 60 seconds)
+        setInterval(() => this.loadStats(), 300000);
+        
         // Check auth status every 5 minutes
         setInterval(() => {
-            const userData = sessionStorage.getItem('fraudshield_user');
-            const apiKey = sessionStorage.getItem('fraudshield_api_key');
-            
-            if (!userData || !apiKey) {
+            const auth = AuthManager.getAuth();
+            if (!auth.user || !auth.apiKey) {
                 window.location.href = '/user_auth/pages/login.html';
             }
         }, 300000);
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     window.userManagement = new UserManagement();
 });

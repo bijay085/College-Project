@@ -1,0 +1,402 @@
+[
+  {
+    "email": "john.doe@gmail.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.8",
+    "fingerprint": "fp_clean_001",
+    "price": 49.99,
+    "product": "Premium Subscription",
+    "phone": "+1-555-0123",
+    "billing_country": "US"
+  },
+  {
+    "email": "sarah.smith@outlook.com",
+    "card_number": "5425233430109903",
+    "ip": "192.168.1.100",
+    "fingerprint": "fp_clean_002",
+    "price": 129.99,
+    "product": "Annual License",
+    "phone": "+1-555-0124",
+    "billing_country": "US"
+  },
+  {
+    "email": "testuser123@tempmail.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.9",
+    "fingerprint": "fp_disp_001",
+    "price": 99.99,
+    "product": "Digital Product",
+    "phone": "+1-555-0125",
+    "billing_country": "US"
+  },
+  {
+    "email": "fraudster@10minutemail.com",
+    "card_number": "5425233430109903",
+    "ip": "172.16.0.9",
+    "fingerprint": "fp_disp_002",
+    "price": 199.99,
+    "product": "Electronics",
+    "phone": "+1-555-0126",
+    "billing_country": "US"
+  },
+  {
+    "email": "suspicious@example.com",
+    "card_number": "123456789012345",
+    "ip": "98.137.246.10",
+    "fingerprint": "fp_sus_001",
+    "price": 199.99,
+    "product": "High Value Item",
+    "phone": "+1-555-0127",
+    "billing_country": "US"
+  },
+  {
+    "email": "badactor@gmail.com",
+    "card_number": "411111789012345",
+    "ip": "203.0.113.45",
+    "fingerprint": "fp_sus_002",
+    "price": 599.99,
+    "product": "Luxury Product",
+    "phone": "+1-555-0128",
+    "billing_country": "US"
+  },
+  {
+    "email": "iptest@example.com",
+    "card_number": "4532015112830366",
+    "ip": "203.0.113.45",
+    "fingerprint": "fp_flag_001",
+    "price": 299.99,
+    "product": "Software Bundle",
+    "phone": "+1-555-0129",
+    "billing_country": "US"
+  },
+  {
+    "email": "hacker@protonmail.com",
+    "card_number": "5425233430109903",
+    "ip": "198.51.100.22",
+    "fingerprint": "fp_flag_002",
+    "price": 899.99,
+    "product": "Gaming Console",
+    "phone": "+1-555-0130",
+    "billing_country": "US"
+  },
+  {
+    "email": "fingerprint@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.11",
+    "fingerprint": "fp_abc123",
+    "price": 79.99,
+    "product": "Software License",
+    "phone": "+1-555-0131",
+    "billing_country": "US"
+  },
+  {
+    "email": "reused@yahoo.com",
+    "card_number": "5425233430109903",
+    "ip": "192.168.1.101",
+    "fingerprint": "fp_xyz789",
+    "price": 149.99,
+    "product": "Premium Service",
+    "phone": "+1-555-0132",
+    "billing_country": "US"
+  },
+  {
+    "email": "pricetamper@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.12",
+    "fingerprint": "fp_tamper_001",
+    "price": 0.01,
+    "product": "Expensive Product",
+    "phone": "+1-555-0133",
+    "billing_country": "US"
+  },
+  {
+    "email": "cheat@gmail.com",
+    "card_number": "5425233430109903",
+    "ip": "172.16.0.10",
+    "fingerprint": "fp_tamper_002",
+    "price": 0.99,
+    "product": "Premium Subscription",
+    "phone": "+1-555-0134",
+    "billing_country": "US"
+  },
+  {
+    "email": "fraud999@mailinator.com",
+    "card_number": "999999789012345",
+    "ip": "198.51.100.22",
+    "fingerprint": "fp_xyz789",
+    "price": 0.99,
+    "product": "Multiple Items",
+    "phone": "+1-555-0135",
+    "billing_country": "US"
+  },
+  {
+    "email": "scammer@guerrillamail.com",
+    "card_number": "555555789012345",
+    "ip": "10.0.0.1",
+    "fingerprint": "fp_repeat_777",
+    "price": 9999.99,
+    "product": "Bulk Order",
+    "phone": "+1-555-0136",
+    "billing_country": "US"
+  },
+  {
+    "email": "velocity.test@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.13",
+    "fingerprint": "fp_vel_001",
+    "price": 29.99,
+    "product": "Rapid Purchase 1",
+    "phone": "+1-555-0137",
+    "billing_country": "US"
+  },
+  {
+    "email": "velocity.test@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.13",
+    "fingerprint": "fp_vel_001",
+    "price": 39.99,
+    "product": "Rapid Purchase 2",
+    "phone": "+1-555-0138",
+    "billing_country": "US"
+  },
+  {
+    "email": "velocity.test@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.13",
+    "fingerprint": "fp_vel_001",
+    "price": 49.99,
+    "product": "Rapid Purchase 3",
+    "phone": "+1-555-0139",
+    "billing_country": "US"
+  },
+  {
+    "email": "velocity.test@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.13",
+    "fingerprint": "fp_vel_001",
+    "price": 59.99,
+    "product": "Rapid Purchase 4",
+    "phone": "+1-555-0140",
+    "billing_country": "US"
+  },
+  {
+    "email": "samecard.diff1@example.com",
+    "card_number": "4916338506082832",
+    "ip": "98.137.246.14",
+    "fingerprint": "fp_multi_001",
+    "price": 89.99,
+    "product": "Product A",
+    "phone": "+1-555-0141",
+    "billing_country": "US"
+  },
+  {
+    "email": "samecard.diff2@hotmail.com",
+    "card_number": "4916338506082832",
+    "ip": "98.137.246.15",
+    "fingerprint": "fp_multi_002",
+    "price": 109.99,
+    "product": "Product B",
+    "phone": "+1-555-0142",
+    "billing_country": "US"
+  },
+  {
+    "email": "samecard.diff3@yahoo.com",
+    "card_number": "4916338506082832",
+    "ip": "98.137.246.16",
+    "fingerprint": "fp_multi_003",
+    "price": 129.99,
+    "product": "Product C",
+    "phone": "+1-555-0143",
+    "billing_country": "US"
+  },
+  {
+    "email": "location.hop@example.com",
+    "card_number": "4532015112830366",
+    "ip": "203.0.113.45",
+    "fingerprint": "fp_loc_001",
+    "price": 199.99,
+    "product": "Item 1",
+    "phone": "+1-555-0144",
+    "billing_country": "US"
+  },
+  {
+    "email": "location.hop@example.com",
+    "card_number": "4532015112830366",
+    "ip": "198.51.100.22",
+    "fingerprint": "fp_loc_001",
+    "price": 299.99,
+    "product": "Item 2",
+    "phone": "+44-20-1234",
+    "billing_country": "GB"
+  },
+  {
+    "email": "number123456@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.17",
+    "fingerprint": "fp_num_001",
+    "price": 79.99,
+    "product": "Digital Service",
+    "phone": "+1-555-0145",
+    "billing_country": "US"
+  },
+  {
+    "email": "qwxzbnm@example.com",
+    "card_number": "5425233430109903",
+    "ip": "192.168.1.102",
+    "fingerprint": "fp_rand_001",
+    "price": 149.99,
+    "product": "Random Product",
+    "phone": "+1-555-0146",
+    "billing_country": "US"
+  },
+  {
+    "email": "test+fraud+extra@gmail.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.18",
+    "fingerprint": "fp_plus_001",
+    "price": 199.99,
+    "product": "Plus Address Test",
+    "phone": "+1-555-0147",
+    "billing_country": "US"
+  },
+  {
+    "email": "new2024user@example.com",
+    "card_number": "5425233430109903",
+    "ip": "172.16.0.11",
+    "fingerprint": "fp_new_001",
+    "price": 249.99,
+    "product": "Recent Account",
+    "phone": "+1-555-0148",
+    "billing_country": "US"
+  },
+  {
+    "email": "phonemismatch@example.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.19",
+    "fingerprint": "fp_phone_001",
+    "price": 399.99,
+    "product": "Phone Test",
+    "phone": "+44-20-5678",
+    "billing_country": "US"
+  },
+  {
+    "email": "hackpattern@example.com",
+    "card_number": "123456789012345",
+    "ip": "10.0.0.1",
+    "fingerprint": "fp_abc123",
+    "price": 1.00,
+    "product": "Suspicious Pattern",
+    "phone": "+1-555-0149",
+    "billing_country": "US"
+  },
+  {
+    "email": "clean.user@company.com",
+    "card_number": "4532015112830366",
+    "ip": "98.137.246.20",
+    "fingerprint": "fp_clean_003",
+    "price": 599.99,
+    "product": "Enterprise License",
+    "phone": "+1-555-0150",
+    "billing_country": "US"
+  },
+  {
+    "email": "alice.johnson@email.com",
+    "card_number": "5425233430109903",
+    "ip": "192.168.1.103",
+    "fingerprint": "fp_clean_004",
+    "price": 79.99,
+    "product": "Monthly Subscription",
+    "phone": "+1-555-0151",
+    "billing_country": "US"
+  },
+  {
+    "email": "bintest1@example.com",
+    "card_number": "123456111111111",
+    "ip": "98.137.246.21",
+    "fingerprint": "fp_bin_001",
+    "price": 149.99,
+    "product": "BIN Test 1",
+    "phone": "+1-555-0152",
+    "billing_country": "US"
+  },
+  {
+    "email": "bintest2@example.com",
+    "card_number": "123456222222222",
+    "ip": "98.137.246.22",
+    "fingerprint": "fp_bin_002",
+    "price": 249.99,
+    "product": "BIN Test 2",
+    "phone": "+1-555-0153",
+    "billing_country": "US"
+  },
+  {
+    "email": "bintest3@example.com",
+    "card_number": "123456333333333",
+    "ip": "98.137.246.23",
+    "fingerprint": "fp_bin_003",
+    "price": 349.99,
+    "product": "BIN Test 3",
+    "phone": "+1-555-0154",
+    "billing_country": "US"
+  },
+  {
+    "email": "bintest4@example.com",
+    "card_number": "123456444444444",
+    "ip": "98.137.246.24",
+    "fingerprint": "fp_bin_004",
+    "price": 449.99,
+    "product": "BIN Test 4",
+    "phone": "+1-555-0155",
+    "billing_country": "US"
+  },
+  {
+    "email": "bintest5@example.com",
+    "card_number": "123456555555555",
+    "ip": "98.137.246.25",
+    "fingerprint": "fp_bin_005",
+    "price": 549.99,
+    "product": "BIN Test 5",
+    "phone": "+1-555-0156",
+    "billing_country": "US"
+  },
+  {
+    "email": "rapidchange@example.com",
+    "card_number": "4532015112830366",
+    "ip": "203.0.113.45",
+    "fingerprint": "fp_rapid_001",
+    "price": 99.99,
+    "product": "Location Test 1",
+    "phone": "+1-555-0157",
+    "billing_country": "US"
+  },
+  {
+    "email": "rapidchange@example.com",
+    "card_number": "4532015112830366",
+    "ip": "198.51.100.22",
+    "fingerprint": "fp_rapid_001",
+    "price": 199.99,
+    "product": "Location Test 2",
+    "phone": "+1-555-0158",
+    "billing_country": "US"
+  },
+  {
+    "email": "rapidchange@example.com",
+    "card_number": "4532015112830366",
+    "ip": "10.0.0.1",
+    "fingerprint": "fp_rapid_001",
+    "price": 299.99,
+    "product": "Location Test 3",
+    "phone": "+1-555-0159",
+    "billing_country": "US"
+  },
+  {
+    "email": "normal.buyer@example.com",
+    "card_number": "4916338506082832",
+    "ip": "98.137.246.26",
+    "fingerprint": "fp_clean_005",
+    "price": 34.99,
+    "product": "Standard Product",
+    "phone": "+1-555-0160",
+    "billing_country": "US"
+  }
+]
