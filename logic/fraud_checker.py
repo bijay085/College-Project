@@ -243,32 +243,32 @@ class FraudChecker:
             if not self.advanced_weights:
                 logger.warning("No advanced rules found in DB, using fallback weights")
                 self.advanced_weights = {
-                    'velocity_abuse': 0.3,
-                    'suspicious_patterns': 0.25,
-                    'geo_anomaly': 0.2,
-                    'behavioral_deviation': 0.15,
-                    'network_analysis': 0.1,
-                    'time_pattern_anomaly': 0.1,
-                    'amount_clustering': 0.05,
-                    'phone_mismatch': 0.15,
-                    'email_verification': 0.1,
-                    'phone_verification': 0.1
+                    'velocity_abuse': 0.4,
+                    'suspicious_patterns': 0.35,
+                    'geo_anomaly': 0.35,
+                    'behavioral_deviation': 0.25,
+                    'network_analysis': 0.3,
+                    'time_pattern_anomaly': 0.2,
+                    'amount_clustering': 0.15,
+                    'phone_mismatch': 0.25,
+                    'email_verification': 0.2,
+                    'phone_verification': 0.2
                 }
                 
         except Exception as e:
             logger.error(f"Failed to load rules: {e}")
             self.rules = {}
             self.advanced_weights = {
-                'velocity_abuse': 0.3,
-                'suspicious_patterns': 0.25,
-                'geo_anomaly': 0.2,
-                'behavioral_deviation': 0.15,
-                'network_analysis': 0.1,
-                'time_pattern_anomaly': 0.1,
-                'amount_clustering': 0.05,
-                'phone_mismatch': 0.15,
-                'email_verification': 0.1,
-                'phone_verification': 0.1
+                'velocity_abuse': 0.4,
+                'suspicious_patterns': 0.35,
+                'geo_anomaly': 0.35,
+                'behavioral_deviation': 0.25,
+                'network_analysis': 0.3,
+                'time_pattern_anomaly': 0.2,
+                'amount_clustering': 0.15,
+                'phone_mismatch': 0.25,
+                'email_verification': 0.2,
+                'phone_verification': 0.2
             }
 
     async def _load_transaction_history(self):
@@ -307,6 +307,35 @@ class FraudChecker:
         if not isinstance(weight, (int, float)):
             logger.warning(f"Invalid weight type for rule {rule_key}: {type(weight)}")
             return 0.0
+        
+        # BALANCED: More reasonable fallback weights
+        if weight == 0:
+            fallback_weights = {
+                "disposable_email": 0.25,
+                "suspicious_bin": 0.3,
+                "flagged_ip": 0.25,
+                "reused_fingerprint": 0.2,
+                "tampered_price": 0.35,
+                "blacklisted_pattern": 0.4,
+                "same_card_multiple_emails": 0.3,
+                "card_location_abuse": 0.35,
+                "card_device_abuse": 0.3,
+                "bin_location_abuse": 0.25,
+                "rapid_location_change": 0.4,
+                "velocity_abuse": 0.3,
+                "impossible_travel": 0.3,
+                "suspicious_email_pattern": 0.15,
+                "suspicious_patterns": 0.2,
+                "geo_anomaly": 0.25,
+                "network_analysis": 0.15,
+                "behavioral_deviation": 0.15,
+                "email_verification": 0.1,
+                "phone_verification": 0.1,
+                "phone_mismatch": 0.15,
+                "phone_country_mismatch": 0.15
+            }
+            weight = fallback_weights.get(rule_key, 0.1)
+            logger.warning(f"Using fallback weight for {rule_key}: {weight}")
         
         return float(weight)
 
@@ -559,17 +588,32 @@ class FraudChecker:
         email_verified = tx.get("email_verified", False)
         phone_verified = tx.get("phone_verified", False)
         
-        if not email_verified:
-            score += 0.1
-            reasons.append("email_not_verified")
-        
-        if not phone_verified:
-            score += 0.1
-            reasons.append("phone_not_verified")
+        # Only penalize if BOTH are unverified or if there are other red flags
+        base_violations = len([r for r in ["disposable_email", "suspicious_bin", "flagged_ip", "tampered_price", "reused_fingerprint"] 
+                             if r in str(tx)])
         
         if not email_verified and not phone_verified:
-            score += 0.05
-            reasons.append("no_verification")
+            # Heavy penalty only if other red flags exist
+            if base_violations > 0:
+                score += 0.25
+                reasons.append("no_verification_with_red_flags")
+            else:
+                score += 0.05
+                reasons.append("no_verification")
+        elif not email_verified:
+            if base_violations > 0:
+                score += 0.1
+                reasons.append("email_not_verified")
+            else:
+                score += 0.02
+                reasons.append("email_not_verified_minor")
+        elif not phone_verified:
+            if base_violations > 0:
+                score += 0.1
+                reasons.append("phone_not_verified")
+            else:
+                score += 0.02
+                reasons.append("phone_not_verified_minor")
         
         return score, reasons
 
@@ -580,11 +624,40 @@ class FraudChecker:
             weight = self.advanced_weights.get(algorithm, 0.1)
             total_advanced_score += score * weight
         
-        composite_score = (base_score * 0.6) + (total_advanced_score * 0.4)
+        # Count how many rules were triggered
+        total_rules_triggered = len(advanced_scores) if hasattr(advanced_scores, '__len__') else 0
         
-        normalized_score = 1 / (1 + math.exp(-5 * (composite_score - 0.5)))
+        # BALANCED: More reasonable weighting
+        if base_score >= 0.6:
+            composite_score = base_score * 0.7 + total_advanced_score * 0.3
+        elif base_score >= 0.3:
+            composite_score = base_score * 0.6 + total_advanced_score * 0.4
+        else:
+            composite_score = base_score * 0.5 + total_advanced_score * 0.5
         
-        return min(normalized_score, 1.0)
+        # Moderate amplification based on rule count
+        if total_rules_triggered >= 10:
+            adjusted_score = composite_score * 1.3
+        elif total_rules_triggered >= 7:
+            adjusted_score = composite_score * 1.2
+        elif total_rules_triggered >= 5:
+            adjusted_score = composite_score * 1.15
+        elif total_rules_triggered >= 3:
+            adjusted_score = composite_score * 1.1
+        else:
+            adjusted_score = composite_score * 1.05
+        
+        # Reasonable minimums based on base score
+        if base_score >= 0.8:
+            adjusted_score = max(adjusted_score, 0.7)
+        elif base_score >= 0.6:
+            adjusted_score = max(adjusted_score, 0.5)
+        elif base_score >= 0.4:
+            adjusted_score = max(adjusted_score, 0.35)
+        
+        final_score = min(adjusted_score, 0.99)
+        
+        return round(final_score, 3)
 
     def analyze_transaction(self, tx: dict) -> dict:
         try:
@@ -604,6 +677,8 @@ class FraudChecker:
                 domain = email.split("@")[-1]
                 if domain in self.disposable_domains:
                     weight = self._safe_get_rule_weight("disposable_email")
+                    if weight == 0:  # Fallback if rule not found
+                        weight = 0.5
                     base_score += weight
                     reasons.append("disposable_email")
                     logger.debug(f"Disposable email detected: {domain}")
@@ -613,6 +688,8 @@ class FraudChecker:
                 bin_number = card_number[:6]
                 if bin_number in self.suspicious_bins:
                     weight = self._safe_get_rule_weight("suspicious_bin")
+                    if weight == 0:  # Fallback
+                        weight = 0.6
                     base_score += weight
                     reasons.append("suspicious_bin")
                     logger.debug(f"Suspicious BIN detected: {bin_number}")
@@ -620,6 +697,8 @@ class FraudChecker:
             ip = str(tx.get("ip", "")).strip()
             if ip in self.flagged_ips:
                 weight = self._safe_get_rule_weight("flagged_ip")
+                if weight == 0:  # Fallback
+                    weight = 0.55
                 base_score += weight
                 reasons.append("flagged_ip")
                 logger.debug(f"Flagged IP detected: {ip}")
@@ -627,6 +706,8 @@ class FraudChecker:
             fingerprint = str(tx.get("fingerprint", "")).strip()
             if fingerprint in self.reused_fingerprints:
                 weight = self._safe_get_rule_weight("reused_fingerprint")
+                if weight == 0:  # Fallback
+                    weight = 0.45
                 base_score += weight
                 reasons.append("reused_fingerprint")
                 logger.debug(f"Reused fingerprint detected: {fingerprint}")
@@ -635,11 +716,30 @@ class FraudChecker:
                 price = float(tx.get("price", 0))
                 if price in self.tampered_prices:
                     weight = self._safe_get_rule_weight("tampered_price")
+                    if weight == 0:  # Fallback
+                        weight = 0.7
                     base_score += weight
                     reasons.append("tampered_price")
                     logger.debug(f"Tampered price detected: {price}")
             except (ValueError, TypeError):
                 logger.warning(f"Invalid price value: {tx.get('price')}")
+            
+            # BALANCED: Base score based on severity
+            if len(reasons) >= 5:
+                logger.warning(f"Many base violations ({len(reasons)}). Setting high base score.")
+                base_score = max(base_score, 0.8)
+            elif len(reasons) >= 4:
+                base_score = max(base_score, 0.6)
+            elif len(reasons) >= 3:
+                base_score = max(base_score, 0.45)
+            elif len(reasons) >= 2:
+                base_score = max(base_score, 0.3)
+            elif len(reasons) >= 1:
+                base_score = max(base_score, 0.15)
+            
+            # Don't penalize if NO base violations
+            if len(reasons) == 0:
+                base_score = 0.0
             
             if card_number and len(card_number) >= 6 and email:
                 card_hash = hashlib.sha256(card_number.encode()).hexdigest()
@@ -656,7 +756,7 @@ class FraudChecker:
                 if email_count > 1:
                     weight = self._safe_get_rule_weight("same_card_multiple_emails")
                     if weight == 0:
-                        weight = 0.3 if email_count == 2 else 0.5
+                        weight = 0.5 if email_count == 2 else 0.65
                     base_score += weight
                     reasons.append(f"same_card_multiple_emails_{email_count}")
                     logger.debug(f"Same card used with {email_count} different emails")
@@ -691,7 +791,7 @@ class FraudChecker:
                     blacklist_reason = f"card_used_from_{len(self.card_to_locations[card_hash])}_different_locations"
                     weight = self._safe_get_rule_weight("card_location_abuse")
                     if weight == 0:
-                        weight = 0.4
+                        weight = 0.75
                     base_score += weight
                     reasons.append(blacklist_reason)
 
@@ -700,7 +800,7 @@ class FraudChecker:
                     blacklist_reason = f"card_used_from_{len(self.card_to_devices[card_hash])}_different_devices"
                     weight = self._safe_get_rule_weight("card_device_abuse")
                     if weight == 0:
-                        weight = 0.4
+                        weight = 0.7
                     base_score += weight
                     reasons.append(blacklist_reason)
 
@@ -709,7 +809,7 @@ class FraudChecker:
                     blacklist_reason = f"bin_used_from_{len(self.bin_to_locations[bin_number])}_different_locations"
                     weight = self._safe_get_rule_weight("bin_location_abuse")
                     if weight == 0:
-                        weight = 0.35
+                        weight = 0.6
                     base_score += weight
                     reasons.append(blacklist_reason)
 
@@ -719,12 +819,19 @@ class FraudChecker:
                         blacklist_reason = "rapid_location_change_same_card"
                         weight = self._safe_get_rule_weight("rapid_location_change")
                         if weight == 0:
-                            weight = 0.5
+                            weight = 0.8
                         base_score += weight
                         reasons.append(blacklist_reason)
 
                 if auto_blacklist:
-                    asyncio.create_task(self._auto_blacklist_suspicious_cards(card_hash, bin_number, blacklist_reason))
+                    try:
+                        loop = asyncio.get_event_loop()
+                        if loop.is_running():
+                            loop.create_task(self._auto_blacklist_suspicious_cards(card_hash, bin_number, blacklist_reason))
+                        else:
+                            self._sync_auto_blacklist_suspicious_cards(card_hash, bin_number, blacklist_reason)
+                    except RuntimeError:
+                        self._sync_auto_blacklist_suspicious_cards(card_hash, bin_number, blacklist_reason)
                     self.metrics.increment_metric("auto_blacklisted_cards")
             
             velocity_score, velocity_reasons = self._analyze_velocity_patterns(tx)
@@ -775,10 +882,27 @@ class FraudChecker:
             
             all_reasons = reasons + all_advanced_reasons
             
+            # Recalculate with total rules count
+            total_rules = len(all_reasons)
+            if total_rules >= 5:
+                # Many rules triggered - boost the score significantly
+                rule_penalty = min(0.05 * total_rules, 0.5)
+                composite_score = min(composite_score + rule_penalty, 0.99)
+                
+                # Ensure minimum scores for many violations
+                if total_rules >= 12:
+                    composite_score = max(composite_score, 0.95)
+                elif total_rules >= 10:
+                    composite_score = max(composite_score, 0.9)
+                elif total_rules >= 8:
+                    composite_score = max(composite_score, 0.85)
+                elif total_rules >= 6:
+                    composite_score = max(composite_score, 0.75)
+            
             if composite_score >= 0.7:
                 decision = "fraud"
                 self.metrics.increment_metric("fraud_blocked")
-            elif composite_score >= 0.4:
+            elif composite_score >= 0.35:
                 decision = "suspicious"
                 self.metrics.increment_metric("suspicious_flagged")
             else:
@@ -1028,6 +1152,34 @@ class FraudChecker:
 
         except Exception as e:
             logger.error(f"Failed to auto-blacklist: {e}")
+
+    def _sync_auto_blacklist_suspicious_cards(self, card_hash: str, bin_number: str, reason: str):
+        try:
+            if bin_number and self.mongo.client:
+                fraud_blacklist_entry = {
+                    "type": "suspicious_bin",
+                    "value": bin_number,
+                    "risk_score": 0.9,
+                    "source": "auto_blacklist",
+                    "created_at": datetime.now(),
+                    "metadata": {
+                        "reason": reason,
+                        "card_hash": card_hash[:16] + "...",
+                        "auto_blacklisted": True
+                    }
+                }
+                
+                self.mongo.db.fraud_blacklist.update_one(
+                    {"type": "suspicious_bin", "value": bin_number},
+                    {"$set": fraud_blacklist_entry},
+                    upsert=True
+                )
+                
+                self.suspicious_bins.add(bin_number)
+                logger.info(f"Auto-blacklisted BIN: {bin_number} Reason: {reason}")
+
+        except Exception as e:
+            logger.error(f"Failed to sync auto-blacklist: {e}")
 
     async def refresh_blacklists(self):
         try:
