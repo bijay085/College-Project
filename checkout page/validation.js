@@ -100,7 +100,6 @@ function validateExpiry(input) {
     showError(input, "Expiry must be MM/YY.");
     return false;
   }
-  // Check not expired
   const now = new Date();
   const month = parseInt(match[1], 10);
   const year = 2000 + parseInt(match[2], 10);
@@ -131,6 +130,16 @@ function validateQuantity(input) {
   return true;
 }
 
+// ✅ New checkbox validator
+function validateCheckbox(input, message) {
+  clearError(input);
+  if (!input.checked) {
+    showError(input, message || "This field must be checked.");
+    return false;
+  }
+  return true;
+}
+
 // Attach validation on submit
 document.addEventListener('DOMContentLoaded', function () {
   const form = document.getElementById('checkoutForm');
@@ -156,6 +165,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const expiry = document.getElementById('expiry');
     const cvv = document.getElementById('cvv');
     const quantity = document.getElementById('quantity');
+    const emailVerified = document.getElementById('emailVerified');
+    const phoneVerified = document.getElementById('phoneVerified');
 
     if (!validateName(name)) valid = false;
     if (!validateEmail(email)) valid = false;
@@ -170,9 +181,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!validateCVV(cvv)) valid = false;
     if (!validateQuantity(quantity)) valid = false;
 
+    // ✅ Enforce checkboxes
+    if (!validateCheckbox(emailVerified, "Please verify your email.")) valid = false;
+    if (!validateCheckbox(phoneVerified, "Please verify your phone.")) valid = false;
+
     if (!valid) {
       e.preventDefault();
-      // Do NOT clear any input fields, just prevent submission and show errors
       const firstError = form.querySelector('.error-border');
       if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return false;

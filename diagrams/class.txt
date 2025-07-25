@@ -1,0 +1,292 @@
+classDiagram
+    %% Authentication & User Management Classes
+    class User {
+        -String _id
+        -String name
+        -String email
+        -String company
+        -String password_hash
+        -String api_key
+        -String role
+        -DateTime created_at
+        -DateTime last_login
+        -Boolean is_verified
+        -Integer login_attempts
+        -DateTime locked_until
+        -BehavioralProfile behavioral_profile
+        -Float security_score
+        +validateCredentials(password: String): Boolean
+        +lockAccount(duration: Integer): void
+        +unlockAccount(): void
+        +updateLastLogin(): void
+        +generateApiKey(): String
+        +updateSecurityScore(score: Float): void
+    }
+
+    class BehavioralProfile {
+        -List~Integer~ typical_login_hours
+        -List~String~ typical_ips
+        -String login_frequency
+        -DateTime created_at
+        -DateTime last_updated
+        +addLoginHour(hour: Integer): void
+        +addTypicalIp(ip: String): void
+        +updateFrequency(frequency: String): void
+    }
+
+    class Session {
+        -String session_id
+        -String user_id
+        -DateTime created_at
+        -DateTime expires_at
+        -Boolean remember_me
+        -String ip_address
+        -String user_agent
+        -Float login_risk_score
+        -List~String~ anomalies_detected
+        +isValid(): Boolean
+        +extend(duration: Integer): void
+        +revoke(): void
+    }
+
+    class AuthManager {
+        -String API_BASE_URL
+        -Integer MAX_LOGIN_ATTEMPTS
+        -Integer LOCKOUT_DURATION
+        +login(email: String, password: String): AuthResult
+        +register(userData: UserData): AuthResult
+        +validateSession(sessionId: String): Boolean
+        +logout(sessionId: String): void
+        +detectLoginAnomalies(email: String, ip: String): AnomalyResult
+        +trackLoginBehavior(userId: String, ip: String): void
+    }
+
+    %% Fraud Detection Core Classes
+    class FraudChecker {
+        -Set~String~ disposable_domains
+        -Set~String~ flagged_ips
+        -Set~String~ suspicious_bins
+        -Set~String~ reused_fingerprints
+        -Set~Float~ tampered_prices
+        -Dict rules
+        -Dict advanced_weights
+        -Dict transaction_history
+        -Dict velocity_cache
+        -SyncMetricsTracker metrics
+        +analyzeTransaction(transaction: Dict): FraudResult
+        +analyzeBulk(file: FileObject): List~FraudResult~
+        +loadBlacklists(): void
+        +loadRules(): void
+        +calculateCompositeRiskScore(baseScore: Float, advancedScores: Dict): Float
+        +refreshBlacklists(): void
+    }
+
+    class AdvancedAlgorithms {
+        <<abstract>>
+        +analyzeVelocityPatterns(transaction: Dict): Tuple~Float, List~String~~
+        +analyzeBehavioralPatterns(transaction: Dict): Tuple~Float, List~String~~
+        +analyzeGeographicAnomalies(transaction: Dict): Tuple~Float, List~String~~
+        +analyzeNetworkPatterns(transaction: Dict): Tuple~Float, List~String~~
+        +analyzeEmailPatterns(transaction: Dict): Tuple~Float, List~String~~
+        +analyzeAmountClustering(transaction: Dict): Tuple~Float, List~String~~
+        +analyzePhoneCountryMismatch(transaction: Dict): Tuple~Float, List~String~~
+    }
+
+    class FraudResult {
+        -Float fraud_score
+        -Float base_score
+        -Dict advanced_scores
+        -String decision
+        -List~String~ triggered_rules
+        -String analysis_timestamp
+        -String algorithm_version
+        +isDanger(): Boolean
+        +isSuspicious(): Boolean
+        +isSafe(): Boolean
+        +getExplanation(): String
+    }
+
+    class Rule {
+        -String _id
+        -String rule_key
+        -Boolean enabled
+        -Float weight
+        -String category
+        -String description
+        -Dict threshold_config
+        -DateTime created_at
+        -DateTime updated_at
+        +isEnabled(): Boolean
+        +getWeight(): Float
+        +updateWeight(newWeight: Float): void
+        +toggle(): void
+    }
+
+    %% Database Management Classes
+    class DatabaseManager {
+        -MongoClient client
+        -Database db
+        -Boolean connected
+        +connect(): Boolean
+        +reconnect(): Boolean
+        +isConnected(): Boolean
+        +getDatabase(): Database
+        +initCollections(): void
+        +createDefaultAdmin(): void
+        +initSystemSettings(): void
+    }
+
+    class MongoManager {
+        -String mongo_uri
+        -AsyncIOMotorClient client
+        -Database db
+        -Dict collections
+        +getCollection(name: String): Collection
+        +connect(): void
+        +disconnect(): void
+    }
+
+    class SyncMetricsTracker {
+        -MongoClient client
+        -Database db
+        -Collection metrics_collection
+        +incrementMetric(metricName: String, increment: Integer): Boolean
+        +getMetricCount(metricName: String): Integer
+        +initializeMetrics(): Boolean
+    }
+
+    %% API Layer Classes
+    class BulkAPI {
+        -Flask app
+        -FraudChecker checker
+        -DatabaseManager db_manager
+        -String API_BASE_URL
+        +healthCheck(): Response
+        +fraudCheck(): Response
+        +bulkCheck(): Response
+        +getRealStats(): Response
+        +getAllRules(): Response
+        +updateRule(ruleId: String): Response
+        +batchUpdateRules(): Response
+    }
+
+    class AuthAPI {
+        -Flask app
+        -DatabaseManager db_manager
+        -CacheManager cache_manager
+        -Dict endpoint_rate_limits
+        +register(): Response
+        +login(): Response
+        +logout(): Response
+        +validateSession(): Response
+        +getAdminStats(): Response
+        +getUserStats(): Response
+        +getAlgorithmSettings(): Response
+        +updateAlgorithmSettings(): Response
+    }
+
+    class CacheManager {
+        -Dict _cache
+        -Dict _timestamps
+        +get(key: String, default: Any): Any
+        +set(key: String, value: Any, ttl: Integer): void
+        +getTtl(key: String): Integer
+        +clear(): void
+        +invalidate(pattern: String): void
+    }
+
+    %% Frontend Classes
+    class LoginForm {
+        -HTMLFormElement form
+        -Dict inputs
+        -Dict ui
+        -Dict validation
+        -String API_BASE_URL
+        +init(): void
+        +handleSubmit(event: Event): void
+        +validateField(field: String, value: String): Boolean
+        +attemptLogin(email: String, password: String, remember: Boolean): LoginResult
+        +checkExistingSession(): void
+        +redirectUser(user: User): void
+    }
+
+    class RegistrationForm {
+        -HTMLFormElement form
+        -Dict inputs
+        -Dict ui
+        -Dict validation
+        -Dict passwordRequirements
+        +init(): void
+        +handleSubmit(event: Event): void
+        +validateEmail(value: String): Boolean
+        +validatePasswordRequirements(value: String): void
+        +calculatePasswordStrength(password: String): Integer
+        +attemptRegistration(): RegistrationResult
+        +displayApiKey(apiKey: String): void
+    }
+
+    class DashboardManager {
+        -HTMLElement container
+        -String currentTab
+        -Dict tabContents
+        +switchTab(tabName: String): void
+        +loadUserProfile(): void
+        +loadRealMetrics(): void
+        +setupRoleBasedAccess(): void
+        +handleBulkUpload(file: File): void
+    }
+
+    class UserManagement {
+        -String API_BASE_URL
+        -List~User~ users
+        -List~User~ filteredUsers
+        -User currentUser
+        +init(): void
+        +loadUsers(): void
+        +loadStats(): void
+        +filterUsers(): void
+        +openUserModal(userId: String): void
+        +saveUser(): void
+        +deleteUser(userId: String): void
+        +regenerateApiKey(): void
+    }
+
+    class RuleManager {
+        -List~Rule~ rules
+        -Dict originalRules
+        -Set modifiedRules
+        -String apiUrl
+        +init(): void
+        +loadRules(): void
+        +renderRules(): void
+        +toggleRule(ruleId: String): void
+        +updateWeight(ruleId: String, newWeight: Float): void
+        +saveRule(ruleId: String): void
+        +saveAllChanges(): void
+        +updateStats(): void
+    }
+
+    %% Relationships
+    User ||--o{ Session : "has"
+    User ||--|| BehavioralProfile : "contains"
+    User }|--|| AuthManager : "managed by"
+    
+    FraudChecker ||--|| SyncMetricsTracker : "uses"
+    FraudChecker ||--|| AdvancedAlgorithms : "implements"
+    FraudChecker ||--o{ Rule : "applies"
+    FraudChecker ||--o{ FraudResult : "produces"
+    
+    BulkAPI ||--|| FraudChecker : "uses"
+    BulkAPI ||--|| DatabaseManager : "uses"
+    
+    AuthAPI ||--|| DatabaseManager : "uses"
+    AuthAPI ||--|| CacheManager : "uses"
+    AuthAPI ||--|| AuthManager : "uses"
+    
+    DatabaseManager ||--|| MongoManager : "extends"
+    
+    LoginForm ||--|| AuthAPI : "communicates with"
+    RegistrationForm ||--|| AuthAPI : "communicates with"
+    DashboardManager ||--|| BulkAPI : "communicates with"
+    UserManagement ||--|| AuthAPI : "communicates with"
+    RuleManager ||--|| BulkAPI : "communicates with"

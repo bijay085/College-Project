@@ -56,17 +56,10 @@
 
   // ========== 4. API Key Management ==========
   function getApiKey() {
-    // Check if user is authenticated and has API key
     const userData = sessionStorage.getItem('fraudshield_user');
     const apiKey = sessionStorage.getItem('fraudshield_api_key');
-    
-    if (userData && apiKey) {
-      return apiKey;
-    }
-    
-    // For demo purposes, you can also allow a hardcoded API key
-    // Remove this in production
-    return "fsk_toe7ZZBgv8xeEWOie7KffQRfwg8dMSuJRwtOY0Tjdak";
+    if (userData && apiKey) return apiKey;
+    return "fsk_toe7ZZBgv8xeEWOie7KffQRfwg8dMSuJRwtOY0Tjdak"; // demo key
   }
 
   function getUserEmail() {
@@ -94,11 +87,15 @@
     const quantity = parseInt(get("quantity") || "1");
     const userEmail = getUserEmail();
 
+    // ✅ Read checkbox states
+    const isEmailVerified = document.getElementById("emailVerified")?.checked || false;
+    const isPhoneVerified = document.getElementById("phoneVerified")?.checked || false;
+
     return {
       // Authentication
       api_key: getApiKey(),
       user_email: userEmail,
-      
+
       // Transaction data
       timestamp: new Date().toISOString(),
       checkout_time: checkoutTime,
@@ -130,12 +127,16 @@
       billing_zip: get("zip"),
       billing_country: get("billingCountry"),
 
-      // Payment - ⚠️ Use token in production!
+      // ✅ Verification
+      email_verified: isEmailVerified,
+      phone_verified: isPhoneVerified,
+
+      // Payment (tokenize in production!)
       card_bin: cardBIN,
       card_token: "simulate_or_use_token_here",
-      
-      // Additional tracking
-      ip: "auto_detect", // Server will detect real IP
+
+      // Extra
+      ip: "auto_detect",
       price: unitPrice * quantity
     };
   }
@@ -148,15 +149,15 @@
     try {
       const response = await fetch("http://127.0.0.1:5000/fraud-check", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${payload.api_key}` // Send API key in header too
+          "Authorization": `Bearer ${payload.api_key}`
         },
         body: JSON.stringify(payload),
       });
 
       const result = await response.json();
-      
+
       if (response.ok) {
         displayResult(result);
         localStorage.removeItem("unsent_fraud_data");
@@ -166,14 +167,12 @@
 
     } catch (error) {
       console.error("FraudShield error:", error);
-      
       let errorMessage = "⚠️ Error contacting fraud detection system.";
       if (error.message.includes("Invalid API key")) {
         errorMessage = "🔐 Authentication failed. Please check your API key.";
       } else if (error.message.includes("API key not found")) {
         errorMessage = "🔑 API key not found. Please contact support.";
       }
-      
       alert(errorMessage);
       localStorage.setItem("unsent_fraud_data", JSON.stringify(payload));
     }
@@ -191,11 +190,10 @@
       if (container) container.appendChild(resultBox);
     }
 
-    // Handle both direct response and wrapped response formats
     const fraudData = data.data || data;
-    
-    const status = fraudData.is_fraud === true ? "❌ FRAUD" : 
-                  fraudData.is_fraud === "chance" ? "🟡 Suspicious" : "✅ Legit";
+    const status = fraudData.is_fraud === true ? "❌ FRAUD"
+                 : fraudData.is_fraud === "chance" ? "🟡 Suspicious"
+                 : "✅ Legit";
 
     resultBox.innerHTML = `
       <h3>🛡️ FraudShield Result</h3>
@@ -213,29 +211,28 @@
   if (form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-      
+
       const apiKey = getApiKey();
       if (!apiKey) {
         alert("🔑 No API key found. Please authenticate first.");
         return;
       }
-      
+
       const data = collectFraudData();
       console.log("📦 Collected Fraud Data with API Key:", {
         ...data,
-        api_key: data.api_key.substring(0, 10) + "..." // Log partial key for security
+        api_key: data.api_key.substring(0, 10) + "..."
       });
       console.table(data);
       sendToBackend(data);
     });
   }
 
-  // ========== 9. API Key Status Display ==========
+  // ========== 9. API Key Status ==========
   function displayApiKeyStatus() {
     const apiKey = getApiKey();
     const userEmail = getUserEmail();
-    
-    // Create status display
+
     let statusDiv = document.getElementById("apiKeyStatus");
     if (!statusDiv) {
       statusDiv = document.createElement("div");
@@ -254,7 +251,7 @@
       `;
       document.body.appendChild(statusDiv);
     }
-    
+
     if (userEmail && apiKey) {
       statusDiv.innerHTML = `
         <div style="color: #059669; font-weight: 600;">🔐 Authenticated</div>
@@ -274,11 +271,7 @@
       `;
     }
   }
-  
-  // Show API key status on page load
+
   displayApiKeyStatus();
-  
-  // Update status when session changes
   window.addEventListener('storage', displayApiKeyStatus);
-  
 })();

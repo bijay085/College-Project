@@ -1,0 +1,629 @@
+<svg viewBox="0 0 1800 2950" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .class-box { fill: #f8f9fa; stroke: #2563eb; stroke-width: 2; }
+      .class-title { fill: #1e293b; font-family: 'Arial', sans-serif; font-size: 14px; font-weight: bold; }
+      .attribute { fill: #475569; font-family: 'Arial', sans-serif; font-size: 11px; }
+      .method { fill: #475569; font-family: 'Arial', sans-serif; font-size: 11px; }
+      .section-line { stroke: #cbd5e1; stroke-width: 1; }
+      .relationship { stroke: #2563eb; stroke-width: 2; fill: none; }
+      .arrow { fill: #2563eb; }
+      .composition { stroke: #059669; stroke-width: 2; }
+      .inheritance { stroke: #dc2626; stroke-width: 2; }
+      .section-header { fill: #0f172a; font-family: 'Arial', sans-serif; font-size: 16px; font-weight: bold; }
+      .diagram-title { fill: #0f172a; font-family: 'Arial', sans-serif; font-size: 24px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Diagram Title -->
+  <text x="900" y="30" class="diagram-title" text-anchor="middle">FraudShield Enhanced Class Diagram v2.0</text>
+
+  <!-- Section Headers -->
+  <text x="50" y="70" class="section-header">Authentication Layer</text>
+  <text x="50" y="500" class="section-header">Fraud Detection Engine</text>
+  <text x="50" y="1000" class="section-header">Database Layer</text>
+  <text x="50" y="1400" class="section-header">API Layer</text>
+  <text x="50" y="1900" class="section-header">Cache &amp; Security Layer</text>
+  <text x="50" y="2180" class="section-header">Frontend Components (JavaScript)</text>
+
+  <!-- Authentication Layer -->
+  
+  <!-- User Class (Enhanced) -->
+  <rect x="50" y="90" width="320" height="280" class="class-box"/>
+  <text x="210" y="110" class="class-title" text-anchor="middle">User</text>
+  <line x1="50" y1="120" x2="370" y2="120" class="section-line"/>
+  <text x="60" y="140" class="attribute">- _id: ObjectId</text>
+  <text x="60" y="155" class="attribute">- name: String</text>
+  <text x="60" y="170" class="attribute">- email: String</text>
+  <text x="60" y="185" class="attribute">- company: String</text>
+  <text x="60" y="200" class="attribute">- password_hash: String</text>
+  <text x="60" y="215" class="attribute">- api_key: String</text>
+  <text x="60" y="230" class="attribute">- role: String</text>
+  <text x="60" y="245" class="attribute">- created_at: DateTime</text>
+  <text x="60" y="260" class="attribute">- last_login: DateTime</text>
+  <text x="60" y="275" class="attribute">- is_verified: Boolean</text>
+  <text x="60" y="290" class="attribute">- login_attempts: Integer</text>
+  <text x="60" y="305" class="attribute">- locked_until: DateTime</text>
+  <text x="60" y="320" class="attribute">- behavioral_profile: Dict</text>
+  <text x="60" y="335" class="attribute">- security_score: Float</text>
+  <line x1="50" y1="345" x2="370" y2="345" class="section-line"/>
+  <text x="60" y="365" class="method">+ validateCredentials(): Boolean</text>
+
+  <!-- AuthConfig Class -->
+  <rect x="420" y="90" width="320" height="280" class="class-box"/>
+  <text x="580" y="110" class="class-title" text-anchor="middle">AuthConfig</text>
+  <line x1="420" y1="120" x2="740" y2="120" class="section-line"/>
+  <text x="430" y="140" class="attribute">+ JWT_SECRET_KEY: String</text>
+  <text x="430" y="155" class="attribute">+ API_KEY_PREFIX: String</text>
+  <text x="430" y="170" class="attribute">+ PASSWORD_MIN_LENGTH: Integer</text>
+  <text x="430" y="185" class="attribute">+ MAX_LOGIN_ATTEMPTS: Integer</text>
+  <text x="430" y="200" class="attribute">+ LOCKOUT_DURATION_MINUTES: Integer</text>
+  <text x="430" y="215" class="attribute">+ MONGODB_URI: String</text>
+  <text x="430" y="230" class="attribute">+ DATABASE_NAME: String</text>
+  <text x="430" y="245" class="attribute">+ SESSION_DURATION_HOURS: Integer</text>
+  <text x="430" y="260" class="attribute">+ CORS_ORIGINS: List&lt;String&gt;</text>
+  <text x="430" y="275" class="attribute">+ FRAUD_API_URL: String</text>
+  <text x="430" y="290" class="attribute">+ ENABLE_BEHAVIORAL_TRACKING: Boolean</text>
+  <text x="430" y="305" class="attribute">+ ENABLE_LOGIN_ANOMALY_DETECTION: Boolean</text>
+  <text x="430" y="320" class="attribute">+ SUSPICIOUS_LOGIN_THRESHOLD: Float</text>
+  <text x="430" y="335" class="attribute">+ DEFAULT_FRAUD_THRESHOLD: Float</text>
+  <text x="430" y="350" class="attribute">+ DEFAULT_SUSPICIOUS_THRESHOLD: Float</text>
+
+  <!-- Session Class (Enhanced) -->
+  <rect x="790" y="90" width="300" height="240" class="class-box"/>
+  <text x="940" y="110" class="class-title" text-anchor="middle">Session</text>
+  <line x1="790" y1="120" x2="1090" y2="120" class="section-line"/>
+  <text x="800" y="140" class="attribute">- session_id: String</text>
+  <text x="800" y="155" class="attribute">- user_id: String</text>
+  <text x="800" y="170" class="attribute">- created_at: DateTime</text>
+  <text x="800" y="185" class="attribute">- expires_at: DateTime</text>
+  <text x="800" y="200" class="attribute">- remember_me: Boolean</text>
+  <text x="800" y="215" class="attribute">- ip_address: String</text>
+  <text x="800" y="230" class="attribute">- user_agent: String</text>
+  <text x="800" y="245" class="attribute">- login_risk_score: Float</text>
+  <text x="800" y="260" class="attribute">- anomalies_detected: List&lt;String&gt;</text>
+  <line x1="790" y1="270" x2="1090" y2="270" class="section-line"/>
+  <text x="800" y="290" class="method">+ isValid(): Boolean</text>
+  <text x="800" y="305" class="method">+ extend(): void</text>
+  <text x="800" y="320" class="method">+ revoke(): void</text>
+
+  <!-- DatabaseManager Class (Enhanced) -->
+  <rect x="1140" y="90" width="320" height="280" class="class-box"/>
+  <text x="1300" y="110" class="class-title" text-anchor="middle">DatabaseManager</text>
+  <line x1="1140" y1="120" x2="1460" y2="120" class="section-line"/>
+  <text x="1150" y="140" class="attribute">- client: MongoClient</text>
+  <text x="1150" y="155" class="attribute">- db: Database</text>
+  <text x="1150" y="170" class="attribute">- connected: Boolean</text>
+  <line x1="1140" y1="180" x2="1460" y2="180" class="section-line"/>
+  <text x="1150" y="200" class="method">+ connect(max_retries, retry_delay): Boolean</text>
+  <text x="1150" y="215" class="method">+ isConnected(): Boolean</text>
+  <text x="1150" y="230" class="method">+ reconnect(): Boolean</text>
+  <text x="1150" y="245" class="method">+ getDatabase(): Database</text>
+  <text x="1150" y="260" class="method">- _initCollections(): void</text>
+  <text x="1150" y="275" class="method">- _createDefaultAdmin(): void</text>
+  <text x="1150" y="290" class="method">- _initSystemSettings(): void</text>
+
+  <!-- BehavioralProfile Class -->
+  <rect x="1510" y="90" width="240" height="180" class="class-box"/>
+  <text x="1630" y="110" class="class-title" text-anchor="middle">BehavioralProfile</text>
+  <line x1="1510" y1="120" x2="1750" y2="120" class="section-line"/>
+  <text x="1520" y="140" class="attribute">- typical_login_hours: List&lt;Integer&gt;</text>
+  <text x="1520" y="155" class="attribute">- typical_ips: List&lt;String&gt;</text>
+  <text x="1520" y="170" class="attribute">- login_frequency: String</text>
+  <text x="1520" y="185" class="attribute">- created_at: DateTime</text>
+  <text x="1520" y="200" class="attribute">- last_updated: DateTime</text>
+  <line x1="1510" y1="210" x2="1750" y2="210" class="section-line"/>
+  <text x="1520" y="230" class="method">+ update(): void</text>
+  <text x="1520" y="245" class="method">+ analyzePattern(): Dict</text>
+
+  <!-- Fraud Detection Engine -->
+  
+  <!-- FraudChecker Class -->
+  <rect x="50" y="520" width="350" height="240" class="class-box"/>
+  <text x="225" y="540" class="class-title" text-anchor="middle">FraudChecker</text>
+  <line x1="50" y1="550" x2="400" y2="550" class="section-line"/>
+  <text x="60" y="570" class="attribute">- disposable_domains: Set&lt;String&gt;</text>
+  <text x="60" y="585" class="attribute">- flagged_ips: Set&lt;String&gt;</text>
+  <text x="60" y="600" class="attribute">- suspicious_bins: Set&lt;String&gt;</text>
+  <text x="60" y="615" class="attribute">- rules: Dict</text>
+  <text x="60" y="630" class="attribute">- advanced_weights: Dict</text>
+  <text x="60" y="645" class="attribute">- transaction_history: Dict</text>
+  <text x="60" y="660" class="attribute">- metrics: SyncMetricsTracker</text>
+  <line x1="50" y1="670" x2="400" y2="670" class="section-line"/>
+  <text x="60" y="690" class="method">+ analyzeTransaction(): FraudResult</text>
+  <text x="60" y="705" class="method">+ analyzeBulk(): List&lt;FraudResult&gt;</text>
+  <text x="60" y="720" class="method">+ calculateCompositeRiskScore(): Float</text>
+  <text x="60" y="735" class="method">+ loadBlacklists(): void</text>
+  <text x="60" y="750" class="method">+ loadRules(): void</text>
+
+  <!-- LoginAnomalyDetector Class (NEW) -->
+  <rect x="450" y="520" width="320" height="200" class="class-box"/>
+  <text x="610" y="540" class="class-title" text-anchor="middle">LoginAnomalyDetector</text>
+  <line x1="450" y1="550" x2="770" y2="550" class="section-line"/>
+  <text x="460" y="570" class="attribute">- enable_detection: Boolean</text>
+  <text x="460" y="585" class="attribute">- suspicious_threshold: Float</text>
+  <line x1="450" y1="595" x2="770" y2="595" class="section-line"/>
+  <text x="460" y="615" class="method">+ detectLoginAnomalies(email, ip, agent): Tuple</text>
+  <text x="460" y="630" class="method">+ trackLoginBehavior(user_id, ip, agent, success): void</text>
+  <text x="460" y="645" class="method">+ updateBehavioralProfile(user_id, ip, agent): void</text>
+  <text x="460" y="660" class="method">+ analyzeVelocity(email): Float</text>
+  <text x="460" y="675" class="method">+ analyzeGeographicAnomaly(ip): Float</text>
+  <text x="460" y="690" class="method">+ analyzeTimePatterns(hour): Float</text>
+  <text x="460" y="705" class="method">+ calculateRiskScore(factors): Float</text>
+
+  <!-- FraudResult Class -->
+  <rect x="820" y="520" width="280" height="180" class="class-box"/>
+  <text x="960" y="540" class="class-title" text-anchor="middle">FraudResult</text>
+  <line x1="820" y1="550" x2="1100" y2="550" class="section-line"/>
+  <text x="830" y="570" class="attribute">- fraud_score: Float</text>
+  <text x="830" y="585" class="attribute">- base_score: Float</text>
+  <text x="830" y="600" class="attribute">- advanced_scores: Dict</text>
+  <text x="830" y="615" class="attribute">- decision: String</text>
+  <text x="830" y="630" class="attribute">- triggered_rules: List&lt;String&gt;</text>
+  <line x1="820" y1="640" x2="1100" y2="640" class="section-line"/>
+  <text x="830" y="660" class="method">+ isDanger(): Boolean</text>
+  <text x="830" y="675" class="method">+ isSuspicious(): Boolean</text>
+  <text x="830" y="690" class="method">+ getExplanation(): String</text>
+
+  <!-- SystemSettings Class (NEW) -->
+  <rect x="1150" y="520" width="280" height="200" class="class-box"/>
+  <text x="1290" y="540" class="class-title" text-anchor="middle">SystemSettings</text>
+  <line x1="1150" y1="550" x2="1430" y2="550" class="section-line"/>
+  <text x="1160" y="570" class="attribute">- _id: String</text>
+  <text x="1160" y="585" class="attribute">- fraud_threshold: Float</text>
+  <text x="1160" y="600" class="attribute">- suspicious_threshold: Float</text>
+  <text x="1160" y="615" class="attribute">- algorithm_weights: Dict</text>
+  <text x="1160" y="630" class="attribute">- enabled: Boolean</text>
+  <text x="1160" y="645" class="attribute">- updated_at: DateTime</text>
+  <line x1="1150" y1="655" x2="1430" y2="655" class="section-line"/>
+  <text x="1160" y="675" class="method">+ updateThresholds(): void</text>
+  <text x="1160" y="690" class="method">+ updateAlgorithmSettings(): void</text>
+  <text x="1160" y="705" class="method">+ validate(): Boolean</text>
+
+  <!-- LoginAttempt Class (NEW) -->
+  <rect x="1480" y="520" width="270" height="220" class="class-box"/>
+  <text x="1615" y="540" class="class-title" text-anchor="middle">LoginAttempt</text>
+  <line x1="1480" y1="550" x2="1750" y2="550" class="section-line"/>
+  <text x="1490" y="570" class="attribute">- user_id: String</text>
+  <text x="1490" y="585" class="attribute">- email: String</text>
+  <text x="1490" y="600" class="attribute">- ip_address: String</text>
+  <text x="1490" y="615" class="attribute">- user_agent: String</text>
+  <text x="1490" y="630" class="attribute">- success: Boolean</text>
+  <text x="1490" y="645" class="attribute">- timestamp: DateTime</text>
+  <text x="1490" y="660" class="attribute">- risk_score: Float</text>
+  <text x="1490" y="675" class="attribute">- anomalies_detected: List&lt;String&gt;</text>
+  <text x="1490" y="690" class="attribute">- hour_of_day: Integer</text>
+  <text x="1490" y="705" class="attribute">- day_of_week: Integer</text>
+  <line x1="1480" y1="715" x2="1750" y2="715" class="section-line"/>
+  <text x="1490" y="735" class="method">+ log(): void</text>
+
+  <!-- Database Layer -->
+  
+  <!-- MongoManager Class -->
+  <rect x="50" y="1020" width="280" height="160" class="class-box"/>
+  <text x="190" y="1040" class="class-title" text-anchor="middle">MongoManager</text>
+  <line x1="50" y1="1050" x2="330" y2="1050" class="section-line"/>
+  <text x="60" y="1070" class="attribute">- mongo_uri: String</text>
+  <text x="60" y="1085" class="attribute">- client: AsyncIOMotorClient</text>
+  <text x="60" y="1100" class="attribute">- collections: Dict</text>
+  <line x1="50" y1="1110" x2="330" y2="1110" class="section-line"/>
+  <text x="60" y="1130" class="method">+ getCollection(): Collection</text>
+  <text x="60" y="1145" class="method">+ connect(): void</text>
+  <text x="60" y="1160" class="method">+ initCollections(): void</text>
+
+  <!-- SyncMetricsTracker Class -->
+  <rect x="380" y="1020" width="280" height="160" class="class-box"/>
+  <text x="520" y="1040" class="class-title" text-anchor="middle">SyncMetricsTracker</text>
+  <line x1="380" y1="1050" x2="660" y2="1050" class="section-line"/>
+  <text x="390" y="1070" class="attribute">- client: MongoClient</text>
+  <text x="390" y="1085" class="attribute">- metrics_collection: Collection</text>
+  <line x1="380" y1="1095" x2="660" y2="1095" class="section-line"/>
+  <text x="390" y="1115" class="method">+ incrementMetric(): Boolean</text>
+  <text x="390" y="1130" class="method">+ getMetricCount(): Integer</text>
+  <text x="390" y="1145" class="method">+ initializeMetrics(): Boolean</text>
+
+  <!-- Collections (Enhanced) -->
+  <rect x="710" y="1020" width="280" height="300" class="class-box"/>
+  <text x="850" y="1040" class="class-title" text-anchor="middle">MongoDB Collections</text>
+  <line x1="710" y1="1050" x2="990" y2="1050" class="section-line"/>
+  <text x="720" y="1070" class="attribute">+ users</text>
+  <text x="720" y="1085" class="attribute">+ sessions</text>
+  <text x="720" y="1100" class="attribute">+ sites</text>
+  <text x="720" y="1115" class="attribute">+ logs</text>
+  <text x="720" y="1130" class="attribute">+ login_attempts</text>
+  <text x="720" y="1145" class="attribute">+ user_behavior</text>
+  <text x="720" y="1160" class="attribute">+ system_settings</text>
+  <text x="720" y="1175" class="attribute">+ security_logs</text>
+  <text x="720" y="1190" class="attribute">+ health_reports</text>
+  <line x1="710" y1="1200" x2="990" y2="1200" class="section-line"/>
+  <text x="720" y="1220" class="method">Indexes:</text>
+  <text x="720" y="1235" class="method">- users.email (unique)</text>
+  <text x="720" y="1250" class="method">- users.api_key (unique, sparse)</text>
+  <text x="720" y="1265" class="method">- sessions.session_id (unique)</text>
+  <text x="720" y="1280" class="method">- sessions.expires_at (TTL)</text>
+  <text x="720" y="1295" class="method">- login_attempts.email, timestamp</text>
+  <text x="720" y="1310" class="method">- login_attempts.ip_address</text>
+
+  <!-- API Layer -->
+  
+  <!-- AuthAPI Class (Enhanced) -->
+  <rect x="50" y="1420" width="380" height="400" class="class-box"/>
+  <text x="240" y="1440" class="class-title" text-anchor="middle">AuthAPI (Flask App)</text>
+  <line x1="50" y1="1450" x2="430" y2="1450" class="section-line"/>
+  <text x="60" y="1470" class="attribute">- app: Flask</text>
+  <text x="60" y="1485" class="attribute">- db_manager: DatabaseManager</text>
+  <text x="60" y="1500" class="attribute">- cache_manager: CacheManager</text>
+  <text x="60" y="1515" class="attribute">- RATE_LIMITS: Dict</text>
+  <line x1="50" y1="1525" x2="430" y2="1525" class="section-line"/>
+  <text x="60" y="1545" class="method">Routes:</text>
+  <text x="60" y="1560" class="method">+ /auth/health: healthCheck()</text>
+  <text x="60" y="1575" class="method">+ /auth/register: register()</text>
+  <text x="60" y="1590" class="method">+ /auth/login: login()</text>
+  <text x="60" y="1605" class="method">+ /auth/logout: logout()</text>
+  <text x="60" y="1620" class="method">+ /auth/validate-session: validateSession()</text>
+  <text x="60" y="1635" class="method">+ /auth/user-stats: getUserStats()</text>
+  <text x="60" y="1650" class="method">+ /auth/validate-api-key: validateApiKey()</text>
+  <text x="60" y="1665" class="method">Admin Routes:</text>
+  <text x="60" y="1680" class="method">+ /auth/users: getAllUsers()</text>
+  <text x="60" y="1695" class="method">+ /auth/admin/stats: getAdminStats()</text>
+  <text x="60" y="1710" class="method">+ /auth/settings/algorithms: get/updateAlgorithmSettings()</text>
+  <text x="60" y="1725" class="method">+ /auth/settings/thresholds: get/updateFraudThresholds()</text>
+  <text x="60" y="1740" class="method">+ /auth/settings/system-health: getSystemHealth()</text>
+  <text x="60" y="1755" class="method">+ /auth/security/behavioral-insights: getBehavioralInsights()</text>
+  <text x="60" y="1770" class="method">+ /auth/user/regenerate-api-key: regenerateApiKey()</text>
+  <text x="60" y="1785" class="method">Decorators:</text>
+  <text x="60" y="1800" class="method">+ @enhanced_rate_limit()</text>
+  <text x="60" y="1815" class="method">+ @require_admin_auth()</text>
+
+  <!-- BulkAPI Class -->
+  <rect x="480" y="1420" width="280" height="200" class="class-box"/>
+  <text x="620" y="1440" class="class-title" text-anchor="middle">BulkAPI</text>
+  <line x1="480" y1="1450" x2="760" y2="1450" class="section-line"/>
+  <text x="490" y="1470" class="attribute">- app: Flask</text>
+  <text x="490" y="1485" class="attribute">- checker: FraudChecker</text>
+  <text x="490" y="1500" class="attribute">- db_manager: DatabaseManager</text>
+  <line x1="480" y1="1510" x2="760" y2="1510" class="section-line"/>
+  <text x="490" y="1530" class="method">+ healthCheck(): Response</text>
+  <text x="490" y="1545" class="method">+ fraudCheck(): Response</text>
+  <text x="490" y="1560" class="method">+ bulkCheck(): Response</text>
+  <text x="490" y="1575" class="method">+ getRealStats(): Response</text>
+  <text x="490" y="1590" class="method">+ updateRule(): Response</text>
+
+  <!-- Utility Functions -->
+  <rect x="810" y="1420" width="320" height="320" class="class-box"/>
+  <text x="970" y="1440" class="class-title" text-anchor="middle">Utility Functions</text>
+  <line x1="810" y1="1450" x2="1130" y2="1450" class="section-line"/>
+  <text x="820" y="1470" class="method">+ hashPassword(password): String</text>
+  <text x="820" y="1485" class="method">+ verifyPassword(password, hashed): Boolean</text>
+  <text x="820" y="1500" class="method">+ generateApiKey(): String</text>
+  <text x="820" y="1515" class="method">+ validateEmail(email): Boolean</text>
+  <text x="820" y="1530" class="method">+ validatePasswordStrength(password): Tuple</text>
+  <text x="820" y="1545" class="method">+ createErrorResponse(msg, code, details): Response</text>
+  <text x="820" y="1560" class="method">+ createSuccessResponse(data, msg): Response</text>
+  <text x="820" y="1575" class="method">+ logAuthAttempt(email, success, ip, agent, risk, anomalies): void</text>
+  <text x="820" y="1590" class="method">+ createSession(user_id, remember): String</text>
+  <text x="820" y="1605" class="method">+ validateSession(session_id): UserDict</text>
+  <text x="820" y="1620" class="method">+ cleanupSessions(): void</text>
+  <text x="820" y="1635" class="method">+ checkFraudApiHealth(): Dict</text>
+  <text x="820" y="1650" class="method">+ getFraudDetectionStats(): Dict</text>
+  <text x="820" y="1665" class="method">+ trackLoginBehavior(user_id, ip, agent, success): void</text>
+  <text x="820" y="1680" class="method">+ updateUserBehavioralProfile(user_id, ip, agent): void</text>
+  <text x="820" y="1695" class="method">+ detectLoginAnomalies(email, ip, agent): Tuple</text>
+  <text x="820" y="1710" class="method">+ updateUserSecurityScores(): void</text>
+  <text x="820" y="1725" class="method">+ generateHealthReport(): void</text>
+
+  <!-- Maintenance System -->
+  <rect x="1180" y="1420" width="280" height="200" class="class-box"/>
+  <text x="1320" y="1440" class="class-title" text-anchor="middle">MaintenanceSystem</text>
+  <line x1="1180" y1="1450" x2="1460" y2="1450" class="section-line"/>
+  <text x="1190" y="1470" class="attribute">- maintenance_run_count: Integer</text>
+  <line x1="1180" y1="1480" x2="1460" y2="1480" class="section-line"/>
+  <text x="1190" y="1500" class="method">+ runMaintenance(): void</text>
+  <text x="1190" y="1515" class="method">+ cleanupSessions(): void</text>
+  <text x="1190" y="1530" class="method">+ updateUserSecurityScores(): void</text>
+  <text x="1190" y="1545" class="method">+ generateHealthReport(): void</text>
+  <text x="1190" y="1560" class="method">+ maintenanceWorker(): void</text>
+  <text x="1190" y="1575" class="method">Schedule:</text>
+  <text x="1190" y="1590" class="method">- Hourly: session cleanup</text>
+  <text x="1190" y="1605" class="method">- 6 hours: security scores</text>
+  <text x="1190" y="1620" class="method">- Daily: full maintenance</text>
+
+  <!-- Cache & Security Layer -->
+  
+  <!-- CacheManager Class (Enhanced) -->
+  <rect x="50" y="1920" width="280" height="200" class="class-box"/>
+  <text x="190" y="1940" class="class-title" text-anchor="middle">CacheManager</text>
+  <line x1="50" y1="1950" x2="330" y2="1950" class="section-line"/>
+  <text x="60" y="1970" class="attribute">- _cache: Dict</text>
+  <text x="60" y="1985" class="attribute">- _timestamps: Dict</text>
+  <line x1="50" y1="1995" x2="330" y2="1995" class="section-line"/>
+  <text x="60" y="2015" class="method">+ get(key, default): Any</text>
+  <text x="60" y="2030" class="method">+ set(key, value, ttl): void</text>
+  <text x="60" y="2045" class="method">+ getTtl(key): Integer</text>
+  <text x="60" y="2060" class="method">+ clear(): void</text>
+  <text x="60" y="2075" class="method">+ invalidate(pattern): void</text>
+  <text x="60" y="2090" class="method">TTL Rules:</text>
+  <text x="60" y="2105" class="method">- admin_stats: 300s</text>
+  <text x="60" y="2120" class="method">- fraud_health: 60s</text>
+
+  <!-- RateLimiter -->
+  <rect x="380" y="1920" width="320" height="180" class="class-box"/>
+  <text x="540" y="1940" class="class-title" text-anchor="middle">RateLimiter</text>
+  <line x1="380" y1="1950" x2="700" y2="1950" class="section-line"/>
+  <text x="390" y="1970" class="attribute">- endpoint_rate_limits: DefaultDict</text>
+  <text x="390" y="1985" class="attribute">- pending_requests: Dict</text>
+  <text x="390" y="2000" class="attribute">- RATE_LIMITS: Dict</text>
+  <line x1="380" y1="2010" x2="700" y2="2010" class="section-line"/>
+  <text x="390" y="2030" class="method">+ enhanced_rate_limit(endpoint, limit_seconds): decorator</text>
+  <text x="390" y="2045" class="method">+ checkRequestSignature(data): String</text>
+  <text x="390" y="2060" class="method">+ deduplicateRequest(signature): Boolean</text>
+  <text x="390" y="2075" class="method">Limits:</text>
+  <text x="390" y="2090" class="method">- admin_stats: 60s, login: 5s, register: 30s</text>
+
+  <!-- SecurityLogger -->
+  <rect x="750" y="1920" width="280" height="160" class="class-box"/>
+  <text x="890" y="1940" class="class-title" text-anchor="middle">SecurityLogger</text>
+  <line x1="750" y1="1950" x2="1030" y2="1950" class="section-line"/>
+  <text x="760" y="1970" class="attribute">- logger: Logger</text>
+  <text x="760" y="1985" class="attribute">- log_file: String</text>
+  <line x1="750" y1="1995" x2="1030" y2="1995" class="section-line"/>
+  <text x="760" y="2015" class="method">+ logWarning(message, extra): void</text>
+  <text x="760" y="2030" class="method">+ logError(message, extra): void</text>
+  <text x="760" y="2045" class="method">+ logAuthAttempt(details): void</text>
+  <text x="760" y="2060" class="method">+ logSecurityEvent(event): void</text>
+
+  <!-- Frontend Components -->
+  
+  <!-- LoginForm Class (Enhanced) -->
+  <rect x="50" y="2200" width="380" height="340" class="class-box"/>
+  <text x="240" y="2220" class="class-title" text-anchor="middle">LoginForm</text>
+  <line x1="50" y1="2230" x2="430" y2="2230" class="section-line"/>
+  <text x="60" y="2250" class="attribute">- form: HTMLFormElement</text>
+  <text x="60" y="2265" class="attribute">- inputs: {email, password, remember}</text>
+  <text x="60" y="2280" class="attribute">- ui: {submitBtn, loader, messages}</text>
+  <text x="60" y="2295" class="attribute">- validation: {email: Boolean, password: Boolean}</text>
+  <text x="60" y="2310" class="attribute">- debounceTimers: Dict</text>
+  <text x="60" y="2325" class="attribute">- formSubmitted: Boolean</text>
+  <text x="60" y="2340" class="attribute">- API_BASE_URL: String</text>
+  <text x="60" y="2355" class="attribute">- MAX_RETRIES: Integer</text>
+  <line x1="50" y1="2365" x2="430" y2="2365" class="section-line"/>
+  <text x="60" y="2385" class="method">+ init(): void</text>
+  <text x="60" y="2400" class="method">+ checkExistingSession(): Promise&lt;void&gt;</text>
+  <text x="60" y="2415" class="method">+ handleSubmit(e): Promise&lt;void&gt;</text>
+  <text x="60" y="2430" class="method">+ attemptLogin(email, password, remember): Promise</text>
+  <text x="60" y="2445" class="method">+ validateEmail(value): Boolean</text>
+  <text x="60" y="2460" class="method">+ validatePassword(value): Boolean</text>
+  <text x="60" y="2475" class="method">+ handleLoginSuccess(userData, remember): void</text>
+  <text x="60" y="2490" class="method">+ loadRememberedUser(): void</text>
+  <text x="60" y="2505" class="method">+ clearPersistentSession(): void</text>
+  <text x="60" y="2520" class="method">Static Methods:</text>
+  <text x="60" y="2535" class="method">+ isLoggedIn(): Boolean</text>
+
+  <!-- RegistrationForm Class -->
+  <rect x="480" y="2200" width="380" height="360" class="class-box"/>
+  <text x="670" y="2220" class="class-title" text-anchor="middle">RegistrationForm</text>
+  <line x1="480" y1="2230" x2="860" y2="2230" class="section-line"/>
+  <text x="490" y="2250" class="attribute">- form: HTMLFormElement</text>
+  <text x="490" y="2265" class="attribute">- inputs: {name, email, company, password, confirmPassword, terms}</text>
+  <text x="490" y="2280" class="attribute">- ui: {submitBtn, progressBar, apiKeyDisplay}</text>
+  <text x="490" y="2295" class="attribute">- validation: Dict&lt;String, Boolean&gt;</text>
+  <text x="490" y="2310" class="attribute">- passwordRequirements: Dict</text>
+  <text x="490" y="2325" class="attribute">- API_BASE_URL: String</text>
+  <line x1="480" y1="2335" x2="860" y2="2335" class="section-line"/>
+  <text x="490" y="2355" class="method">+ init(): void</text>
+  <text x="490" y="2370" class="method">+ handleSubmit(e): Promise&lt;void&gt;</text>
+  <text x="490" y="2385" class="method">+ attemptRegistration(): Promise</text>
+  <text x="490" y="2400" class="method">+ validateName(value): Boolean</text>
+  <text x="490" y="2415" class="method">+ validateEmail(value): Promise&lt;Boolean&gt;</text>
+  <text x="490" y="2430" class="method">+ validatePasswordRequirements(value): void</text>
+  <text x="490" y="2445" class="method">+ calculatePasswordStrength(password): Integer</text>
+  <text x="490" y="2460" class="method">+ updateProgress(): void</text>
+  <text x="490" y="2475" class="method">+ displayApiKey(apiKey): Promise&lt;void&gt;</text>
+  <text x="490" y="2490" class="method">+ copyApiKey(): Promise&lt;void&gt;</text>
+  <text x="490" y="2505" class="method">Static Methods:</text>
+  <text x="490" y="2520" class="method">+ isLoggedIn(): Boolean</text>
+  <text x="490" y="2535" class="method">+ getCurrentUser(): Object</text>
+  <text x="490" y="2550" class="method">+ getApiKey(): String</text>
+
+  <!-- SessionManager (Static Utils) -->
+  <rect x="910" y="2200" width="320" height="240" class="class-box"/>
+  <text x="1070" y="2220" class="class-title" text-anchor="middle">SessionManager (Static)</text>
+  <line x1="910" y1="2230" x2="1230" y2="2230" class="section-line"/>
+  <text x="920" y="2250" class="attribute">Storage Keys:</text>
+  <text x="920" y="2265" class="attribute">- fraudshield_user</text>
+  <text x="920" y="2280" class="attribute">- fraudshield_api_key</text>
+  <text x="920" y="2295" class="attribute">- fraudshield_session_id</text>
+  <text x="920" y="2310" class="attribute">- fraudshield_persistent_*</text>
+  <text x="920" y="2325" class="attribute">- fraudshield_remember</text>
+  <line x1="910" y1="2335" x2="1230" y2="2335" class="section-line"/>
+  <text x="920" y="2355" class="method">+ getCurrentUser(): Object</text>
+  <text x="920" y="2370" class="method">+ getApiKey(): String</text>
+  <text x="920" y="2385" class="method">+ isLoggedIn(): Boolean</text>
+  <text x="920" y="2400" class="method">+ logout(): void</text>
+  <text x="920" y="2415" class="method">+ loadUserStats(): Promise&lt;void&gt;</text>
+  <text x="920" y="2430" class="method">+ saveProfile(): Promise&lt;void&gt;</text>
+
+  <!-- AdminSettingsManager -->
+  <rect x="1280" y="2200" width="320" height="220" class="class-box"/>
+  <text x="1440" y="2220" class="class-title" text-anchor="middle">AdminSettingsManager</text>
+  <line x1="1280" y1="2230" x2="1600" y2="2230" class="section-line"/>
+  <text x="1290" y="2250" class="attribute">- API_BASE_URL: String</text>
+  <line x1="1280" y1="2260" x2="1600" y2="2260" class="section-line"/>
+  <text x="1290" y="2280" class="method">+ loadThresholds(): Promise&lt;void&gt;</text>
+  <text x="1290" y="2295" class="method">+ saveThresholds(): Promise&lt;void&gt;</text>
+  <text x="1290" y="2310" class="method">+ performHealthCheck(): Promise&lt;void&gt;</text>
+  <text x="1290" y="2325" class="method">+ regenerateApiKey(): Promise&lt;void&gt;</text>
+  <text x="1290" y="2340" class="method">+ initializeSettings(): Promise&lt;void&gt;</text>
+  <text x="1290" y="2355" class="method">+ loadUserProfile(): void</text>
+  <text x="1290" y="2370" class="method">+ isAdmin(): Boolean</text>
+  <text x="1290" y="2385" class="method">+ isAuthenticated(): Boolean</text>
+  <text x="1290" y="2400" class="method">+ showToast(title, msg, type): void</text>
+
+  <!-- Add these new classes after AdminSettingsManager -->
+
+  <!-- ApiCallManager -->
+  <rect x="50" y="2580" width="320" height="200" class="class-box"/>
+  <text x="210" y="2600" class="class-title" text-anchor="middle">ApiCallManager</text>
+  <line x1="50" y1="2610" x2="370" y2="2610" class="section-line"/>
+  <text x="60" y="2630" class="attribute">Static Properties:</text>
+  <text x="60" y="2645" class="attribute">+ pendingRequests: Map</text>
+  <text x="60" y="2660" class="attribute">+ lastCallTime: Map</text>
+  <text x="60" y="2675" class="attribute">+ MIN_CALL_INTERVAL: Dict</text>
+  <line x1="50" y1="2685" x2="370" y2="2685" class="section-line"/>
+  <text x="60" y="2705" class="method">+ makeRequest(url, options, forceRefresh): Promise</text>
+  <text x="60" y="2720" class="method">Features:</text>
+  <text x="60" y="2735" class="method">- Request deduplication</text>
+  <text x="60" y="2750" class="method">- Rate limiting per endpoint</text>
+  <text x="60" y="2765" class="method">- Automatic caching</text>
+
+  <!-- ActivityLogsManager -->
+  <rect x="420" y="2580" width="360" height="260" class="class-box"/>
+  <text x="600" y="2600" class="class-title" text-anchor="middle">ActivityLogsManager</text>
+  <line x1="420" y1="2610" x2="780" y2="2610" class="section-line"/>
+  <text x="430" y="2630" class="attribute">- logsContainer: HTMLElement</text>
+  <text x="430" y="2645" class="attribute">- logControls: HTMLElement</text>
+  <text x="430" y="2660" class="attribute">- isLoading: Boolean</text>
+  <text x="430" y="2675" class="attribute">- currentLogs: Array</text>
+  <text x="430" y="2690" class="attribute">- autoRefreshInterval: Number</text>
+  <text x="430" y="2705" class="attribute">- lastLoadTime: Number</text>
+  <text x="430" y="2720" class="attribute">- minLoadInterval: Number</text>
+  <line x1="420" y1="2730" x2="780" y2="2730" class="section-line"/>
+  <text x="430" y="2750" class="method">+ init(): ActivityLogsManager</text>
+  <text x="430" y="2765" class="method">+ loadUserLogs(showLoading): Promise&lt;void&gt;</text>
+  <text x="430" y="2780" class="method">+ displayLogs(logs, metadata): void</text>
+  <text x="430" y="2795" class="method">+ createLogEntry(log): String</text>
+  <text x="430" y="2810" class="method">+ clearLogs(): Promise&lt;void&gt;</text>
+  <text x="430" y="2825" class="method">+ exportLogs(): void</text>
+
+  <!-- AuthManager (Enhanced) -->
+  <rect x="830" y="2580" width="380" height="320" class="class-box"/>
+  <text x="1020" y="2600" class="class-title" text-anchor="middle">AuthManager</text>
+  <line x1="830" y1="2610" x2="1210" y2="2610" class="section-line"/>
+  <text x="840" y="2630" class="attribute">Static Properties:</text>
+  <text x="840" y="2645" class="attribute">+ statsCache: Object</text>
+  <text x="840" y="2660" class="attribute">+ statsCacheTime: Number</text>
+  <text x="840" y="2675" class="attribute">+ STATS_CACHE_DURATION: Number</text>
+  <text x="840" y="2690" class="attribute">+ metricsRefreshInterval: Number</text>
+  <text x="840" y="2705" class="attribute">+ lastHealthCheck: Number</text>
+  <line x1="830" y1="2715" x2="1210" y2="2715" class="section-line"/>
+  <text x="840" y="2735" class="method">+ getCurrentUser(): Object</text>
+  <text x="840" y="2750" class="method">+ isAuthenticated(): Boolean</text>
+  <text x="840" y="2765" class="method">+ isAdmin(): Boolean</text>
+  <text x="840" y="2780" class="method">+ getApiKey(): String</text>
+  <text x="840" y="2795" class="method">+ logout(): void</text>
+  <text x="840" y="2810" class="method">+ restorePersistentSession(): void</text>
+  <text x="840" y="2825" class="method">+ setupUserInterface(): void</text>
+  <text x="840" y="2840" class="method">+ loadRealMetrics(): Promise</text>
+  <text x="840" y="2855" class="method">+ updateDashboardMetrics(data): void</text>
+  <text x="840" y="2870" class="method">+ performHealthCheck(): Promise&lt;void&gt;</text>
+  <text x="840" y="2885" class="method">+ startMetricsRefresh(): void</text>
+
+  <!-- BulkUploadManager -->
+  <rect x="1260" y="2580" width="320" height="200" class="class-box"/>
+  <text x="1420" y="2600" class="class-title" text-anchor="middle">BulkUploadManager</text>
+  <line x1="1260" y1="2610" x2="1580" y2="2610" class="section-line"/>
+  <text x="1270" y="2630" class="attribute">- fileInput: HTMLInputElement</text>
+  <text x="1270" y="2645" class="attribute">- submitBtn: HTMLButtonElement</text>
+  <text x="1270" y="2660" class="attribute">- progressBar: HTMLElement</text>
+  <text x="1270" y="2675" class="attribute">- bulkResultsBox: HTMLElement</text>
+  <line x1="1260" y1="2685" x2="1580" y2="2685" class="section-line"/>
+  <text x="1270" y="2705" class="method">+ validateFile(file): Object</text>
+  <text x="1270" y="2720" class="method">+ formatFileSize(bytes): String</text>
+  <text x="1270" y="2735" class="method">+ updateButtonState(file): void</text>
+  <text x="1270" y="2750" class="method">+ renderResults(results, summary): void</text>
+  <text x="1270" y="2765" class="method">+ renderTable(results): HTMLElement</text>
+
+  <!-- Relationships -->
+  
+  <!-- AuthAPI uses DatabaseManager -->
+  <line x1="240" y1="1485" x2="1300" y2="1485" class="composition"/>
+  <line x1="1300" y1="1485" x2="1300" y2="370" class="composition"/>
+  <polygon points="1300,370 1295,380 1305,380" class="arrow"/>
+  
+  <!-- DatabaseManager has Collections -->
+  <line x1="1300" y1="370" x2="1300" y2="1170" class="composition"/>
+  <line x1="1300" y1="1170" x2="990" y2="1170" class="composition"/>
+  <polygon points="990,1170 1000,1165 1000,1175" class="arrow"/>
+  
+  <!-- AuthAPI uses CacheManager -->
+  <line x1="240" y1="1500" x2="240" y2="1850" class="composition"/>
+  <line x1="240" y1="1850" x2="190" y2="1850" class="composition"/>
+  <line x1="190" y1="1850" x2="190" y2="1920" class="composition"/>
+  <polygon points="190,1920 185,1910 195,1910" class="arrow"/>
+  
+  <!-- AuthAPI uses LoginAnomalyDetector -->
+  <line x1="240" y1="1420" x2="240" y2="610" class="relationship"/>
+  <line x1="240" y1="610" x2="450" y2="610" class="relationship"/>
+  <polygon points="450,610 440,605 440,615" class="arrow"/>
+  
+  <!-- User has BehavioralProfile -->
+  <line x1="370" y1="230" x2="1510" y2="230" class="composition"/>
+  <line x1="1510" y1="230" x2="1510" y2="180" class="composition"/>
+  <polygon points="1510,180 1505,190 1515,190" class="arrow"/>
+  
+  <!-- Session tracks LoginAttempt -->
+  <line x1="1090" y1="210" x2="1615" y2="210" class="relationship"/>
+  <line x1="1615" y1="210" x2="1615" y2="520" class="relationship"/>
+  <polygon points="1615,520 1610,510 1620,510" class="arrow"/>
+  
+  <!-- LoginAnomalyDetector creates LoginAttempt -->
+  <line x1="770" y1="620" x2="1480" y2="620" class="relationship"/>
+  <polygon points="1480,620 1470,615 1470,625" class="arrow"/>
+  
+  <!-- AuthAPI uses SystemSettings -->
+  <line x1="430" y1="1710" x2="1290" y2="1710" class="relationship"/>
+  <line x1="1290" y1="1710" x2="1290" y2="720" class="relationship"/>
+  <polygon points="1290,720 1285,730 1295,730" class="arrow"/>
+  
+  <!-- MaintenanceSystem uses DatabaseManager -->
+  <line x1="1320" y1="1420" x2="1320" y2="370" class="relationship"/>
+  <polygon points="1320,370 1315,380 1325,380" class="arrow"/>
+  
+  <!-- AuthAPI uses RateLimiter -->
+  <line x1="430" y1="1800" x2="540" y2="1800" class="relationship"/>
+  <line x1="540" y1="1800" x2="540" y2="1920" class="relationship"/>
+  <polygon points="540,1920 535,1910 545,1910" class="arrow"/>
+  
+  <!-- BulkAPI uses FraudChecker -->
+  <line x1="620" y1="1420" x2="620" y2="760" class="composition"/>
+  <line x1="620" y1="760" x2="225" y2="760" class="composition"/>
+  <polygon points="225,760 235,755 235,765" class="arrow"/>
+  
+  <!-- AuthAPI integrates with BulkAPI (Fraud API) -->
+  <line x1="430" y1="1630" x2="480" y2="1630" class="relationship" stroke-dasharray="5,5"/>
+  <text x="455" y="1645" class="attribute" font-size="9">HTTP</text>
+
+  <!-- ApiCallManager is used by all frontend components -->
+  <line x1="210" y1="2580" x2="210" y2="2540" class="relationship" stroke-dasharray="3,3"/>
+  <text x="215" y="2560" class="attribute" font-size="9">throttles</text>
+  
+  <!-- AuthManager uses ApiCallManager -->
+  <line x1="1020" y1="2580" x2="1020" y2="2550" class="relationship"/>
+  <line x1="1020" y1="2550" x2="210" y2="2550" class="relationship"/>
+  <line x1="210" y1="2550" x2="210" y2="2580" class="relationship"/>
+  <polygon points="210,2580 205,2570 215,2570" class="arrow"/>
+  
+  <!-- ActivityLogsManager uses ApiCallManager -->
+  <line x1="600" y1="2580" x2="600" y2="2560" class="relationship"/>
+  <line x1="600" y1="2560" x2="210" y2="2560" class="relationship"/>
+  <polygon points="210,2560 205,2550 215,2550" class="arrow"/>
+  
+  <!-- BulkUploadManager calls BulkAPI -->
+  <line x1="1420" y1="2580" x2="1420" y2="2100" class="relationship" stroke-dasharray="5,5"/>
+  <line x1="1420" y1="2100" x2="620" y2="2100" class="relationship" stroke-dasharray="5,5"/>
+  <line x1="620" y1="2100" x2="620" y2="1620" class="relationship" stroke-dasharray="5,5"/>
+  <text x="1425" y="2350" class="attribute" font-size="9">HTTP/REST</text>
+  <polygon points="620,1620 615,1630 625,1630" class="arrow"/>
+  
+  <!-- ActivityLogsManager calls AuthAPI for logs -->
+  <line x1="600" y1="2840" x2="600" y2="2900" class="relationship" stroke-dasharray="5,5"/>
+  <line x1="600" y1="2900" x2="240" y2="2900" class="relationship" stroke-dasharray="5,5"/>
+  <line x1="240" y1="2900" x2="240" y2="1820" class="relationship" stroke-dasharray="5,5"/>
+  <text x="605" y="2870" class="attribute" font-size="9">HTTP/REST</text>
+  
+  <!-- AuthManager monitors BulkAPI health -->
+  <line x1="1020" y1="2900" x2="1020" y2="2950" class="relationship" stroke-dasharray="5,5"/>
+  <line x1="1020" y1="2950" x2="620" y2="2950" class="relationship" stroke-dasharray="5,5"/>
+  <line x1="620" y1="2950" x2="620" y2="1620" class="relationship" stroke-dasharray="5,5"/>
+  <text x="800" y="2965" class="attribute" font-size="9">Health Check</text>
+</svg>

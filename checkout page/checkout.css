@@ -117,6 +117,27 @@ select:focus {
     margin-bottom: 12px;
 }
 
+/* ✅ Checkbox styling */
+.form-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.form-group label input[type="checkbox"] + span {
+    vertical-align: middle;
+}
+
+/* Optional: smoother appearance for checkbox groups */
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    color: #475569;
+}
+
+/* Responsive behavior */
 @media (max-width: 640px) {
     .product-preview {
         flex-direction: column;

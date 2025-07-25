@@ -7,16 +7,27 @@
   <meta name="description" content="FraudShield - Advanced real-time fraud detection and prevention dashboard" />
   <meta name="keywords" content="fraud detection, transaction security, risk assessment, financial protection" />
   <meta name="author" content="FraudShield Security Solutions" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="FraudShield Dashboard - Advanced Fraud Detection Platform" />
+  <meta property="og:description" content="Advanced real-time fraud detection and prevention dashboard" />
+  <meta property="og:type" content="website" />
   <title>FraudShield Dashboard - Advanced Fraud Detection Platform</title>
 
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-    rel="stylesheet" />
+  <!-- Preconnect for Performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="assets/favicon.png" />
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  
+  <!-- Favicon Set -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="manifest.json" />
 
   <!-- Core Stylesheets -->
   <link rel="stylesheet" href="css/base.css" />
@@ -26,6 +37,11 @@
   <link rel="stylesheet" href="css/bulk-analysis.css" />
   <link rel="stylesheet" href="css/logs.css" />
   <link rel="stylesheet" href="css/settings.css" />
+
+  <!-- Preload Critical Assets -->
+  <link rel="preload" href="assets/logo.png" as="image" />
+  <link rel="preload" href="css/base.css" as="style" />
+  <link rel="preload" href="index.js" as="script" />
 
   <!-- FIXED: Removed forced authentication check - Allow public access -->
   <script>
@@ -55,45 +71,48 @@
 </head>
 
 <body>
+  <!-- Skip to Content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
   <!-- Enhanced Header with User Info -->
-  <header>
+  <header role="banner">
     <div class="logo-section">
-      <a href="index.html">
-        <img src="assets/logo.png" alt="FraudShield Portal" />
+      <a href="index.html" aria-label="FraudShield Home">
+        <img src="assets/logo.png" alt="FraudShield Portal" width="180" height="40" loading="eager" />
       </a>
 
-      <div class="status-indicator" id="apiStatus">
-        <span class="status-dot"></span>
+      <div class="status-indicator" id="apiStatus" role="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
         <span class="status-text">Connecting...</span>
       </div>
     </div>
 
     <nav role="navigation" aria-label="Main navigation">
-      <button class="tab-btn active" data-tab="home" aria-selected="true">
-        <span class="icon">🏠</span>
+      <button class="tab-btn active" data-tab="home" aria-selected="true" aria-controls="home" type="button">
+        <span class="icon" aria-hidden="true">🏠</span>
         <span class="label">Dashboard</span>
       </button>
-      <button class="tab-btn" data-tab="bulk" aria-selected="false">
-        <span class="icon">📊</span>
+      <button class="tab-btn" data-tab="bulk" aria-selected="false" aria-controls="bulk" type="button">
+        <span class="icon" aria-hidden="true">📊</span>
         <span class="label">Bulk Analysis</span>
       </button>
-      <button class="tab-btn" data-tab="logs" aria-selected="false" id="logsTab">
-        <span class="icon">📋</span>
+      <button class="tab-btn" data-tab="logs" aria-selected="false" aria-controls="logs" id="logsTab" type="button">
+        <span class="icon" aria-hidden="true">📋</span>
         <span class="label">Activity Logs</span>
       </button>
-      <button class="tab-btn" data-tab="settings" aria-selected="false" id="settingsTab">
-        <span class="icon">⚙️</span>
+      <button class="tab-btn" data-tab="settings" aria-selected="false" aria-controls="settings" id="settingsTab" type="button">
+        <span class="icon" aria-hidden="true">⚙️</span>
         <span class="label">Settings</span>
       </button>
     </nav>
 
     <!-- User Profile Section - Show login button if not authenticated -->
-    <div class="user-section" id="userSection">
+    <div class="user-section" id="userSection" role="complementary">
       <!-- Content will be dynamically generated based on auth status -->
     </div>
   </header>
 
-  <main role="main">
+  <main role="main" id="main-content">
 
     <!-- Enhanced Home/Dashboard Tab -->
     <section id="home" class="tab-content active" role="tabpanel" aria-labelledby="home-tab">
@@ -103,17 +122,17 @@
         <div class="hero-content">
           <h1 id="welcomeMessage">Welcome to FraudShield</h1>
           <p class="hero-subtitle">Advanced rule-based fraud detection with transparent, explainable results</p>
-          <div class="hero-stats">
+          <div class="hero-stats" role="group" aria-label="Detection statistics">
             <div class="stat-item">
-              <span class="stat-number" id="totalChecks">1,247</span>
+              <span class="stat-number" id="totalChecks" data-value="1247">1,247</span>
               <span class="stat-label">Transactions Analyzed</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number" id="fraudBlocked">89</span>
+              <span class="stat-number" id="fraudBlocked" data-value="89">89</span>
               <span class="stat-label">Fraud Attempts Blocked</span>
             </div>
             <div class="stat-item">
-              <span class="stat-number" id="accuracyRate">99.2%</span>
+              <span class="stat-number" id="accuracyRate" data-value="99.2">99.2%</span>
               <span class="stat-label">Detection Accuracy</span>
             </div>
           </div>
@@ -121,27 +140,27 @@
       </div>
 
       <!-- Authentication Prompt for Non-Authenticated Users -->
-      <div id="authPrompt" class="hidden">
-        <div
+      <div id="authPrompt" class="hidden" role="region" aria-label="Authentication prompt">
+        <div class="auth-prompt-card"
           style="text-align: center; padding: 2rem; background: #f8fafc; border-radius: 12px; margin: 2rem 0; border: 1px solid #e2e8f0;">
           <h3 style="color: #1e293b; margin-bottom: 1rem;">🔐 Want Full Access?</h3>
           <p style="color: #64748b; margin-bottom: 1.5rem;">Create a free account to access advanced features, activity
             logs, and system settings.</p>
           <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="/user_auth/pages/registration.html"
-              style="display: inline-flex; align-items: center; gap: 0.5rem; background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
-              <span>👤</span> Create Account
+            <a href="/user_auth/pages/registration.html" class="btn-auth-primary"
+              style="display: inline-flex; align-items: center; gap: 0.5rem; background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s;">
+              <span aria-hidden="true">👤</span> Create Account
             </a>
-            <a href="/user_auth/pages/login.html"
-              style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2563eb; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid #2563eb;">
-              <span>🚪</span> Sign In
+            <a href="/user_auth/pages/login.html" class="btn-auth-secondary"
+              style="display: inline-flex; align-items: center; gap: 0.5rem; background: white; color: #2563eb; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid #2563eb; transition: all 0.2s;">
+              <span aria-hidden="true">🚪</span> Sign In
             </a>
           </div>
         </div>
       </div>
 
       <!-- Role-specific Content -->
-      <div id="roleSpecificContent">
+      <div id="roleSpecificContent" role="region" aria-label="Role specific content">
         <!-- Content will be loaded based on user role -->
       </div>
 
@@ -158,27 +177,27 @@
             Built for businesses that need <em>speed, accuracy, and complete transparency</em>
             in their fraud detection pipeline. Every decision is explainable and auditable.
           </p>
-          <div class="feature-highlights">
-            <span class="highlight-badge">⚡ Sub-second Analysis</span>
-            <span class="highlight-badge">🔍 100% Explainable</span>
-            <span class="highlight-badge">📊 Rule-Based Logic</span>
+          <div class="feature-highlights" role="list">
+            <span class="highlight-badge" role="listitem">⚡ Sub-second Analysis</span>
+            <span class="highlight-badge" role="listitem">🔍 100% Explainable</span>
+            <span class="highlight-badge" role="listitem">📊 Rule-Based Logic</span>
           </div>
         </div>
         <div class="media">
-          <div class="demo-visualization">
+          <div class="demo-visualization" role="img" aria-label="Live detection engine demo">
             <div class="vis-header">Live Detection Engine</div>
-            <div class="threat-item safe">
-              <span class="threat-icon">✅</span>
+            <div class="threat-item safe" role="status">
+              <span class="threat-icon" aria-hidden="true">✅</span>
               <span class="threat-text">Transaction #1001 - Clean</span>
               <span class="threat-score">0.12</span>
             </div>
-            <div class="threat-item warning">
-              <span class="threat-icon">⚠️</span>
+            <div class="threat-item warning" role="status">
+              <span class="threat-icon" aria-hidden="true">⚠️</span>
               <span class="threat-text">Transaction #1002 - Review</span>
               <span class="threat-score">0.65</span>
             </div>
-            <div class="threat-item danger">
-              <span class="threat-icon">❌</span>
+            <div class="threat-item danger" role="status">
+              <span class="threat-icon" aria-hidden="true">❌</span>
               <span class="threat-text">Transaction #1003 - Blocked</span>
               <span class="threat-score">0.91</span>
             </div>
@@ -189,49 +208,49 @@
       <!-- Get Started Section -->
       <div class="two-col right">
         <div class="media">
-          <div class="workflow-preview">
+          <div class="workflow-preview" role="img" aria-label="Workflow process">
             <div class="workflow-step active">
-              <span class="step-icon">📁</span>
+              <span class="step-icon" aria-hidden="true">📁</span>
               <span class="step-name">Upload Data</span>
             </div>
-            <div class="workflow-arrow">→</div>
+            <div class="workflow-arrow" aria-hidden="true">→</div>
             <div class="workflow-step">
-              <span class="step-icon">⚙️</span>
+              <span class="step-icon" aria-hidden="true">⚙️</span>
               <span class="step-name">Rule Engine</span>
             </div>
-            <div class="workflow-arrow">→</div>
+            <div class="workflow-arrow" aria-hidden="true">→</div>
             <div class="workflow-step">
-              <span class="step-icon">📊</span>
+              <span class="step-icon" aria-hidden="true">📊</span>
               <span class="step-name">Results</span>
             </div>
           </div>
         </div>
         <div class="text">
           <h3>🚀 Get Started in Minutes</h3>
-          <div class="step-guide">
-            <div class="step">
-              <span class="step-number">1</span>
+          <div class="step-guide" role="list">
+            <div class="step" role="listitem">
+              <span class="step-number" aria-label="Step 1">1</span>
               <div class="step-content">
                 <h4>Upload Transaction Data</h4>
                 <p>CSV, Excel, or JSON files with transaction details</p>
               </div>
             </div>
-            <div class="step">
-              <span class="step-number">2</span>
+            <div class="step" role="listitem">
+              <span class="step-number" aria-label="Step 2">2</span>
               <div class="step-content">
                 <h4>Rule Engine Analysis</h4>
                 <p>8+ detection rules analyze each transaction instantly</p>
               </div>
             </div>
-            <div class="step">
-              <span class="step-number">3</span>
+            <div class="step" role="listitem">
+              <span class="step-number" aria-label="Step 3">3</span>
               <div class="step-content">
                 <h4>Download Results</h4>
                 <p>Get detailed reports with fraud scores and triggered rules</p>
               </div>
             </div>
           </div>
-          <button class="cta-button" onclick="switchToTab('bulk')">
+          <button class="cta-button" onclick="switchToTab('bulk')" type="button" aria-label="Start fraud analysis">
             📊 Start Analysis
           </button>
         </div>
@@ -248,11 +267,11 @@
       </div>
 
       <!-- Public Access Notice -->
-      <div id="publicAccessNotice" class="hidden">
-        <div
+      <div id="publicAccessNotice" class="hidden" role="alert">
+        <div class="info-notice"
           style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 1rem; margin-bottom: 2rem;">
           <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <span style="font-size: 1.25rem;">ℹ️</span>
+            <span style="font-size: 1.25rem;" aria-hidden="true">ℹ️</span>
             <div>
               <strong style="color: #1d4ed8;">Public Demo Mode</strong>
               <p style="margin: 0.25rem 0 0 0; color: #1e40af; font-size: 0.9rem;">
@@ -267,8 +286,8 @@
 
       <!-- File Upload Section -->
       <div class="upload-section">
-        <div class="upload-box" id="uploadBox">
-          <div class="upload-icon">📁</div>
+        <div class="upload-box" id="uploadBox" role="region" aria-label="File upload area">
+          <div class="upload-icon" aria-hidden="true">📁</div>
           <h3>Upload Transaction Data</h3>
           <p class="upload-desc">
             Drag & drop your file here or click to browse
@@ -279,24 +298,24 @@
 
           <input type="file" id="bulkFile" accept=".csv,.json,.xlsx,.txt,.xls" aria-label="Upload transaction file" />
 
-          <div class="file-info hidden" id="fileInfo">
+          <div class="file-info hidden" id="fileInfo" role="status">
             <div class="file-details">
               <span class="file-name" id="fileName"></span>
               <span class="file-size" id="fileSize"></span>
             </div>
           </div>
 
-          <button id="bulkSubmit" class="submit-btn" disabled>
-            <span class="btn-icon">🔍</span>
+          <button id="bulkSubmit" class="submit-btn" disabled type="button" aria-busy="false">
+            <span class="btn-icon" aria-hidden="true">🔍</span>
             <span class="btn-text">Analyze Transactions</span>
           </button>
 
-          <div class="upload-progress-bar hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <div class="upload-progress-bar hidden" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
             <div class="upload-progress-bar-inner"></div>
             <span class="progress-text">Processing...</span>
           </div>
 
-          <div class="upload-stats">
+          <div class="upload-stats" role="group" aria-label="Upload limitations">
             <div class="stat">
               <span class="stat-label">Max File Size:</span>
               <span class="stat-value">16 MB</span>
@@ -314,7 +333,7 @@
       </div>
 
       <!-- Results Section -->
-      <div id="bulkResults" class="results-section" aria-live="polite"></div>
+      <div id="bulkResults" class="results-section" aria-live="polite" aria-atomic="true"></div>
 
     </section>
 
@@ -327,33 +346,33 @@
       </div>
 
       <!-- Auth Required Notice -->
-      <div id="logsAuthRequired" class="access-denied">
-        <div class="access-denied-icon">🔒</div>
+      <div id="logsAuthRequired" class="access-denied" role="alert">
+        <div class="access-denied-icon" aria-hidden="true">🔒</div>
         <h3>Authentication Required</h3>
         <p>Activity logs require a user account to protect sensitive data.</p>
         <div style="margin-top: 1.5rem;">
           <a href="/user_auth/pages/login.html" class="btn btn-primary">
-            <span>🚪</span> Sign In
+            <span aria-hidden="true">🚪</span> Sign In
           </a>
           <a href="/user_auth/pages/registration.html" class="btn btn-secondary" style="margin-left: 1rem;">
-            <span>👤</span> Create Account
+            <span aria-hidden="true">👤</span> Create Account
           </a>
         </div>
       </div>
 
       <!-- Admin Only Notice -->
-      <div id="logsAdminOnly" class="access-denied hidden">
-        <div class="access-denied-icon">👑</div>
+      <div id="logsAdminOnly" class="access-denied hidden" role="alert">
+        <div class="access-denied-icon" aria-hidden="true">👑</div>
         <h3>Administrator Access Required</h3>
         <p>Activity logs are only available to administrators.</p>
         <p>Contact your system administrator for access.</p>
       </div>
 
       <!-- Log Controls - Only shown to admins -->
-      <div class="log-controls hidden" id="logControls">
+      <div class="log-controls hidden" id="logControls" role="region" aria-label="Log controls">
         <div class="control-group">
           <label for="logLevel">Log Level:</label>
-          <select id="logLevel">
+          <select id="logLevel" aria-label="Filter log level">
             <option value="all">All Events</option>
             <option value="info">Info</option>
             <option value="warning">Warnings</option>
@@ -362,16 +381,16 @@
           </select>
         </div>
         <div class="control-group">
-          <button id="clearLogs" class="secondary-btn">🗑️ Clear Logs</button>
-          <button id="exportLogs" class="secondary-btn">💾 Export</button>
+          <button id="clearLogs" class="secondary-btn" type="button">🗑️ Clear Logs</button>
+          <button id="exportLogs" class="secondary-btn" type="button">💾 Export</button>
         </div>
       </div>
 
       <!-- Live Log Feed -->
       <div class="log-container hidden" id="logContainer">
-        <div id="logOutput" class="log-output">
+        <div id="logOutput" class="log-output" role="log" aria-live="polite" aria-label="Activity log feed">
           <div class="log-placeholder">
-            <div class="placeholder-icon">📋</div>
+            <div class="placeholder-icon" aria-hidden="true">📋</div>
             <h3>Waiting for Activity</h3>
             <p>Fraud detection events and system logs will appear here in real-time</p>
           </div>
@@ -389,57 +408,59 @@
       </div>
 
       <!-- Auth Required Notice -->
-      <div id="settingsAuthRequired" class="access-denied">
-        <div class="access-denied-icon">🔒</div>
+      <div id="settingsAuthRequired" class="access-denied" role="alert">
+        <div class="access-denied-icon" aria-hidden="true">🔒</div>
         <h3>Authentication Required</h3>
         <p>Settings require a user account to protect system configuration.</p>
         <div style="margin-top: 1.5rem;">
           <a href="/user_auth/pages/login.html" class="btn btn-primary">
-            <span>🚪</span> Sign In
+            <span aria-hidden="true">🚪</span> Sign In
           </a>
           <a href="/user_auth/pages/registration.html" class="btn btn-secondary" style="margin-left: 1rem;">
-            <span>👤</span> Create Account
+            <span aria-hidden="true">👤</span> Create Account
           </a>
         </div>
       </div>
 
       <!-- Settings Grid - Only shown to authenticated users -->
-      <div class="settings-grid hidden" id="settingsGrid">
+      <div class="settings-grid hidden" id="settingsGrid" role="region" aria-label="Settings configuration">
 
         <!-- User Profile Settings (Available to all authenticated users) -->
         <div class="settings-card">
           <h3>👤 Profile Settings</h3>
-          <div class="setting-item">
-            <label for="profileName">Full Name</label>
-            <input type="text" id="profileName" class="form-input" placeholder="Your full name">
-          </div>
-          <div class="setting-item">
-            <label for="profileEmail">Email Address</label>
-            <input type="email" id="profileEmail" class="form-input" placeholder="your@email.com" disabled>
-          </div>
-          <div class="setting-item">
-            <label for="profileCompany">Company</label>
-            <input type="text" id="profileCompany" class="form-input" placeholder="Your company">
-          </div>
-          <button id="saveProfile" class="primary-btn">💾 Save Profile</button>
+          <form id="profileForm" novalidate>
+            <div class="setting-item">
+              <label for="profileName">Full Name</label>
+              <input type="text" id="profileName" class="form-input" placeholder="Your full name" required>
+            </div>
+            <div class="setting-item">
+              <label for="profileEmail">Email Address</label>
+              <input type="email" id="profileEmail" class="form-input" placeholder="your@email.com" disabled>
+            </div>
+            <div class="setting-item">
+              <label for="profileCompany">Company</label>
+              <input type="text" id="profileCompany" class="form-input" placeholder="Your company">
+            </div>
+            <button id="saveProfile" class="primary-btn" type="submit">💾 Save Profile</button>
+          </form>
         </div>
 
         <!-- API Key Management (Available to all authenticated users) -->
         <div class="settings-card">
           <h3>🔑 API Key Management</h3>
           <div class="api-key-display">
-            <label>Your API Key</label>
+            <label for="userApiKey">Your API Key</label>
             <div class="api-key-box">
-              <code id="userApiKey" class="api-key-code">Loading...</code>
-              <button id="copyUserApiKey" class="copy-btn">📋 Copy</button>
+              <code id="userApiKey" class="api-key-code" tabindex="0">Loading...</code>
+              <button id="copyUserApiKey" class="copy-btn" type="button" aria-label="Copy API key">📋 Copy</button>
             </div>
           </div>
           <div class="api-key-actions">
-            <button id="regenerateApiKey" class="secondary-btn">🔄 Regenerate Key</button>
-            <button id="downloadApiKey" class="secondary-btn">💾 Download</button>
+            <button id="regenerateApiKey" class="secondary-btn" type="button">🔄 Regenerate Key</button>
+            <button id="downloadApiKey" class="secondary-btn" type="button">💾 Download</button>
           </div>
-          <div class="api-warning">
-            <div class="warning-icon">⚠️</div>
+          <div class="api-warning" role="alert">
+            <div class="warning-icon" aria-hidden="true">⚠️</div>
             <div class="warning-content">
               <strong>Important:</strong> Keep your API key secure. It provides access to your FraudShield account.
             </div>
@@ -455,12 +476,12 @@
   </main>
 
   <!-- Toast Notifications -->
-  <div id="toastContainer" class="toast-container" aria-live="assertive"></div>
+  <div id="toastContainer" class="toast-container" role="status" aria-live="assertive" aria-atomic="true"></div>
 
   <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="loading-spinner"></div>
-    <p>Processing your request...</p>
+  <div id="loadingOverlay" class="loading-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="loadingText">
+    <div class="loading-spinner" aria-hidden="true"></div>
+    <p id="loadingText">Processing your request...</p>
   </div>
 
   <!-- Scripts -->

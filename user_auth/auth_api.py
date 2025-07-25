@@ -109,7 +109,6 @@ cache_manager = CacheManager()
 # ============================================================================
 # CONFIGURATION CLASS
 # ============================================================================
-
 class AuthConfig:
     """Enhanced configuration settings for the authentication API."""
     
