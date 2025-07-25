@@ -1,8 +1,8 @@
 """
-FraudShield Authentication API - Enhanced with Advanced Algorithm Integration
+FraudShield Authentication API - Enhanced with Optimized Database Integration
 Author: FraudShield Team
 Location: user_auth/auth_api.py
-About: Complete authentication system with advanced fraud detection integration
+About: Complete authentication system with optimized database structure and checkout integration
 """
 
 from __future__ import annotations
@@ -48,7 +48,8 @@ RATE_LIMITS = {
     'admin_stats': 60,      # 60 seconds
     'login': 5,             # 5 seconds between login attempts
     'register': 30,         # 30 seconds between registrations
-    'fraud_api_health': 60  # 60 seconds for fraud API health checks
+    'fraud_api_health': 60, # 60 seconds for fraud API health checks
+    'track_activity': 1     # 1 second for activity tracking
 }
 
 # ============================================================================
@@ -137,16 +138,17 @@ class AuthConfig:
         "http://localhost:8080",
         "http://127.0.0.1:8000",
         "http://localhost:8000",
+        "file://",  # For local development
         "null"  # file:// protocol for local dev
     ]
     
-    # NEW: Advanced Algorithm Integration Settings
+    # Advanced Algorithm Integration Settings
     FRAUD_API_URL: str = os.getenv('FRAUD_API_URL', 'http://127.0.0.1:5000')
     ENABLE_BEHAVIORAL_TRACKING: bool = True
     ENABLE_LOGIN_ANOMALY_DETECTION: bool = True
     SUSPICIOUS_LOGIN_THRESHOLD: float = 0.6
     
-    # NEW: Default fraud detection thresholds
+    # Default fraud detection thresholds
     DEFAULT_FRAUD_THRESHOLD: float = 0.7
     DEFAULT_SUSPICIOUS_THRESHOLD: float = 0.4
 
@@ -245,11 +247,11 @@ def enhanced_rate_limit(endpoint: str, limit_seconds: int = 0):
     return decorator
 
 # ============================================================================
-# ENHANCED DATABASE MANAGER CLASS
+# ENHANCED DATABASE MANAGER CLASS FOR OPTIMIZED STRUCTURE
 # ============================================================================
 
 class DatabaseManager:
-    """Enhanced database manager with advanced fraud integration capabilities."""
+    """Enhanced database manager with optimized collection structure."""
     
     def __init__(self) -> None:
         """Initialize the database manager."""
@@ -307,24 +309,45 @@ class DatabaseManager:
         return False
     
     def _init_collections(self) -> None:
-        """Initialize database collections with indexes and enhanced fraud detection settings."""
+        """Initialize database collections with indexes for optimized structure."""
         try:
             if self.db is None:
                 return
                 
-            # Create indexes for better performance (FIXED: Remove _id index creation)
+            # Create indexes for users collection
             self.db.users.create_index("email", unique=True)
             self.db.users.create_index("api_key", unique=True, sparse=True)
+            
+            # Create indexes for sessions
             self.db.sessions.create_index("session_id", unique=True)
             self.db.sessions.create_index("expires_at", expireAfterSeconds=0)
             
-            # NEW: Enhanced indexes for advanced fraud detection
-            self.db.login_attempts.create_index([("email", 1), ("timestamp", -1)])
-            self.db.login_attempts.create_index("ip_address")
-            self.db.user_behavior.create_index([("user_id", 1), ("timestamp", -1)])
-            # FIXED: Don't try to create unique index on system_settings._id
+            # Create indexes for sites collection (checkout integration)
+            self.db.sites.create_index("api_key")
+            self.db.sites.create_index("user_email")
             
-            logger.info("Database indexes created/verified")
+            # Create indexes for optimized fraud_blacklist collection
+            self.db.fraud_blacklist.create_index([("type", 1), ("value", 1)], unique=True)
+            self.db.fraud_blacklist.create_index("type")
+            self.db.fraud_blacklist.create_index("risk_score")
+            
+            # Create indexes for transactions collection
+            self.db.transactions.create_index([("email", 1), ("timestamp", -1)])
+            self.db.transactions.create_index("api_key")
+            self.db.transactions.create_index("device_fingerprint")
+            self.db.transactions.create_index("ip_address")
+            self.db.transactions.create_index("fraud_score")
+            
+            # Create indexes for metrics collection
+            self.db.metrics.create_index("category")
+            self.db.metrics.create_index("last_updated")
+            
+            # Create indexes for audit logs
+            self.db.audit_logs.create_index([("timestamp", -1)])
+            self.db.audit_logs.create_index("action")
+            self.db.audit_logs.create_index("user_email")
+            
+            logger.info("Database indexes created/verified for optimized structure")
             
             # Create default admin user and system settings
             self._create_default_admin()
@@ -353,7 +376,7 @@ class DatabaseManager:
                     "login_attempts": 0,
                     "locked_until": None,
                     "terms_accepted_at": datetime.now(),
-                    # NEW: Enhanced user fields for fraud detection
+                    # Enhanced user fields for fraud detection
                     "behavioral_profile": {
                         "typical_login_hours": [],
                         "typical_ips": [],
@@ -362,7 +385,24 @@ class DatabaseManager:
                     "security_score": 1.0
                 }
                 
-                self.db.users.insert_one(admin_user)
+                result = self.db.users.insert_one(admin_user)
+                
+                # Create site entry for admin
+                site_doc = {
+                    "user_email": admin_user["email"],
+                    "api_key": admin_user["api_key"],
+                    "site_name": "FraudShield Admin",
+                    "domain": "fraudshield.com",
+                    "created_at": datetime.now(),
+                    "status": "active",
+                    "settings": {
+                        "fraud_threshold": 0.7,
+                        "auto_block": True,
+                        "notification_email": admin_user["email"]
+                    }
+                }
+                self.db.sites.insert_one(site_doc)
+                
                 logger.info("Default admin user created: admin@fraudshield.com / Admin@123!")
                 
         except Exception as e:
@@ -385,7 +425,7 @@ class DatabaseManager:
                 }
                 self.db.system_settings.insert_one(fraud_settings)
             
-            # NEW: Initialize advanced algorithm settings
+            # Initialize advanced algorithm settings
             if not self.db.system_settings.find_one({"_id": "advanced_algorithms"}):
                 algo_settings = {
                     "_id": "advanced_algorithms",
@@ -458,8 +498,8 @@ db_manager: DatabaseManager = DatabaseManager()
 # ENHANCED BEHAVIORAL TRACKING FUNCTIONS
 # ============================================================================
 
-def track_login_behavior(user_id: str, ip_address: str, user_agent: str, success: bool) -> None:
-    """Track user login behavior for anomaly detection."""
+def track_login_behavior(user_id: str, email: str, ip_address: str, user_agent: str, success: bool) -> None:
+    """Track user login behavior for anomaly detection using optimized structure."""
     try:
         if not AuthConfig.ENABLE_BEHAVIORAL_TRACKING:
             return
@@ -468,23 +508,39 @@ def track_login_behavior(user_id: str, ip_address: str, user_agent: str, success
         if db is None:
             return
         
-        # Record login attempt
-        login_attempt = {
-            "user_id": user_id,
-            "email": "",  # Will be filled by caller
+        # Record in transactions collection (optimized structure)
+        login_record = {
+            "transaction_id": f"login_{user_id}_{datetime.now().timestamp()}",
+            "timestamp": datetime.now(),
+            "api_key": None,  # Not available during login
+            "user_email": email,
+            "email": email,
+            "device_fingerprint": hashlib.md5(f"{ip_address}:{user_agent}".encode()).hexdigest(),
             "ip_address": ip_address,
             "user_agent": user_agent,
+            "action": "login_attempt",
             "success": success,
-            "timestamp": datetime.now(),
-            "hour_of_day": datetime.now().hour,
-            "day_of_week": datetime.now().weekday()
+            "fraud_score": 0.0,  # Will be updated by anomaly detection
+            "decision": "allowed",
+            "reasons": [],
+            "metadata": {
+                "hour_of_day": datetime.now().hour,
+                "day_of_week": datetime.now().weekday()
+            }
         }
         
-        db.login_attempts.insert_one(login_attempt)
+        db.transactions.insert_one(login_record)
         
         # Update user behavioral profile if login was successful
         if success:
             update_user_behavioral_profile(user_id, ip_address, user_agent)
+            
+        # Update metrics
+        db.metrics.update_one(
+            {"_id": "total_transactions"},
+            {"$inc": {"count": 1}, "$set": {"last_updated": datetime.now()}},
+            upsert=True
+        )
             
     except Exception as e:
         logger.error(f"Failed to track login behavior: {e}")
@@ -575,8 +631,9 @@ def detect_login_anomalies(email: str, ip_address: str, user_agent: str) -> Tupl
             anomalies.append("new_ip_address")
         
         # Check login frequency (velocity)
-        recent_attempts = db.login_attempts.count_documents({
+        recent_attempts = db.transactions.count_documents({
             "email": email,
+            "action": "login_attempt",
             "timestamp": {"$gte": datetime.now() - timedelta(hours=1)}
         })
         
@@ -585,8 +642,9 @@ def detect_login_anomalies(email: str, ip_address: str, user_agent: str) -> Tupl
             anomalies.append("high_login_frequency")
         
         # Check for multiple failed attempts recently
-        failed_attempts = db.login_attempts.count_documents({
+        failed_attempts = db.transactions.count_documents({
             "email": email,
+            "action": "login_attempt",
             "success": False,
             "timestamp": {"$gte": datetime.now() - timedelta(hours=1)}
         })
@@ -650,13 +708,13 @@ def get_fraud_detection_stats() -> Dict[str, Any]:
             cache_manager.set('fraud_detection_stats', stats, 120)
             return stats
         else:
-            return cache_manager.get('fraud_detection_stats') or {}  # Return cached version if available, ensure dict
+            return cache_manager.get('fraud_detection_stats') or {}
     except Exception as e:
         logger.error(f"Failed to get fraud detection stats: {e}")
-        return cache_manager.get('fraud_detection_stats') or {}  # Return cached version if available, ensure dict
+        return cache_manager.get('fraud_detection_stats') or {}
 
 # ============================================================================
-# SESSION MANAGEMENT FUNCTIONS (Enhanced)
+# SESSION MANAGEMENT FUNCTIONS
 # ============================================================================
 
 def create_session(user_id: Union[str, ObjectId], remember: bool = False) -> Optional[str]:
@@ -694,7 +752,7 @@ def create_session(user_id: Union[str, ObjectId], remember: bool = False) -> Opt
             "remember_me": remember,
             "ip_address": request.remote_addr or "unknown",
             "user_agent": request.headers.get('User-Agent', ''),
-            # NEW: Enhanced session tracking
+            # Enhanced session tracking
             "login_risk_score": getattr(g, 'login_risk_score', 0.0),
             "anomalies_detected": getattr(g, 'login_anomalies', [])
         }
@@ -736,7 +794,7 @@ def validate_session(session_id: str) -> DatabaseResponse:
             db.sessions.delete_one({"session_id": session_id})
             return None
         
-        # NEW: Check if session has suspicious activity
+        # Check if session has suspicious activity
         if session.get("login_risk_score", 0) > AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD:
             logger.warning(f"High-risk session accessed: {session_id}, risk: {session.get('login_risk_score')}")
         
@@ -757,17 +815,17 @@ def cleanup_sessions() -> None:
         if result.deleted_count > 0:
             logger.info(f"Cleaned up {result.deleted_count} expired sessions")
         
-        # NEW: Clean up old login attempts (keep last 30 days)
-        cutoff_date = datetime.now() - timedelta(days=30)
-        old_attempts = db.login_attempts.delete_many({"timestamp": {"$lt": cutoff_date}})
-        if old_attempts.deleted_count > 0:
-            logger.info(f"Cleaned up {old_attempts.deleted_count} old login attempts")
+        # Clean up old transactions (keep last 90 days)
+        cutoff_date = datetime.now() - timedelta(days=90)
+        old_transactions = db.transactions.delete_many({"timestamp": {"$lt": cutoff_date}})
+        if old_transactions.deleted_count > 0:
+            logger.info(f"Cleaned up {old_transactions.deleted_count} old transactions")
             
     except Exception as e:
         log_error(f"Failed to cleanup sessions: {e}")
 
 # ============================================================================
-# UTILITY FUNCTIONS (Enhanced)
+# UTILITY FUNCTIONS
 # ============================================================================
 
 def hash_password(password: str) -> str:
@@ -823,7 +881,7 @@ def validate_email(email: str) -> bool:
     if not re.match(pattern, email):
         return False
     
-    # NEW: Check against common disposable email domains
+    # Check against common disposable email domains
     disposable_domains = {
         'tempmail.org', '10minutemail.com', 'guerrillamail.com', 'mailinator.com',
         'yopmail.com', 'temp-mail.org', 'throwaway.email', 'maildrop.cc'
@@ -862,7 +920,7 @@ def validate_password_strength(password: str) -> Tuple[bool, str]:
         r'(.)\1{2,}',  # Repeated characters
         r'123456|234567|345678|456789|567890',  # Sequential numbers
         r'qwerty|asdfgh|zxcvbn',  # Keyboard patterns
-        r'password|admin|user|test|guest|fraud|shield',  # Common words including app-specific
+        r'password|admin|user|test|guest|fraud|shield',  # Common words
         r'(.{1,3})\1{2,}',  # Repeated short sequences
     ]
     
@@ -870,7 +928,7 @@ def validate_password_strength(password: str) -> Tuple[bool, str]:
         if re.search(pattern, password, re.IGNORECASE):
             return False, "Password contains common patterns. Please choose a more secure password."
     
-    # NEW: Check password entropy
+    # Check password entropy
     import math
     entropy = len(set(password)) * math.log2(len(set(password))) if password else 0
     if entropy < 25:  # Minimum entropy threshold
@@ -937,20 +995,19 @@ def log_auth_attempt(email: str, success: bool, ip_address: str, user_agent: Opt
     try:
         db = db_manager.get_database()
         if db is not None:
+            # Log to audit_logs collection
             log_entry: Dict[str, Any] = {
-                "email": email,
+                "timestamp": datetime.now(),
+                "action": "auth_attempt",
+                "user_email": email,
                 "success": success,
                 "ip_address": ip_address,
                 "user_agent": user_agent,
-                "timestamp": datetime.now(),
-                "type": "auth_attempt",
-                # NEW: Enhanced logging fields
                 "risk_score": risk_score,
                 "anomalies_detected": anomalies or [],
-                "hour_of_day": datetime.now().hour,
-                "day_of_week": datetime.now().weekday()
+                "log_level": "info" if success else "warning"
             }
-            db.logs.insert_one(log_entry)
+            db.audit_logs.insert_one(log_entry)
         
         # Enhanced logging message
         risk_msg = f", Risk: {risk_score:.2f}" if risk_score > 0 else ""
@@ -961,7 +1018,7 @@ def log_auth_attempt(email: str, success: bool, ip_address: str, user_agent: Opt
         logger.error(f"Failed to log auth attempt: {e}")
 
 # ============================================================================
-# API ENDPOINTS (Enhanced)
+# API ENDPOINTS
 # ============================================================================
 
 @app.route("/auth/health", methods=["GET"])
@@ -989,14 +1046,14 @@ def health_check() -> ResponseTuple:
                 db_info = {
                     "users": user_count,
                     "active_sessions": session_count,
-                    "login_attempts_24h": db.login_attempts.count_documents({
+                    "transactions_24h": db.transactions.count_documents({
                         "timestamp": {"$gte": datetime.now() - timedelta(hours=24)}
-                    }) if hasattr(db, 'login_attempts') else 0
+                    })
                 }
             except Exception as e:
                 db_status = f"error: {str(e)}"
         
-        # NEW: Check fraud API health
+        # Check fraud API health
         fraud_api_health = check_fraud_api_health()
         
         status: Dict[str, Any] = {
@@ -1004,10 +1061,10 @@ def health_check() -> ResponseTuple:
             "timestamp": datetime.now().isoformat(),
             "database": db_status,
             "database_info": db_info,
-            "fraud_api": fraud_api_health,  # NEW
-            "version": "2.0.0",  # Updated version
+            "fraud_api": fraud_api_health,
+            "version": "2.0.0",
             "uptime": time.time() - start_time if 'start_time' in globals() else 0,
-            "features": {  # NEW: Feature status
+            "features": {
                 "behavioral_tracking": AuthConfig.ENABLE_BEHAVIORAL_TRACKING,
                 "login_anomaly_detection": AuthConfig.ENABLE_LOGIN_ANOMALY_DETECTION,
                 "advanced_algorithms": fraud_api_health.get("algorithm_info", {}).get("version") == "2.0_advanced"
@@ -1023,7 +1080,7 @@ def health_check() -> ResponseTuple:
 @enhanced_rate_limit("register", 30)
 def register() -> ResponseTuple:
     """
-    Enhanced user registration endpoint with advanced validation.
+    Enhanced user registration endpoint with optimized database integration.
     
     Returns:
         JSON response with user data and API key if successful
@@ -1086,7 +1143,7 @@ def register() -> ResponseTuple:
         # Generate API key
         api_key = generate_api_key()
         
-        # NEW: Initialize behavioral profile
+        # Initialize behavioral profile
         behavioral_profile = {
             "typical_login_hours": [],
             "typical_ips": [],
@@ -1108,7 +1165,7 @@ def register() -> ResponseTuple:
             "login_attempts": 0,
             "locked_until": None,
             "terms_accepted_at": datetime.now(),
-            # NEW: Enhanced fields
+            # Enhanced fields
             "behavioral_profile": behavioral_profile,
             "security_score": 1.0,
             "registration_ip": request.remote_addr,
@@ -1118,14 +1175,19 @@ def register() -> ResponseTuple:
         # Insert user
         result = db.users.insert_one(user_doc)
         
-        # Create site entry
+        # Create site entry with user_email reference (optimized structure)
         site_doc: Dict[str, Any] = {
-            "user_id": str(result.inserted_id),
+            "user_email": email,  # Use email instead of user_id
             "api_key": api_key,
             "site_name": f"{name}'s Site",
-            "domain": email.split('@')[1],
+            "domain": email.split('@')[1] if '@' in email else "default.com",
             "created_at": datetime.now(),
-            "status": "active"
+            "status": "active",
+            "settings": {
+                "fraud_threshold": 0.7,
+                "auto_block": False,
+                "notification_email": email
+            }
         }
         db.sites.insert_one(site_doc)
         
@@ -1134,6 +1196,13 @@ def register() -> ResponseTuple:
         
         # Log successful registration
         log_auth_attempt(email, True, request.remote_addr or "", request.headers.get('User-Agent'), 0.0, [])
+        
+        # Update metrics
+        db.metrics.update_one(
+            {"_id": "total_users"},
+            {"$inc": {"count": 1}, "$set": {"last_updated": datetime.now()}},
+            upsert=True
+        )
         
         # Invalidate cache
         cache_manager.invalidate('admin_stats')
@@ -1185,7 +1254,7 @@ def login() -> ResponseTuple:
         if not email or not password:
             return create_error_response("Email and password are required")
         
-        # NEW: Detect login anomalies before authentication
+        # Detect login anomalies before authentication
         ip_address = request.remote_addr or "unknown"
         user_agent = request.headers.get('User-Agent', '')
         risk_score, anomalies = detect_login_anomalies(email, ip_address, user_agent)
@@ -1195,6 +1264,7 @@ def login() -> ResponseTuple:
         
         if not user:
             log_auth_attempt(email, False, ip_address, user_agent, risk_score, anomalies)
+            track_login_behavior("unknown", email, ip_address, user_agent, False)
             return create_error_response("Invalid email or password")
         
         # Check if account is locked
@@ -1216,9 +1286,10 @@ def login() -> ResponseTuple:
             db.users.update_one({"_id": user["_id"]}, {"$set": update_data})
             
             log_auth_attempt(email, False, ip_address, user_agent, risk_score, anomalies)
+            track_login_behavior(str(user["_id"]), email, ip_address, user_agent, False)
             return create_error_response("Invalid email or password")
         
-        # NEW: Check if login is too risky
+        # Check if login is too risky
         if risk_score > AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD:
             logger.warning(f"High-risk login detected for {email}: score={risk_score}, anomalies={anomalies}")
             # Could add additional verification steps here
@@ -1244,6 +1315,16 @@ def login() -> ResponseTuple:
         # Create session
         session_id = create_session(user["_id"], remember)
         
+        # Track successful login
+        track_login_behavior(str(user["_id"]), email, ip_address, user_agent, True)
+        
+        # Update metrics
+        db.metrics.update_one(
+            {"_id": "active_users_today"},
+            {"$addToSet": {"users": str(user["_id"])}, "$set": {"last_updated": datetime.now()}},
+            upsert=True
+        )
+        
         # Cleanup old sessions
         cleanup_sessions()
         
@@ -1264,7 +1345,7 @@ def login() -> ResponseTuple:
             },
             "api_key": user.get("api_key"),
             "session_id": session_id,
-            # NEW: Include security info if there are anomalies
+            # Include security info if there are anomalies
             "security_info": {
                 "risk_score": risk_score,
                 "anomalies": anomalies,
@@ -1302,6 +1383,15 @@ def logout() -> ResponseTuple:
                     user = db.users.find_one({"_id": ObjectId(session["user_id"])})
                     if user:
                         logger.info(f"User logged out: {user.get('email')}")
+                        
+                        # Log to audit_logs
+                        db.audit_logs.insert_one({
+                            "timestamp": datetime.now(),
+                            "action": "logout",
+                            "user_email": user.get('email'),
+                            "ip_address": request.remote_addr,
+                            "log_level": "info"
+                        })
                 
                 db.sessions.delete_one({"session_id": session_id})
         
@@ -1331,7 +1421,7 @@ def validate_session_endpoint() -> ResponseTuple:
         if not user:
             return create_error_response("Invalid or expired session", 401)
         
-        # NEW: Get session security info
+        # Get session security info
         db = db_manager.get_database()
         session_info = {}
         if db is not None:
@@ -1351,12 +1441,168 @@ def validate_session_endpoint() -> ResponseTuple:
                 "email": user["email"],
                 "role": user.get("role", "user")
             },
-            "session_info": session_info  # NEW: Include session security info
+            "session_info": session_info
         }, "Session is valid")
         
     except Exception as e:
         logger.error(f"Session validation error: {e}")
         return create_error_response("Session validation failed", 500)
+
+@app.route("/auth/track-activity", methods=["POST"])
+@enhanced_rate_limit("track_activity", 1)
+def track_user_activity() -> ResponseTuple:
+    """Track user activity for behavioral analysis (checkout page integration)"""
+    try:
+        data = request.get_json()
+        api_key = request.headers.get('Authorization', '').replace('Bearer ', '')
+        
+        if not api_key:
+            return create_error_response("API key required", 401)
+        
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Verify API key
+        user = db.users.find_one({"api_key": api_key})
+        if not user:
+            return create_error_response("Invalid API key", 401)
+        
+        # Log activity in transactions collection
+        activity_doc = {
+            "transaction_id": f"activity_{user['_id']}_{datetime.now().timestamp()}",
+            "timestamp": datetime.now(),
+            "api_key": api_key,
+            "user_email": user["email"],
+            "email": user["email"],
+            "action": data.get("action", "page_view"),
+            "page": data.get("page", "unknown"),
+            "ip_address": request.remote_addr,
+            "user_agent": request.headers.get('User-Agent', ''),
+            "metadata": data.get("metadata", {}),
+            "fraud_score": 0.0,
+            "decision": "allowed"
+        }
+        
+        db.transactions.insert_one(activity_doc)
+        
+        # Update metrics
+        db.metrics.update_one(
+            {"_id": "api_requests_today"},
+            {"$inc": {"count": 1}, "$set": {"last_updated": datetime.now()}},
+            upsert=True
+        )
+        
+        return create_success_response({"tracked": True}, "Activity tracked")
+        
+    except Exception as e:
+        logger.error(f"Activity tracking error: {e}")
+        return create_error_response("Failed to track activity", 500)
+
+@app.route("/auth/validate-checkout-key", methods=["POST"])
+def validate_checkout_key() -> ResponseTuple:
+    """Validate API key specifically for checkout page integration"""
+    try:
+        data = request.get_json()
+        api_key = data.get('api_key', '')
+        
+        if not api_key:
+            return create_error_response("API key is required")
+        
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Check fraud_blacklist for this API key
+        blacklisted = db.fraud_blacklist.find_one({
+            "type": "api_key",
+            "value": api_key
+        })
+        
+        if blacklisted:
+            # Log suspicious activity
+            db.audit_logs.insert_one({
+                "timestamp": datetime.now(),
+                "action": "blacklisted_api_key_usage",
+                "api_key": api_key[:10] + "...",
+                "ip_address": request.remote_addr,
+                "log_level": "warning"
+            })
+            return create_error_response("API key is blacklisted", 403)
+        
+        user = db.users.find_one({"api_key": api_key})
+        
+        if not user:
+            return create_error_response("Invalid API key", 401)
+        
+        # Check if account is locked
+        if user.get('locked_until') and user['locked_until'] > datetime.now():
+            return create_error_response("Account is locked", 403)
+        
+        # Get site settings
+        site = db.sites.find_one({"api_key": api_key})
+        
+        # Return user info with checkout-specific data
+        return create_success_response({
+            "valid": True,
+            "user": {
+                "id": str(user["_id"]),
+                "name": user["name"],
+                "email": user["email"],
+                "role": user.get("role", "user")
+            },
+            "checkout_config": {
+                "behavioral_tracking": user.get("behavioral_profile") is not None,
+                "security_score": user.get("security_score", 1.0),
+                "fraud_api_endpoint": AuthConfig.FRAUD_API_URL,
+                "site_settings": site.get("settings", {}) if site else {}
+            }
+        }, "API key is valid for checkout")
+        
+    except Exception as e:
+        logger.error(f"Checkout API key validation error: {e}")
+        return create_error_response("API key validation failed", 500)
+
+@app.route("/auth/user/fraud-settings", methods=["GET"])
+def get_user_fraud_settings() -> ResponseTuple:
+    """Get user's fraud detection settings for checkout integration"""
+    try:
+        api_key = request.headers.get('Authorization', '').replace('Bearer ', '')
+        
+        if not api_key:
+            return create_error_response("API key required", 401)
+        
+        db = db_manager.get_database()
+        if db is None:
+            return create_error_response("Database unavailable", 503)
+        
+        # Get user and site settings
+        user = db.users.find_one({"api_key": api_key})
+        if not user:
+            return create_error_response("Invalid API key", 401)
+        
+        site = db.sites.find_one({"api_key": api_key})
+        if not site:
+            return create_error_response("No site configured", 404)
+        
+        # Get system thresholds
+        thresholds = db.system_settings.find_one({"_id": "fraud_thresholds"})
+        
+        settings = {
+            "api_key": api_key,
+            "user_email": user["email"],
+            "site_settings": site.get("settings", {}),
+            "fraud_threshold": thresholds.get("fraud_threshold", 0.7) if thresholds else 0.7,
+            "suspicious_threshold": thresholds.get("suspicious_threshold", 0.4) if thresholds else 0.4,
+            "behavioral_tracking_enabled": user.get("behavioral_profile") is not None,
+            "security_score": user.get("security_score", 1.0)
+        }
+        
+        return create_success_response(settings, "Fraud settings retrieved")
+        
+    except Exception as e:
+        logger.error(f"Get fraud settings error: {e}")
+        return create_error_response("Failed to get fraud settings", 500)
 
 @app.route("/auth/user-stats", methods=["GET"])
 def get_user_stats() -> ResponseTuple:
@@ -1389,21 +1635,23 @@ def get_user_stats() -> ResponseTuple:
             "created_at": {"$gte": datetime.now() - timedelta(days=7)}
         })
         
-        # NEW: Enhanced statistics
+        # Enhanced statistics
         locked_accounts = db.users.count_documents({
             "locked_until": {"$gt": datetime.now()}
         })
         
         high_risk_logins = 0
         total_login_attempts = 0
-        if hasattr(db, 'login_attempts'):
-            total_login_attempts = db.login_attempts.count_documents({
-                "timestamp": {"$gte": datetime.now() - timedelta(days=7)}
-            })
-            high_risk_logins = db.login_attempts.count_documents({
-                "timestamp": {"$gte": datetime.now() - timedelta(days=7)},
-                "risk_score": {"$gt": AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD}
-            })
+        
+        total_login_attempts = db.transactions.count_documents({
+            "action": "login_attempt",
+            "timestamp": {"$gte": datetime.now() - timedelta(days=7)}
+        })
+        
+        high_risk_logins = db.sessions.count_documents({
+            "created_at": {"$gte": datetime.now() - timedelta(days=7)},
+            "login_risk_score": {"$gt": AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD}
+        })
         
         stats: Dict[str, Union[int, float]] = {
             "total_users": total_users,
@@ -1411,7 +1659,7 @@ def get_user_stats() -> ResponseTuple:
             "active_today": active_today,
             "recent_registrations": recent_registrations,
             "verification_rate": round((verified_users / total_users * 100) if total_users > 0 else 0, 1),
-            # NEW: Security statistics
+            # Security statistics
             "locked_accounts": locked_accounts,
             "login_attempts_7d": total_login_attempts,
             "high_risk_logins_7d": high_risk_logins,
@@ -1451,7 +1699,7 @@ def validate_api_key() -> ResponseTuple:
         if not user:
             return create_error_response("Invalid API key", 401)
         
-        # NEW: Include user security information
+        # Include user security information
         security_info = {
             "security_score": user.get("security_score", 1.0),
             "last_login": user.get("last_login").isoformat() if user.get("last_login") else None,
@@ -1466,7 +1714,7 @@ def validate_api_key() -> ResponseTuple:
                 "email": user["email"],
                 "role": user.get("role", "user")
             },
-            "security_info": security_info  # NEW
+            "security_info": security_info
         }, "API key is valid")
         
     except Exception as e:
@@ -1503,7 +1751,7 @@ def require_admin_auth():
                 if user.get('role') != 'admin':
                     return create_error_response("Admin access required", 403)
                 
-                # NEW: Check if admin account is locked
+                # Check if admin account is locked
                 if user.get('locked_until') and user['locked_until'] > datetime.now():
                     return create_error_response("Admin account is locked", 403)
                 
@@ -1530,7 +1778,7 @@ def get_all_users() -> ResponseTuple:
         # Get query parameters
         search = request.args.get('search', '').strip()
         role_filter = request.args.get('role', '').strip()
-        security_filter = request.args.get('security', '').strip()  # NEW: Filter by security status
+        security_filter = request.args.get('security', '').strip()
         page = int(request.args.get('page', 1))
         limit = int(request.args.get('limit', 100))
         
@@ -1546,7 +1794,7 @@ def get_all_users() -> ResponseTuple:
         if role_filter:
             query['role'] = role_filter
         
-        # NEW: Security-based filtering
+        # Security-based filtering
         if security_filter == 'locked':
             query['locked_until'] = {'$gt': datetime.now()}
         elif security_filter == 'high_risk':
@@ -1565,16 +1813,15 @@ def get_all_users() -> ResponseTuple:
         
         users = []
         for user in cursor:
-            # NEW: Calculate recent login risk
+            # Calculate recent login risk
             recent_risk_score = 0.0
-            if hasattr(db, 'login_attempts'):
-                recent_attempts = list(db.login_attempts.find({
-                    "email": user.get("email"),
-                    "timestamp": {"$gte": datetime.now() - timedelta(days=7)}
-                }).sort("timestamp", -1).limit(1))
-                
-                if recent_attempts:
-                    recent_risk_score = recent_attempts[0].get("risk_score", 0.0)
+            recent_sessions = list(db.sessions.find({
+                "user_id": str(user['_id']),
+                "created_at": {"$gte": datetime.now() - timedelta(days=7)}
+            }).sort("created_at", -1).limit(1))
+            
+            if recent_sessions:
+                recent_risk_score = recent_sessions[0].get("login_risk_score", 0.0)
             
             user_data = {
                 'id': str(user['_id']),
@@ -1589,7 +1836,7 @@ def get_all_users() -> ResponseTuple:
                 'locked_until': user.get('locked_until').isoformat() if user.get('locked_until') else None,
                 'api_key': user.get('api_key', ''),
                 'status': 'locked' if user.get('locked_until') and user.get('locked_until') > datetime.now() else 'active',
-                # NEW: Enhanced security fields
+                # Enhanced security fields
                 'security_score': user.get('security_score', 1.0),
                 'recent_risk_score': recent_risk_score,
                 'behavioral_profile': user.get('behavioral_profile', {}),
@@ -1605,7 +1852,7 @@ def get_all_users() -> ResponseTuple:
                 'total': total_count,
                 'pages': (total_count + limit - 1) // limit
             },
-            'security_summary': {  # NEW: Security overview
+            'security_summary': {
                 'total_users': total_count,
                 'locked_accounts': len([u for u in users if u['status'] == 'locked']),
                 'high_risk_users': len([u for u in users if u['recent_risk_score'] > AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD]),
@@ -1690,20 +1937,21 @@ def get_admin_stats() -> ResponseTuple:
         }
         
         # Enhanced security and fraud detection stats
-        if hasattr(db, 'login_attempts'):
-            stats.update({
-                "login_attempts_today": db.login_attempts.count_documents({
-                    "timestamp": {"$gte": today_start}
-                }),
-                "failed_logins_today": db.login_attempts.count_documents({
-                    "timestamp": {"$gte": today_start},
-                    "success": False
-                }),
-                "high_risk_logins_week": db.login_attempts.count_documents({
-                    "timestamp": {"$gte": week_start},
-                    "risk_score": {"$gt": AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD}
-                })
+        stats.update({
+            "login_attempts_today": db.transactions.count_documents({
+                "action": "login_attempt",
+                "timestamp": {"$gte": today_start}
+            }),
+            "failed_logins_today": db.transactions.count_documents({
+                "action": "login_attempt",
+                "success": False,
+                "timestamp": {"$gte": today_start}
+            }),
+            "high_risk_logins_week": db.sessions.count_documents({
+                "created_at": {"$gte": week_start},
+                "login_risk_score": {"$gt": AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD}
             })
+        })
         
         # Get fraud detection API stats (cached)
         fraud_stats = get_fraud_detection_stats()
@@ -1738,10 +1986,6 @@ def get_admin_stats() -> ResponseTuple:
     except Exception as e:
         logger.error(f"Get admin stats error: {e}")
         return create_error_response("Failed to get statistics", 500)
-
-# ============================================================================
-# NEW ENDPOINTS: Advanced Algorithm Management
-# ============================================================================
 
 @app.route("/auth/settings/algorithms", methods=["GET"])
 @require_admin_auth()
@@ -1896,84 +2140,60 @@ def get_behavioral_insights() -> ResponseTuple:
             "geographic_insights": {}
         }
         
-        # Get behavioral tracking data if available
-        if hasattr(db, 'login_attempts'):
-            # Calculate summary stats
-            yesterday = datetime.now() - timedelta(hours=24)
-            
-            # Count users with behavioral profiles
-            insights["summary"]["total_users_tracked"] = db.users.count_documents({
-                "behavioral_profile": {"$exists": True}
-            })
-            
-            # Count anomalous logins in last 24h
-            insights["summary"]["anomalous_logins_24h"] = db.login_attempts.count_documents({
-                "timestamp": {"$gte": yesterday},
-                "anomalies_detected": {"$ne": [], "$exists": True}
-            })
-            
-            # Get specific anomaly counts
-            new_ip_count = db.login_attempts.count_documents({
-                "timestamp": {"$gte": yesterday},
-                "anomalies_detected": "new_ip_address"
-            })
-            
-            unusual_time_count = db.login_attempts.count_documents({
-                "timestamp": {"$gte": yesterday},
-                "anomalies_detected": "unusual_login_time"
-            })
-            
-            insights["summary"]["new_devices_24h"] = new_ip_count
-            insights["summary"]["unusual_times_24h"] = unusual_time_count
-            
-            # Get risk distribution
-            risk_pipeline = [
-                {"$match": {"timestamp": {"$gte": yesterday}}},
-                {"$group": {
-                    "_id": {
-                        "$cond": [
-                            {"$gte": ["$risk_score", 0.7]}, "high",
-                            {"$cond": [{"$gte": ["$risk_score", 0.3]}, "medium", "low"]}
-                        ]
-                    },
-                    "count": {"$sum": 1}
-                }}
-            ]
-            
-            risk_results = list(db.login_attempts.aggregate(risk_pipeline))
-            for result in risk_results:
-                insights["risk_distribution"][result["_id"]] = result["count"]
-            
-            # Get top anomalies
-            anomaly_pipeline = [
-                {"$match": {
-                    "timestamp": {"$gte": yesterday},
-                    "anomalies_detected": {"$ne": [], "$exists": True}
-                }},
-                {"$unwind": "$anomalies_detected"},
-                {"$group": {
-                    "_id": "$anomalies_detected",
-                    "count": {"$sum": 1}
-                }},
-                {"$sort": {"count": -1}},
-                {"$limit": 10}
-            ]
-            
-            anomaly_results = list(db.login_attempts.aggregate(anomaly_pipeline))
-            insights["top_anomalies"] = [
-                {"type": result["_id"], "count": result["count"]} 
-                for result in anomaly_results
-            ]
+        # Get behavioral tracking data
+        yesterday = datetime.now() - timedelta(hours=24)
+        
+        # Count users with behavioral profiles
+        insights["summary"]["total_users_tracked"] = db.users.count_documents({
+            "behavioral_profile": {"$exists": True}
+        })
+        
+        # Count anomalous logins in last 24h
+        anomalous_sessions = list(db.sessions.find({
+            "created_at": {"$gte": yesterday},
+            "anomalies_detected": {"$ne": [], "$exists": True}
+        }))
+        
+        insights["summary"]["anomalous_logins_24h"] = len(anomalous_sessions)
+        
+        # Count specific anomalies
+        anomaly_counts = {}
+        for session in anomalous_sessions:
+            for anomaly in session.get("anomalies_detected", []):
+                anomaly_counts[anomaly] = anomaly_counts.get(anomaly, 0) + 1
+        
+        insights["summary"]["new_devices_24h"] = anomaly_counts.get("new_ip_address", 0)
+        insights["summary"]["unusual_times_24h"] = anomaly_counts.get("unusual_login_time", 0)
+        
+        # Get risk distribution
+        risk_pipeline = [
+            {"$match": {"created_at": {"$gte": yesterday}}},
+            {"$group": {
+                "_id": {
+                    "$cond": [
+                        {"$gte": ["$login_risk_score", 0.7]}, "high",
+                        {"$cond": [{"$gte": ["$login_risk_score", 0.3]}, "medium", "low"]}
+                    ]
+                },
+                "count": {"$sum": 1}
+            }}
+        ]
+        
+        risk_results = list(db.sessions.aggregate(risk_pipeline))
+        for result in risk_results:
+            insights["risk_distribution"][result["_id"]] = result["count"]
+        
+        # Get top anomalies
+        insights["top_anomalies"] = [
+            {"type": anomaly, "count": count} 
+            for anomaly, count in sorted(anomaly_counts.items(), key=lambda x: x[1], reverse=True)[:10]
+        ]
         
         return create_success_response(insights, "Behavioral insights retrieved")
         
     except Exception as e:
         logger.error(f"Get behavioral insights error: {e}")
         return create_error_response("Failed to get behavioral insights", 500)
-
-# ============================================================================
-# ENHANCED SETTINGS MANAGEMENT ENDPOINTS
-# ============================================================================
 
 @app.route("/auth/settings/thresholds", methods=["GET"])
 @require_admin_auth()
@@ -2127,9 +2347,9 @@ def get_system_health() -> ResponseTuple:
                     "active_sessions": db.sessions.count_documents({
                         "expires_at": {"$gt": datetime.now()}
                     }),
-                    "recent_login_attempts": db.login_attempts.count_documents({
+                    "recent_transactions": db.transactions.count_documents({
                         "timestamp": {"$gte": datetime.now() - timedelta(hours=1)}
-                    }) if hasattr(db, 'login_attempts') else 0
+                    })
                 }
             else:
                 health_status["database_status"] = "offline"
@@ -2222,24 +2442,23 @@ def regenerate_user_api_key() -> ResponseTuple:
         
         # Update sites collection as well
         db.sites.update_many(
-            {"user_id": str(current_user["_id"])},
+            {"user_email": current_user["email"]},
             {"$set": {"api_key": new_api_key}}
         )
         
         # Log the API key regeneration for security audit
         security_log = {
-            "user_id": str(current_user["_id"]),
-            "user_email": current_user.get("email"),
-            "action": "api_key_regenerated",
             "timestamp": datetime.now(),
+            "action": "api_key_regenerated",
+            "user_email": current_user.get("email"),
             "ip_address": request.remote_addr,
             "user_agent": request.headers.get('User-Agent', ''),
             "old_key_prefix": old_api_key[:10] if old_api_key else None,
-            "new_key_prefix": new_api_key[:10]
+            "new_key_prefix": new_api_key[:10],
+            "log_level": "warning"
         }
         
-        if hasattr(db, 'security_logs'):
-            db.security_logs.insert_one(security_log)
+        db.audit_logs.insert_one(security_log)
         
         response_data = {
             "api_key": new_api_key,
@@ -2288,21 +2507,17 @@ def run_maintenance() -> None:
     try:
         cleanup_sessions()
         
-        # NEW: Additional maintenance tasks
+        # Additional maintenance tasks
         db = db_manager.get_database()
         if db is not None:
-            # Clean up old behavioral data
-            cutoff_date = datetime.now() - timedelta(days=90)
-            if hasattr(db, 'user_behavior'):
-                old_behavior = db.user_behavior.delete_many({"timestamp": {"$lt": cutoff_date}})
-                if old_behavior.deleted_count > 0:
-                    logger.info(f"Cleaned up {old_behavior.deleted_count} old behavioral records")
-            
             # Update user security scores based on recent activity
             update_user_security_scores()
             
             # Generate system health report
             generate_health_report()
+            
+            # Update metrics
+            update_daily_metrics()
         
         logger.info("Enhanced maintenance tasks completed")
     except Exception as e:
@@ -2312,38 +2527,35 @@ def update_user_security_scores() -> None:
     """Update user security scores based on recent login patterns."""
     try:
         db = db_manager.get_database()
-        if db is None or not hasattr(db, 'login_attempts'):
+        if db is None:
             return
         
-        # Get users with recent login attempts
-        recent_logins = db.login_attempts.aggregate([
-            {"$match": {"timestamp": {"$gte": datetime.now() - timedelta(days=30)}}},
+        # Get users with recent sessions
+        recent_sessions = db.sessions.aggregate([
+            {"$match": {"created_at": {"$gte": datetime.now() - timedelta(days=30)}}},
             {"$group": {
-                "_id": "$email",
-                "avg_risk_score": {"$avg": "$risk_score"},
-                "failed_attempts": {"$sum": {"$cond": [{"$eq": ["$success", False]}, 1, 0]}},
-                "total_attempts": {"$sum": 1},
+                "_id": "$user_id",
+                "avg_risk_score": {"$avg": "$login_risk_score"},
+                "session_count": {"$sum": 1},
                 "anomaly_count": {"$sum": {"$size": {"$ifNull": ["$anomalies_detected", []]}}}
             }}
         ])
         
-        for user_stats in recent_logins:
-            email = user_stats["_id"]
+        for user_stats in recent_sessions:
+            user_id = user_stats["_id"]
             avg_risk = user_stats.get("avg_risk_score", 0)
-            failed_ratio = user_stats.get("failed_attempts", 0) / max(user_stats.get("total_attempts", 1), 1)
             anomaly_count = user_stats.get("anomaly_count", 0)
             
             # Calculate security score (higher is better)
             security_score = 1.0
             security_score -= min(avg_risk * 0.3, 0.3)  # Reduce for high average risk
-            security_score -= min(failed_ratio * 0.4, 0.4)  # Reduce for high failure rate
             security_score -= min(anomaly_count * 0.01, 0.3)  # Reduce for anomalies
             
             security_score = max(security_score, 0.1)  # Minimum score
             
             # Update user security score
             db.users.update_one(
-                {"email": email},
+                {"_id": ObjectId(user_id)},
                 {"$set": {"security_score": round(security_score, 2)}}
             )
         
@@ -2372,33 +2584,76 @@ def generate_health_report() -> None:
             "high_risk_logins_1h": 0
         }
         
-        if hasattr(db, 'login_attempts'):
-            hour_ago = now - timedelta(hours=1)
-            report["failed_logins_1h"] = db.login_attempts.count_documents({
-                "timestamp": {"$gte": hour_ago},
-                "success": False
-            })
-            report["high_risk_logins_1h"] = db.login_attempts.count_documents({
-                "timestamp": {"$gte": hour_ago},
-                "risk_score": {"$gt": AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD}
-            })
+        hour_ago = now - timedelta(hours=1)
+        report["failed_logins_1h"] = db.transactions.count_documents({
+            "action": "login_attempt",
+            "success": False,
+            "timestamp": {"$gte": hour_ago}
+        })
+        
+        report["high_risk_logins_1h"] = db.sessions.count_documents({
+            "created_at": {"$gte": hour_ago},
+            "login_risk_score": {"$gt": AuthConfig.SUSPICIOUS_LOGIN_THRESHOLD}
+        })
         
         # Store report
-        if hasattr(db, 'health_reports'):
-            db.health_reports.insert_one(report)
-            
-            # Clean old reports (keep last 7 days)
-            old_cutoff = now - timedelta(days=7)
-            db.health_reports.delete_many({"timestamp": {"$lt": old_cutoff}})
+        db.audit_logs.insert_one({
+            "timestamp": now,
+            "action": "health_report_generated",
+            "report": report,
+            "log_level": "info"
+        })
         
     except Exception as e:
         logger.error(f"Failed to generate health report: {e}")
 
+def update_daily_metrics() -> None:
+    """Update daily metrics in optimized structure"""
+    try:
+        db = db_manager.get_database()
+        if db is None:
+            return
+        
+        today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        # Reset daily counters
+        db.metrics.update_one(
+            {"_id": "api_requests_today"},
+            {
+                "$set": {
+                    "count": 0,
+                    "last_updated": datetime.now(),
+                    "expires_at": today_start + timedelta(days=1)
+                }
+            },
+            upsert=True
+        )
+        
+        # Update user activity metrics
+        active_users = db.users.count_documents({
+            "last_login": {"$gte": today_start}
+        })
+        
+        db.metrics.update_one(
+            {"_id": "active_users_today"},
+            {
+                "$set": {
+                    "count": active_users,
+                    "last_updated": datetime.now()
+                }
+            },
+            upsert=True
+        )
+        
+        logger.info("Daily metrics updated")
+        
+    except Exception as e:
+        logger.error(f"Failed to update daily metrics: {e}")
+
 def maintenance_worker() -> None:
-    """Enhanced background worker with less frequent runs."""
+    """Enhanced background worker with optimized intervals."""
     maintenance_run_count = 0
     while True:
-        # Run different tasks at different intervals
         maintenance_run_count += 1
         
         # Every hour: basic cleanup
@@ -2453,6 +2708,7 @@ if __name__ == "__main__":
     start_time: float = time.time()
     
     logger.info("Starting Enhanced FraudShield Authentication API...")
+    logger.info(f"Version: 2.0.0 - Optimized Database Structure")
     logger.info(f"Max login attempts: {AuthConfig.MAX_LOGIN_ATTEMPTS}")
     logger.info(f"Lockout duration: {AuthConfig.LOCKOUT_DURATION_MINUTES} minutes")
     logger.info(f"Database: {AuthConfig.MONGODB_URI}/{AuthConfig.DATABASE_NAME}")
@@ -2461,7 +2717,8 @@ if __name__ == "__main__":
     logger.info(f"Login anomaly detection: {'enabled' if AuthConfig.ENABLE_LOGIN_ANOMALY_DETECTION else 'disabled'}")
     
     if db_manager.connected:
-        logger.info("Enhanced Authentication API is ready!")
+        logger.info("✅ Enhanced Authentication API is ready!")
+        logger.info("✅ Using optimized database structure")
         logger.info("Default admin: admin@fraudshield.com / Admin@123!")
         
         # Test fraud API connection
@@ -2472,7 +2729,7 @@ if __name__ == "__main__":
             if algo_info:
                 logger.info(f"Advanced algorithms detected: {algo_info.get('version', 'unknown')}")
     else:
-        logger.warning("Authentication API starting with limited functionality (no database)")
+        logger.warning("⚠️ Authentication API starting with limited functionality (no database)")
     
     # Start enhanced maintenance worker in background
     maintenance_thread = threading.Thread(target=maintenance_worker, daemon=True)
