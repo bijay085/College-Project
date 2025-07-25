@@ -1,151 +1,531 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Secure checkout for your order" />
+  <meta name="theme-color" content="#6366f1" />
+  
+  <!-- Preconnects for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Scripts with optimized loading -->
   <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js" defer></script>
   <script src="validation.js" defer></script>
+  <script src="tracking.js" defer></script>
+  
   <link rel="stylesheet" href="checkout.css" />
-  <title>Fake Store Checkout</title>
+  <title>Secure Checkout - FraudShield</title>
 </head>
 
 <body>
-  <div class="checkout-container">
-    <h2>Checkout</h2>
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-spinner"></div>
+    <p>Securing your transaction...</p>
+  </div>
 
+  <!-- Main container with glass effect -->
+  <div class="checkout-container">
+    <!-- Header with progress indicator -->
+    <div class="checkout-header">
+      <div class="progress-bar">
+        <div class="progress-fill" data-step="1"></div>
+      </div>
+      <h1 class="checkout-title">
+        <span class="icon">🛡️</span>
+        Secure Checkout
+      </h1>
+      <p class="checkout-subtitle">Your payment is protected by FraudShield</p>
+    </div>
+
+    <!-- Product preview with enhanced styling -->
     <div class="product-preview">
-      <img src="product.webp" alt="Product Image" />
+      <div class="product-image-container">
+        <img src="product.webp" alt="Laptop X Product Image" loading="lazy" />
+        <div class="product-badge">Premium</div>
+      </div>
       <div class="product-details">
-        <p><strong>Product:</strong> Laptop X</p>
-        <p><strong>Unit Price:</strong> ₹74,999</p>
-        <label>Quantity:
-          <input type="number" id="quantity" value="1" min="1" />
-        </label>
+        <h3 class="product-name">Laptop X</h3>
+        <div class="product-price">
+          <span class="currency">₹</span>
+          <span class="amount">74,999</span>
+        </div>
+        <div class="quantity-selector">
+          <label for="quantity" class="quantity-label">Quantity:</label>
+          <div class="quantity-controls">
+            <button type="button" class="qty-btn qty-decrease" aria-label="Decrease quantity">−</button>
+            <input type="number" id="quantity" value="1" min="1" max="10" aria-label="Product quantity" readonly />
+            <button type="button" class="qty-btn qty-increase" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
         <input type="hidden" id="product" value="Laptop X" />
         <input type="hidden" id="expectedPrice" value="74999" />
       </div>
     </div>
 
-    <form id="checkoutForm" novalidate>
-      <h3>Billing Information</h3>
+    <form id="checkoutForm" novalidate aria-label="Checkout form">
+      <!-- Billing Information Section -->
+      <section class="form-section" data-section="billing">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">👤</span>
+            Billing Information
+          </h2>
+          <div class="section-progress">1 of 3</div>
+        </div>
 
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" required />
-      </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name" class="form-label">
+              Full Name
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="name" class="form-input" required 
+                     autocomplete="name" placeholder="Enter your full name"
+                     aria-describedby="name-hint" />
+              <span class="input-icon">👤</span>
+            </div>
+            <small id="name-hint" class="input-hint">As it appears on your ID</small>
+          </div>
 
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" required />
-      </div>
+          <div class="form-group">
+            <label for="email" class="form-label">
+              Email Address
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="email" id="email" class="form-input" required 
+                     autocomplete="email" placeholder="your@email.com"
+                     aria-describedby="email-hint" />
+              <span class="input-icon">📧</span>
+            </div>
+            <small id="email-hint" class="input-hint">We'll send your receipt here</small>
+          </div>
 
-      <div class="form-group">
-        <label for="phone">Phone Number</label>
-        <input type="text" id="phone" required />
-      </div>
+          <div class="form-group">
+            <label for="phone" class="form-label">
+              Phone Number
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="tel" id="phone" class="form-input" required 
+                     autocomplete="tel" placeholder="+91 98765 43210"
+                     aria-describedby="phone-hint" />
+              <span class="input-icon">📱</span>
+            </div>
+            <small id="phone-hint" class="input-hint">For order updates and delivery</small>
+          </div>
 
-      <div class="form-group">
-        <label for="billingAddress">Billing Address</label>
-        <input type="text" id="billingAddress" required />
-      </div>
+          <div class="form-group form-group-full">
+            <label for="billingAddress" class="form-label">
+              Billing Address
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="billingAddress" class="form-input" required 
+                     autocomplete="street-address" placeholder="Street address, apartment, suite, etc."
+                     aria-describedby="address-hint" />
+              <span class="input-icon">🏠</span>
+            </div>
+            <small id="address-hint" class="input-hint">Full street address including apartment/suite number</small>
+          </div>
 
-      <div class="form-group">
-        <label for="city">City</label>
-        <input type="text" id="city" required />
-      </div>
+          <div class="form-group">
+            <label for="city" class="form-label">
+              City
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="city" class="form-input" required 
+                     autocomplete="address-level2" placeholder="City name" />
+              <span class="input-icon">🏙️</span>
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label for="state">State / Province</label>
-        <input type="text" id="state" required />
-      </div>
+          <div class="form-group">
+            <label for="state" class="form-label">
+              State / Province
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="state" class="form-input" required 
+                     autocomplete="address-level1" placeholder="State or Province" />
+              <span class="input-icon">🗺️</span>
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label for="zip">ZIP / Postal Code</label>
-        <input type="text" id="zip" required />
-      </div>
+          <div class="form-group">
+            <label for="zip" class="form-label">
+              ZIP / Postal Code
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="zip" class="form-input" required 
+                     autocomplete="postal-code" placeholder="Postal code" />
+              <span class="input-icon">📮</span>
+            </div>
+          </div>
 
-      <div class="form-group">
-        <label for="billingCountry">Billing Country</label>
-        <select id="billingCountry" required>
-          <option value="IN">India</option>
-          <option value="US">United States</option>
-          <option value="RU">Russia</option>
-          <option value="GB">United Kingdom</option>
-        </select>
-      </div>
+          <div class="form-group">
+            <label for="billingCountry" class="form-label">
+              Country
+              <span class="required">*</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="billingCountry" class="form-select" required autocomplete="country">
+                <option value="">Select Country</option>
+                <option value="IN">🇮🇳 India</option>
+                <option value="US">🇺🇸 United States</option>
+                <option value="RU">🇷🇺 Russia</option>
+                <option value="GB">🇬🇧 United Kingdom</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <h3>Verification</h3>
+      <!-- Verification Section -->
+      <section class="form-section" data-section="verification">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">✅</span>
+            Verification
+          </h2>
+          <div class="section-progress">2 of 3</div>
+        </div>
 
-      <div class="form-group">
-        <label>
-          <input type="checkbox" id="emailVerified" />
-          Email Verified
-        </label>
-      </div>
+        <div class="verification-grid">
+          <div class="verification-card">
+            <div class="verification-header">
+              <span class="verification-icon">📧</span>
+              <h3>Email Verification</h3>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="emailVerified" />
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Email Verified</span>
+            </label>
+            <p class="verification-desc">Confirm your email address to secure your account</p>
+          </div>
 
-      <div class="form-group">
-        <label>
-          <input type="checkbox" id="phoneVerified" />
-          Phone Verified
-        </label>
-      </div>
+          <div class="verification-card">
+            <div class="verification-header">
+              <span class="verification-icon">📱</span>
+              <h3>Phone Verification</h3>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="phoneVerified" />
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">Phone Verified</span>
+            </label>
+            <p class="verification-desc">Verify your phone number for order updates</p>
+          </div>
+        </div>
+      </section>
 
-      <h3>Payment Information</h3>
+      <!-- Payment Information Section -->
+      <section class="form-section" data-section="payment">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">💳</span>
+            Payment Information
+          </h2>
+          <div class="section-progress">3 of 3</div>
+        </div>
 
-      <div class="form-group">
-        <label for="cardNumber">Card Number</label>
-        <input type="text" id="cardNumber" placeholder="4111 1111 1111 1111" maxlength="19" required />
-      </div>
+        <div class="payment-methods">
+          <div class="payment-icons">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23005faa' d='M7.5 4h9c1.93 0 3.5 1.57 3.5 3.5v9c0 1.93-1.57 3.5-3.5 3.5h-9C5.57 20 4 18.43 4 16.5v-9C4 5.57 5.57 4 7.5 4z'/%3E%3C/svg%3E" alt="Visa" class="payment-icon" />
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23eb001b' d='M12 4c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8 3.58-8 8-8z'/%3E%3C/svg%3E" alt="Mastercard" class="payment-icon" />
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2300457c' d='M12 4c4.42 0 8 3.58 8 8s-3.58 8-8 8-8-3.58-8-8 3.58-8 8-8z'/%3E%3C/svg%3E" alt="Amex" class="payment-icon" />
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label for="expiry">Expiry Date (MM/YY)</label>
-        <input type="text" id="expiry" placeholder="MM/YY" required />
-      </div>
+        <div class="form-grid payment-grid">
+          <div class="form-group form-group-full">
+            <label for="cardNumber" class="form-label">
+              Card Number
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper card-input">
+              <input type="text" id="cardNumber" class="form-input" required 
+                     autocomplete="cc-number" placeholder="1234 5678 9012 3456" 
+                     maxlength="19" aria-describedby="card-hint" />
+              <span class="input-icon card-type-icon">💳</span>
+            </div>
+            <small id="card-hint" class="input-hint">Your card information is encrypted and secure</small>
+          </div>
 
-      <div class="form-group">
-        <label for="cvv">CVV</label>
-        <input type="text" id="cvv" placeholder="123" maxlength="4" required />
-      </div>
+          <div class="form-group">
+            <label for="expiry" class="form-label">
+              Expiry Date
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="expiry" class="form-input" required 
+                     autocomplete="cc-exp" placeholder="MM/YY" maxlength="5" />
+              <span class="input-icon">📅</span>
+            </div>
+          </div>
 
-      <div class="price-summary">
-        Total: ₹<span id="finalPrice">74,999</span>
+          <div class="form-group">
+            <label for="cvv" class="form-label">
+              CVV
+              <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <input type="text" id="cvv" class="form-input" required 
+                     autocomplete="cc-csc" placeholder="123" maxlength="4"
+                     aria-describedby="cvv-hint" />
+              <span class="input-icon">🔒</span>
+            </div>
+            <small id="cvv-hint" class="input-hint">3-4 digits on back of card</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <div class="summary-header">
+          <h3>Order Summary</h3>
+          <span class="summary-toggle">▼</span>
+        </div>
+        <div class="summary-content">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>₹<span id="subtotal">74,999</span></span>
+          </div>
+          <div class="summary-row">
+            <span>Tax:</span>
+            <span>₹<span id="tax">13,499</span></span>
+          </div>
+          <div class="summary-row">
+            <span>Shipping:</span>
+            <span class="free-shipping">Free</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total-row">
+            <span>Total:</span>
+            <span class="total-amount">₹<span id="finalPrice">74,999</span></span>
+          </div>
+        </div>
         <input type="hidden" id="actualPrice" value="74999" />
       </div>
 
-      <button type="submit" class="submit-btn">Pay Now</button>
+      <!-- Security badges -->
+      <div class="security-badges">
+        <div class="security-badge">
+          <span class="badge-icon">🛡️</span>
+          <span>SSL Encrypted</span>
+        </div>
+        <div class="security-badge">
+          <span class="badge-icon">🔒</span>
+          <span>Secure Payment</span>
+        </div>
+        <div class="security-badge">
+          <span class="badge-icon">✅</span>
+          <span>Fraud Protected</span>
+        </div>
+      </div>
+
+      <!-- Submit button with loading state -->
+      <button type="submit" class="submit-btn" aria-describedby="submit-help">
+        <span class="btn-content">
+          <span class="btn-icon">🛡️</span>
+          <span class="btn-text">Complete Secure Payment</span>
+          <span class="btn-amount">₹<span class="btn-price">74,999</span></span>
+        </span>
+        <div class="btn-loading">
+          <div class="loading-spinner-small"></div>
+          <span>Processing...</span>
+        </div>
+      </button>
+      <small id="submit-help" class="submit-help">
+        By clicking "Complete Secure Payment", you agree to our terms and conditions
+      </small>
     </form>
+
+    <!-- Fraud detection result -->
+    <div id="fraudResult" class="fraud-result" role="alert" aria-live="polite"></div>
+  </div>
+
+  <!-- Background decoration -->
+  <div class="bg-decoration">
+    <div class="decoration-circle circle-1"></div>
+    <div class="decoration-circle circle-2"></div>
+    <div class="decoration-circle circle-3"></div>
   </div>
 
   <script>
+    // Enhanced quantity controls with animations
     const qty = document.getElementById('quantity');
     const finalPrice = document.getElementById('finalPrice');
+    const btnPrice = document.querySelector('.btn-price');
+    const subtotal = document.getElementById('subtotal');
+    const tax = document.getElementById('tax');
     const expectedPrice = parseFloat(document.getElementById('expectedPrice').value);
     const actualPrice = document.getElementById('actualPrice');
 
-    qty.addEventListener('input', () => {
+    function updatePricing() {
       const qtyVal = parseInt(qty.value) || 1;
       const total = expectedPrice * qtyVal;
-      finalPrice.textContent = total.toLocaleString();
-      actualPrice.value = total;
-    });
-  </script>
+      const taxAmount = Math.round(total * 0.18); // 18% tax
+      const totalWithTax = total + taxAmount;
+      
+      // Animate price changes
+      animateValue(subtotal, parseInt(subtotal.textContent.replace(/,/g, '')), total);
+      animateValue(tax, parseInt(tax.textContent.replace(/,/g, '')), taxAmount);
+      animateValue(finalPrice, parseInt(finalPrice.textContent.replace(/,/g, '')), totalWithTax);
+      animateValue(btnPrice, parseInt(btnPrice.textContent.replace(/,/g, '')), totalWithTax);
+      
+      actualPrice.value = totalWithTax;
+    }
 
-  <script src="tracking.js" defer></script>
-  <script>
-    // Ensure FingerprintJS is loaded before using it
+    function animateValue(element, start, end) {
+      const duration = 300;
+      const startTime = performance.now();
+      
+      function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.round(start + (end - start) * progress);
+        element.textContent = current.toLocaleString();
+        
+        if (progress < 1) {
+          requestAnimationFrame(update);
+        }
+      }
+      
+      requestAnimationFrame(update);
+    }
+
+    // Quantity controls
+    document.querySelector('.qty-decrease').addEventListener('click', () => {
+      const currentValue = parseInt(qty.value) || 1;
+      if (currentValue > 1) {
+        qty.value = currentValue - 1;
+        updatePricing();
+        
+        // Add visual feedback
+        qty.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          qty.style.transform = 'scale(1)';
+        }, 150);
+      }
+    });
+
+    document.querySelector('.qty-increase').addEventListener('click', () => {
+      const currentValue = parseInt(qty.value) || 1;
+      if (currentValue < 10) {
+        qty.value = currentValue + 1;
+        updatePricing();
+        
+        // Add visual feedback
+        qty.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+          qty.style.transform = 'scale(1)';
+        }, 150);
+      }
+    });
+
+    qty.addEventListener('input', updatePricing);
+
+    // Progress bar animation
+    function updateProgress() {
+      const sections = document.querySelectorAll('.form-section');
+      const progressFill = document.querySelector('.progress-fill');
+      let completedSections = 0;
+      
+      sections.forEach(section => {
+        const inputs = section.querySelectorAll('input[required], select[required]');
+        const validInputs = Array.from(inputs).filter(input => 
+          input.type === 'checkbox' ? input.checked : input.value.trim() !== ''
+        );
+        
+        if (validInputs.length === inputs.length) {
+          completedSections++;
+          section.classList.add('completed');
+        } else {
+          section.classList.remove('completed');
+        }
+      });
+      
+      const progress = (completedSections / sections.length) * 100;
+      progressFill.style.width = `${progress}%`;
+    }
+
+    // Add progress tracking to all inputs
+    document.querySelectorAll('input, select').forEach(input => {
+      input.addEventListener('input', updateProgress);
+      input.addEventListener('change', updateProgress);
+    });
+
+    // Card number formatting
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      if (formattedValue !== e.target.value) {
+        e.target.value = formattedValue;
+      }
+      
+      // Update card type icon
+      const cardIcon = document.querySelector('.card-type-icon');
+      if (value.startsWith('4')) {
+        cardIcon.textContent = '💙'; // Visa
+      } else if (value.startsWith('5')) {
+        cardIcon.textContent = '🔴'; // Mastercard  
+      } else {
+        cardIcon.textContent = '💳';
+      }
+    });
+
+    // Expiry date formatting
+    document.getElementById('expiry').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // Form submission loading state
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+      const submitBtn = document.querySelector('.submit-btn');
+      submitBtn.classList.add('loading');
+      
+      // Show loading overlay
+      document.getElementById('loadingOverlay').classList.add('active');
+    });
+
+    // Initialize FingerprintJS with error handling
     document.addEventListener('DOMContentLoaded', function () {
       if (window.FingerprintJS) {
         FingerprintJS.load().then(fp => {
           fp.get().then(result => {
-            console.log('FingerprintJS loaded:', result.visitorId);
+            console.log('🔍 Device fingerprint loaded:', result.visitorId);
+          }).catch(err => {
+            console.warn('FingerprintJS error:', err);
           });
         });
-      } else {
-        console.error('FingerprintJS not loaded');
+      }
+      
+      // Initial progress update
+      updateProgress();
+    });
+
+    // Accessibility improvements
+    document.addEventListener('keydown', function(e) {
+      // Skip to main content with Alt+M
+      if (e.altKey && e.key === 'm') {
+        document.getElementById('checkoutForm').focus();
+        e.preventDefault();
       }
     });
   </script>
 </body>
-
 </html>
