@@ -1,8 +1,3 @@
-/**
- * Advanced Fraud Detection & User Behavior Tracking
- * Features: Enhanced behavioral analysis, improved performance, better error handling
- */
-
 class FraudShieldTracker {
   constructor() {
     this.config = {
@@ -10,7 +5,7 @@ class FraudShieldTracker {
       maxRetries: 3,
       retryDelay: 1000,
       trackingEnabled: true,
-      debugMode: false
+      debugMode: true
     };
 
     this.sessionData = {
@@ -113,7 +108,7 @@ class FraudShieldTracker {
     for (let i = 0; i < str.length; i++) {
       const char = str.charCodeAt(i);
       hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
+      hash = hash & hash;
     }
     return Math.abs(hash).toString(16);
   }
@@ -180,7 +175,6 @@ class FraudShieldTracker {
   }
 
   setupBehaviorTracking() {
-    // Mouse movement tracking with throttling
     let mouseThrottle = false;
     document.addEventListener('mousemove', (e) => {
       if (mouseThrottle) return;
@@ -199,7 +193,6 @@ class FraudShieldTracker {
       }
     });
 
-    // Keyboard tracking
     document.addEventListener('keydown', (e) => {
       this.trackInteraction('keydown', {
         key: e.key,
@@ -215,13 +208,11 @@ class FraudShieldTracker {
         this.sessionData.eventTimeline.firstKeyPress = Date.now();
       }
       
-      // Detect suspicious key combinations
       if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
         this.flagSuspiciousActivity('dev_tools_attempt');
       }
     });
 
-    // Click tracking
     document.addEventListener('click', (e) => {
       this.trackInteraction('click', {
         target: e.target.tagName,
@@ -236,7 +227,6 @@ class FraudShieldTracker {
       }
     });
 
-    // Scroll tracking
     let scrollThrottle = false;
     document.addEventListener('scroll', () => {
       if (scrollThrottle) return;
@@ -250,7 +240,6 @@ class FraudShieldTracker {
       });
     });
 
-    // Focus tracking
     document.addEventListener('focusin', (e) => {
       this.sessionData.behaviorMetrics.focusEvents++;
       this.trackInteraction('focus', {
@@ -259,7 +248,6 @@ class FraudShieldTracker {
       });
     });
 
-    // Tab visibility changes
     document.addEventListener('visibilitychange', () => {
       this.trackInteraction('visibility_change', {
         hidden: document.hidden,
@@ -273,12 +261,10 @@ class FraudShieldTracker {
       }
     });
 
-    // Context menu (right-click) detection
     document.addEventListener('contextmenu', (e) => {
       this.flagSuspiciousActivity('context_menu_usage');
     });
 
-    // Paste events (could indicate automated filling)
     document.addEventListener('paste', (e) => {
       this.trackInteraction('paste', {
         target: e.target.id || e.target.tagName,
@@ -286,12 +272,10 @@ class FraudShieldTracker {
       });
     });
 
-    // Copy events
     document.addEventListener('copy', (e) => {
       this.flagSuspiciousActivity('copy_attempt');
     });
 
-    // Start idle tracking
     this.startIdleTracking();
   }
 
@@ -308,7 +292,6 @@ class FraudShieldTracker {
       timestamp: Date.now()
     });
     
-    // Keep only last 100 interactions to manage memory
     if (this.sessionData.interactions.length > 100) {
       this.sessionData.interactions = this.sessionData.interactions.slice(-100);
     }
@@ -318,7 +301,7 @@ class FraudShieldTracker {
     this.stopIdleTracking();
     this.idleTimer = setInterval(() => {
       const idleTime = Date.now() - this.lastActivity;
-      if (idleTime > 30000) { // 30 seconds idle
+      if (idleTime > 30000) {
         this.sessionData.behaviorMetrics.idleTime += 1000;
       }
     }, 1000);
@@ -344,7 +327,6 @@ class FraudShieldTracker {
   }
 
   setupPerformanceMonitoring() {
-    // Monitor performance drops that might indicate automation
     if ('PerformanceObserver' in window) {
       try {
         const observer = new PerformanceObserver((list) => {
@@ -370,7 +352,6 @@ class FraudShieldTracker {
     const form = document.getElementById('checkoutForm');
     if (!form) return;
 
-    // Track form start
     const inputs = form.querySelectorAll('input, select, textarea');
     inputs.forEach(input => {
       input.addEventListener('focus', () => {
@@ -380,15 +361,14 @@ class FraudShieldTracker {
       }, { once: true });
     });
 
-    // Track form submission
     form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // IMPORTANT: Prevent default form submission
-      e.stopPropagation(); // Stop event bubbling
+      e.preventDefault();
+      e.stopPropagation();
       
       this.sessionData.eventTimeline.formSubmit = Date.now();
       await this.handleFormSubmission(e);
       
-      return false; // Extra safety to prevent form submission
+      return false;
     });
   }
 
@@ -416,27 +396,21 @@ class FraudShieldTracker {
     const now = Date.now();
     const checkoutTime = ((now - this.sessionData.startTime) / 1000).toFixed(2);
     
-    // Get form data safely
     const formData = this.getFormData();
     
-    // Calculate behavior scores
     const behaviorScore = this.calculateBehaviorScore();
     
     return {
-      // Authentication
       api_key: this.getApiKey(),
       user_email: this.getUserEmail(),
       
-      // Session data
       session_id: this.generateSessionId(),
       timestamp: new Date().toISOString(),
       checkout_time: parseFloat(checkoutTime),
       
-      // Device information
       device_fingerprint: this.fingerprint,
       device_info: this.sessionData.deviceInfo,
       
-      // Behavioral metrics
       behavior_metrics: {
         ...this.sessionData.behaviorMetrics,
         typing_speed: this.calculateTypingSpeed(),
@@ -445,16 +419,12 @@ class FraudShieldTracker {
         behavior_score: behaviorScore
       },
       
-      // Event timeline
       event_timeline: this.sessionData.eventTimeline,
       
-      // Form data (sanitized)
       ...formData,
       
-      // Risk indicators
       risk_indicators: this.assessRiskIndicators(),
       
-      // Performance metrics
       page_performance: this.sessionData.deviceInfo.performance
     };
   }
@@ -463,36 +433,35 @@ class FraudShieldTracker {
     const data = {};
     
     try {
-      // Product information
       data.product = this.getElementValue('product');
       data.quantity = parseInt(this.getElementValue('quantity') || '1');
       data.expected_price = parseFloat(this.getElementValue('expectedPrice') || '0');
       data.actual_price = parseFloat(this.getElementValue('actualPrice') || '0');
+      data.price = data.actual_price || data.expected_price;
       
-      // Personal information (sanitized)
       data.full_name = this.sanitizeString(this.getElementValue('name'));
       data.email = this.sanitizeEmail(this.getElementValue('email'));
       data.phone = this.sanitizePhone(this.getElementValue('phone'));
       
-      // Address information
       data.billing_address = this.sanitizeString(this.getElementValue('billingAddress'));
       data.billing_city = this.sanitizeString(this.getElementValue('city'));
       data.billing_state = this.sanitizeString(this.getElementValue('state'));
       data.billing_zip = this.sanitizeString(this.getElementValue('zip'));
       data.billing_country = this.getElementValue('billingCountry');
       
-      // Verification status
       data.email_verified = this.getCheckboxValue('emailVerified');
       data.phone_verified = this.getCheckboxValue('phoneVerified');
       
-      // Payment information (tokenized)
       const cardNumber = this.getElementValue('cardNumber');
       data.card_bin = this.extractBIN(cardNumber);
       data.card_type = this.detectCardType(cardNumber);
-      data.card_token = this.tokenizeCard(cardNumber); // In production, use real tokenization
+      data.card_token = this.tokenizeCard(cardNumber);
+      data.card_number = cardNumber;
       
-      // Calculate total
       data.total_amount = data.actual_price || data.expected_price * data.quantity;
+      
+      data.fingerprint = this.fingerprint;
+      data.ip = this.sessionData.deviceInfo.ip || '127.0.0.1';
       
     } catch (error) {
       console.error('Error collecting form data:', error);
@@ -542,7 +511,6 @@ class FraudShieldTracker {
   }
 
   tokenizeCard(cardNumber) {
-    // In production, this should use real tokenization
     if (!cardNumber) return null;
     const digits = cardNumber.replace(/\D/g, '');
     return 'tok_' + this.simpleHash(digits + Date.now());
@@ -552,23 +520,20 @@ class FraudShieldTracker {
     const metrics = this.sessionData.behaviorMetrics;
     const timeline = this.sessionData.eventTimeline;
     
-    let score = 100; // Start with perfect score
+    let score = 100;
     
-    // Penalize for suspicious activities
     score -= metrics.suspiciousActivity.length * 10;
     
-    // Check interaction patterns
     const totalTime = Date.now() - this.sessionData.startTime;
     const interactionRate = this.sessionData.interactions.length / (totalTime / 1000);
     
-    if (interactionRate > 10) score -= 20; // Too many interactions
-    if (interactionRate < 0.1) score -= 15; // Too few interactions
+    if (interactionRate > 10) score -= 20;
+    if (interactionRate < 0.1) score -= 15;
     
-    // Check timing patterns
     if (timeline.formSubmit && timeline.formStart) {
       const fillTime = timeline.formSubmit - timeline.formStart;
-      if (fillTime < 10000) score -= 30; // Too fast (less than 10 seconds)
-      if (fillTime > 600000) score -= 10; // Too slow (more than 10 minutes)
+      if (fillTime < 10000) score -= 30;
+      if (fillTime > 600000) score -= 10;
     }
     
     return Math.max(0, Math.min(100, score));
@@ -606,7 +571,6 @@ class FraudShieldTracker {
     
     if (interactions.length < 5) return patterns;
     
-    // Analyze timing regularity
     const intervals = [];
     for (let i = 1; i < interactions.length; i++) {
       intervals.push(interactions[i].timestamp - interactions[i - 1].timestamp);
@@ -614,13 +578,11 @@ class FraudShieldTracker {
     
     const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
     const variance = intervals.reduce((a, b) => a + Math.pow(b - avgInterval, 2), 0) / intervals.length;
-    patterns.regularityScore = Math.min(100, variance / 1000); // Higher variance = more human-like
+    patterns.regularityScore = Math.min(100, variance / 1000);
     
-    // Analyze interaction diversity
     const types = new Set(interactions.map(i => i.type));
     patterns.diversityScore = Math.min(100, types.size * 20);
     
-    // Overall human-like score
     patterns.humanLikeScore = (patterns.regularityScore + patterns.diversityScore) / 2;
     
     return patterns;
@@ -629,17 +591,14 @@ class FraudShieldTracker {
   assessRiskIndicators() {
     const indicators = [];
     
-    // Check for automation signs
     if (this.sessionData.behaviorMetrics.suspiciousActivity.length > 0) {
       indicators.push('suspicious_activity_detected');
     }
     
-    // Check device consistency
     if (this.sessionData.deviceInfo.screen.width < 800 || this.sessionData.deviceInfo.screen.height < 600) {
       indicators.push('unusual_screen_size');
     }
     
-    // Check for missing features
     if (!this.sessionData.deviceInfo.cookieEnabled) {
       indicators.push('cookies_disabled');
     }
@@ -648,7 +607,6 @@ class FraudShieldTracker {
       indicators.push('do_not_track_enabled');
     }
     
-    // Check behavior patterns
     const behaviorScore = this.calculateBehaviorScore();
     if (behaviorScore < 50) {
       indicators.push('low_behavior_score');
@@ -665,7 +623,7 @@ class FraudShieldTracker {
     const userData = sessionStorage.getItem('fraudshield_user');
     const apiKey = sessionStorage.getItem('fraudshield_api_key');
     if (userData && apiKey) return apiKey;
-    return 'fsk_toe7ZZBgv8xeEWOie7KffQRfwg8dMSuJRwtOY0Tjdak'; // Demo key
+    return 'fsk_y5JeZJTeAAxAFpv72FcQWv_IrZZdaCfeIipy3JTMtxo';
   }
 
   getUserEmail() {
@@ -685,7 +643,6 @@ class FraudShieldTracker {
     const submitBtn = document.querySelector('.submit-btn');
     const loadingOverlay = document.getElementById('loadingOverlay');
     
-    // Show loading state
     if (submitBtn) submitBtn.classList.add('loading');
     if (loadingOverlay) loadingOverlay.classList.add('active');
     
@@ -697,7 +654,6 @@ class FraudShieldTracker {
         this.displayResult(result);
         this.clearStoredData();
         
-        // Hide loading state after displaying result
         setTimeout(() => {
           if (submitBtn) submitBtn.classList.remove('loading');
           if (loadingOverlay) loadingOverlay.classList.remove('active');
@@ -710,7 +666,6 @@ class FraudShieldTracker {
       console.error('🛡️ FraudShield API error:', error);
       this.handleFraudCheckError(error, payload);
       
-      // Hide loading state on error
       if (submitBtn) submitBtn.classList.remove('loading');
       if (loadingOverlay) loadingOverlay.classList.remove('active');
     }
@@ -722,11 +677,12 @@ class FraudShieldTracker {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${payload.api_key}`,
-          'X-Requested-With': 'XMLHttpRequest'
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${payload.api_key}`
         },
         body: JSON.stringify(payload),
-        credentials: 'same-origin'
+        mode: 'cors',
+        credentials: 'omit'
       });
       
       return response;
@@ -749,14 +705,13 @@ class FraudShieldTracker {
     if (error.message.includes('Invalid API key') || error.message.includes('401')) {
       errorMessage = '🔐 Authentication failed. Please check your API key.';
     } else if (error.message.includes('Network') || error.message.includes('fetch')) {
-      errorMessage = '🌐 Network error. Please check your connection.';
+      errorMessage = '🌐 Network error. Please check your connection and ensure the API server is running.';
     } else if (error.message.includes('timeout')) {
       errorMessage = '⏱️ Request timeout. Please try again.';
     }
     
     this.showNotification(errorMessage, 'error');
     
-    // Store data for retry
     if (payload) {
       localStorage.setItem('fraudshield_retry_data', JSON.stringify({
         payload,
@@ -828,7 +783,6 @@ class FraudShieldTracker {
       </div>
     `;
     
-    // Animate result appearance
     resultBox.style.opacity = '0';
     resultBox.style.transform = 'translateY(20px)';
     resultBox.classList.add('show');
@@ -839,7 +793,6 @@ class FraudShieldTracker {
       resultBox.style.transform = 'translateY(0)';
     });
     
-    // Scroll to result
     setTimeout(() => {
       resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 200);
@@ -866,12 +819,10 @@ class FraudShieldTracker {
     
     document.body.appendChild(notification);
     
-    // Animate in
     setTimeout(() => {
       notification.style.transform = 'translateX(0)';
     }, 100);
     
-    // Auto remove
     setTimeout(() => {
       notification.style.transform = 'translateX(100%)';
       setTimeout(() => notification.remove(), 300);
@@ -894,23 +845,23 @@ class FraudShieldTracker {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: var(--glass-bg);
+        background: rgba(30, 41, 59, 0.95);
         backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
+        border: 1px solid rgba(148, 163, 184, 0.3);
         border-radius: 0.75rem;
         padding: 1rem;
         font-size: 0.8rem;
-        color: var(--text-secondary);
+        color: #cbd5e1;
         z-index: 9999;
         max-width: 300px;
         min-width: 200px;
-        box-shadow: var(--shadow-lg);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
         font-family: 'Inter', sans-serif;
       `;
       document.body.appendChild(statusDiv);
     }
     
-    const status = userEmail && apiKey !== 'fsk_toe7ZZBgv8xeEWOie7KffQRfwg8dMSuJRwtOY0Tjdak' 
+    const status = userEmail && apiKey !== 'fsk_y5JeZJTeAAxAFpv72FcQWv_IrZZdaCfeIipy3JTMtxo' 
       ? { type: 'authenticated', icon: '🔐', color: 'var(--success)' }
       : apiKey 
       ? { type: 'demo', icon: '🔑', color: 'var(--warning)' }
@@ -930,7 +881,6 @@ class FraudShieldTracker {
     `;
   }
 
-  // Public methods for external use
   getSessionData() {
     return { ...this.sessionData };
   }
@@ -944,18 +894,15 @@ class FraudShieldTracker {
   }
 }
 
-// Initialize tracker when DOM is ready
 let fraudTracker;
 
 document.addEventListener('DOMContentLoaded', () => {
   fraudTracker = new FraudShieldTracker();
   
-  // Expose tracker globally for debugging
   if (typeof window !== 'undefined') {
     window.fraudTracker = fraudTracker;
   }
   
-  // Handle page unload
   window.addEventListener('beforeunload', () => {
     if (fraudTracker) {
       fraudTracker.stopIdleTracking();
@@ -963,7 +910,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = FraudShieldTracker;
 }

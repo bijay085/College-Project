@@ -6,30 +6,27 @@
   <meta name="description" content="Secure checkout for your order" />
   <meta name="theme-color" content="#6366f1" />
   
-  <!-- Preconnects for performance -->
+  <link rel="icon" href="data:image/x-icon;base64,AA">
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- Scripts with optimized loading -->
   <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js" defer></script>
-  <script src="validation.js" defer></script>
-  <script src="tracking.js" defer></script>
+  <script src="./validation.js" defer></script>
+  <script src="./tracking.js" defer></script>
   
-  <link rel="stylesheet" href="checkout.css" />
+  <link rel="stylesheet" href="./checkout.css" />
   <title>Secure Checkout - FraudShield</title>
 </head>
 
 <body>
-  <!-- Loading overlay -->
   <div id="loadingOverlay" class="loading-overlay">
     <div class="loading-spinner"></div>
     <p>Securing your transaction...</p>
   </div>
 
-  <!-- Main container with glass effect -->
   <div class="checkout-container">
-    <!-- Header with progress indicator -->
     <div class="checkout-header">
       <div class="progress-bar">
         <div class="progress-fill" data-step="1"></div>
@@ -41,10 +38,9 @@
       <p class="checkout-subtitle">Your payment is protected by FraudShield</p>
     </div>
 
-    <!-- Product preview with enhanced styling -->
     <div class="product-preview">
       <div class="product-image-container">
-        <img src="product.webp" alt="Laptop X Product Image" loading="lazy" />
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%234f46e5'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='white' font-size='60'%3E💻%3C/text%3E%3C/svg%3E" alt="Laptop X Product Image" loading="lazy" />
         <div class="product-badge">Premium</div>
       </div>
       <div class="product-details">
@@ -66,8 +62,7 @@
       </div>
     </div>
 
-    <form id="checkoutForm" novalidate aria-label="Checkout form" onsubmit="return false;">
-      <!-- Billing Information Section -->
+    <form id="checkoutForm" novalidate aria-label="Checkout form">
       <section class="form-section" data-section="billing">
         <div class="section-header">
           <h2 class="section-title">
@@ -189,7 +184,6 @@
         </div>
       </section>
 
-      <!-- Verification Section -->
       <section class="form-section" data-section="verification">
         <div class="section-header">
           <h2 class="section-title">
@@ -228,7 +222,6 @@
         </div>
       </section>
 
-      <!-- Payment Information Section -->
       <section class="form-section" data-section="payment">
         <div class="section-header">
           <h2 class="section-title">
@@ -289,7 +282,6 @@
         </div>
       </section>
 
-      <!-- Order Summary -->
       <div class="order-summary">
         <div class="summary-header">
           <h3>Order Summary</h3>
@@ -311,13 +303,12 @@
           <div class="summary-divider"></div>
           <div class="summary-row total-row">
             <span>Total:</span>
-            <span class="total-amount">₹<span id="finalPrice">74,999</span></span>
+            <span class="total-amount">₹<span id="finalPrice">88,498</span></span>
           </div>
         </div>
-        <input type="hidden" id="actualPrice" value="74999" />
+        <input type="hidden" id="actualPrice" value="88498" />
       </div>
 
-      <!-- Security badges -->
       <div class="security-badges">
         <div class="security-badge">
           <span class="badge-icon">🛡️</span>
@@ -333,12 +324,11 @@
         </div>
       </div>
 
-      <!-- Submit button with loading state -->
       <button type="submit" class="submit-btn" aria-describedby="submit-help">
         <span class="btn-content">
           <span class="btn-icon">🛡️</span>
           <span class="btn-text">Complete Secure Payment</span>
-          <span class="btn-amount">₹<span class="btn-price">74,999</span></span>
+          <span class="btn-amount">₹<span class="btn-price">88,498</span></span>
         </span>
         <div class="btn-loading">
           <div class="loading-spinner-small"></div>
@@ -350,11 +340,9 @@
       </small>
     </form>
 
-    <!-- Fraud detection result -->
     <div id="fraudResult" class="fraud-result" role="alert" aria-live="polite"></div>
   </div>
 
-  <!-- Background decoration -->
   <div class="bg-decoration">
     <div class="decoration-circle circle-1"></div>
     <div class="decoration-circle circle-2"></div>
@@ -362,7 +350,6 @@
   </div>
 
   <script>
-    // Enhanced quantity controls with animations
     const qty = document.getElementById('quantity');
     const finalPrice = document.getElementById('finalPrice');
     const btnPrice = document.querySelector('.btn-price');
@@ -374,10 +361,9 @@
     function updatePricing() {
       const qtyVal = parseInt(qty.value) || 1;
       const total = expectedPrice * qtyVal;
-      const taxAmount = Math.round(total * 0.18); // 18% tax
+      const taxAmount = Math.round(total * 0.18);
       const totalWithTax = total + taxAmount;
       
-      // Animate price changes
       animateValue(subtotal, parseInt(subtotal.textContent.replace(/,/g, '')), total);
       animateValue(tax, parseInt(tax.textContent.replace(/,/g, '')), taxAmount);
       animateValue(finalPrice, parseInt(finalPrice.textContent.replace(/,/g, '')), totalWithTax);
@@ -404,14 +390,12 @@
       requestAnimationFrame(update);
     }
 
-    // Quantity controls
     document.querySelector('.qty-decrease').addEventListener('click', () => {
       const currentValue = parseInt(qty.value) || 1;
       if (currentValue > 1) {
         qty.value = currentValue - 1;
         updatePricing();
         
-        // Add visual feedback
         qty.style.transform = 'scale(1.1)';
         setTimeout(() => {
           qty.style.transform = 'scale(1)';
@@ -425,7 +409,6 @@
         qty.value = currentValue + 1;
         updatePricing();
         
-        // Add visual feedback
         qty.style.transform = 'scale(1.1)';
         setTimeout(() => {
           qty.style.transform = 'scale(1)';
@@ -435,7 +418,6 @@
 
     qty.addEventListener('input', updatePricing);
 
-    // Progress bar animation
     function updateProgress() {
       const sections = document.querySelectorAll('.form-section');
       const progressFill = document.querySelector('.progress-fill');
@@ -459,13 +441,11 @@
       progressFill.style.width = `${progress}%`;
     }
 
-    // Add progress tracking to all inputs
     document.querySelectorAll('input, select').forEach(input => {
       input.addEventListener('input', updateProgress);
       input.addEventListener('change', updateProgress);
     });
 
-    // Card number formatting
     document.getElementById('cardNumber').addEventListener('input', function(e) {
       let value = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
       let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
@@ -473,18 +453,16 @@
         e.target.value = formattedValue;
       }
       
-      // Update card type icon
       const cardIcon = document.querySelector('.card-type-icon');
       if (value.startsWith('4')) {
-        cardIcon.textContent = '💙'; // Visa
+        cardIcon.textContent = '💙';
       } else if (value.startsWith('5')) {
-        cardIcon.textContent = '🔴'; // Mastercard  
+        cardIcon.textContent = '🔴';  
       } else {
         cardIcon.textContent = '💳';
       }
     });
 
-    // Expiry date formatting
     document.getElementById('expiry').addEventListener('input', function(e) {
       let value = e.target.value.replace(/\D/g, '');
       if (value.length >= 2) {
@@ -493,24 +471,29 @@
       e.target.value = value;
     });
 
-    // FIXED: Form submission handling
-    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-      e.preventDefault(); // Prevent default form submission
-      e.stopPropagation(); // Stop event propagation
+    document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // Let validator check first
+      if (!validator || !validator.handleSubmit(e)) {
+        console.log('Validation failed, preventing submission');
+        return false;
+      }
       
       const submitBtn = document.querySelector('.submit-btn');
       submitBtn.classList.add('loading');
       
-      // Show loading overlay
       document.getElementById('loadingOverlay').classList.add('active');
       
-      // The fraud check will be handled by FraudShieldTracker
-      console.log('Form submitted, fraud check in progress...');
+      console.log('Form validated successfully, fraud check in progress...');
+      
       return false;
     });
 
-    // Initialize FingerprintJS with error handling
     document.addEventListener('DOMContentLoaded', function () {
+      updatePricing();
+      
       if (window.FingerprintJS) {
         FingerprintJS.load().then(fp => {
           fp.get().then(result => {
@@ -521,13 +504,10 @@
         });
       }
       
-      // Initial progress update
       updateProgress();
     });
 
-    // Accessibility improvements
     document.addEventListener('keydown', function(e) {
-      // Skip to main content with Alt+M
       if (e.altKey && e.key === 'm') {
         document.getElementById('checkoutForm').focus();
         e.preventDefault();

@@ -1,9 +1,9 @@
-// Modern Enhanced Validation System
 class ModernValidator {
   constructor() {
     this.validators = new Map();
     this.debounceTimers = new Map();
     this.isSubmitting = false;
+    this.validationState = new Map(); // Track validation state for each field
     this.init();
   }
 
@@ -13,7 +13,6 @@ class ModernValidator {
     this.addStyles();
   }
 
-  // Enhanced error display with animations
   showError(input, message, type = 'error') {
     this.clearError(input);
     
@@ -23,26 +22,29 @@ class ModernValidator {
     errorDiv.setAttribute('role', 'alert');
     errorDiv.setAttribute('aria-live', 'polite');
     
-    // Add icon based on type
     const icon = type === 'warning' ? '⚠️' : type === 'success' ? '✅' : '❌';
     errorDiv.innerHTML = `<span class="error-icon">${icon}</span><span class="error-text">${message}</span>`;
     
     formGroup.appendChild(errorDiv);
     input.classList.add('error-border', type);
     
-    // Animate error appearance
+    // Update validation state
+    if (type === 'error') {
+      this.validationState.set(input.id, false);
+    } else if (type === 'success') {
+      this.validationState.set(input.id, true);
+    }
+    
     requestAnimationFrame(() => {
       errorDiv.style.opacity = '1';
       errorDiv.style.transform = 'translateY(0)';
     });
 
-    // Shake animation for severe errors
     if (type === 'error') {
       input.style.animation = 'shake 0.4s ease-in-out';
       setTimeout(() => input.style.animation = '', 400);
     }
 
-    // Auto-remove success messages
     if (type === 'success') {
       setTimeout(() => this.clearError(input), 3000);
     }
@@ -61,7 +63,6 @@ class ModernValidator {
     input.classList.remove('error-border', 'error', 'warning', 'success');
   }
 
-  // Debounced validation for better UX
   debounceValidation(input, validator, delay = 500) {
     const key = input.id || input.name;
     
@@ -77,7 +78,6 @@ class ModernValidator {
     this.debounceTimers.set(key, timer);
   }
 
-  // Enhanced validation methods
   validateName(input) {
     this.clearError(input);
     const value = input.value.trim();
@@ -99,7 +99,8 @@ class ModernValidator {
     
     if (value.split(' ').length < 2) {
       this.showError(input, "Please enter your full name (first and last)", 'warning');
-      return true; // Allow but warn
+      this.validationState.set(input.id, true); // Allow but warn
+      return true;
     }
     
     this.showError(input, "Name looks good!", 'success');
@@ -115,7 +116,6 @@ class ModernValidator {
       return false;
     }
     
-    // Enhanced email regex
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
     
     if (!emailRegex.test(value)) {
@@ -123,13 +123,13 @@ class ModernValidator {
       return false;
     }
     
-    // Check for common typos
     const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
     const domain = value.split('@')[1];
     const suggestion = this.suggestDomain(domain, commonDomains);
     
     if (suggestion && suggestion !== domain) {
       this.showError(input, `Did you mean ${value.replace(domain, suggestion)}?`, 'warning');
+      this.validationState.set(input.id, true);
       return true;
     }
     
@@ -151,7 +151,6 @@ class ModernValidator {
       return false;
     }
     
-    // Format phone number as user types
     this.formatPhoneNumber(input);
     
     this.showError(input, "Phone number verified!", 'success');
@@ -185,7 +184,6 @@ class ModernValidator {
       return false;
     }
     
-    // Different patterns for different countries
     const patterns = {
       US: /^\d{5}(-\d{4})?$/,
       CA: /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,
@@ -220,13 +218,11 @@ class ModernValidator {
       return false;
     }
     
-    // Luhn algorithm validation
     if (!this.validateLuhn(value)) {
       this.showError(input, "Invalid card number");
       return false;
     }
     
-    // Detect card type and update UI
     const cardType = this.detectCardType(value);
     this.updateCardBrands(cardType);
     
@@ -253,19 +249,19 @@ class ModernValidator {
     const year = 2000 + parseInt(match[2], 10);
     const expiry = new Date(year, month - 1);
     const now = new Date();
-    now.setDate(1); // Set to first day of current month
+    now.setDate(1);
     
     if (expiry < now) {
       this.showError(input, "Card has expired");
       return false;
     }
     
-    // Warn if expiring soon (within 3 months)
     const threeMonthsFromNow = new Date();
     threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
     
     if (expiry < threeMonthsFromNow) {
       this.showError(input, "Card expires soon", 'warning');
+      this.validationState.set(input.id, true);
       return true;
     }
     
@@ -303,14 +299,28 @@ class ModernValidator {
     if (value > 10) {
       this.showError(input, "Maximum quantity is 10", 'warning');
       input.value = 10;
+      this.validationState.set(input.id, true);
       return true;
     }
     
+    this.validationState.set(input.id, true);
+    return true;
+  }
+
+  validateSelect(input) {
+    this.clearError(input);
+    
+    if (!input.value) {
+      this.showError(input, "Please select a country");
+      return false;
+    }
+    
+    this.showError(input, "Country selected!", 'success');
     return true;
   }
 
   validateCheckbox(input, message) {
-    const formGroup = input.closest('.verification-item') || input.parentElement;
+    const formGroup = input.closest('.verification-card') || input.parentElement;
     const existingError = formGroup.querySelector('.input-error');
     
     if (existingError) {
@@ -320,17 +330,19 @@ class ModernValidator {
     if (!input.checked) {
       const errorDiv = document.createElement('div');
       errorDiv.className = 'input-error error';
+      errorDiv.style.cssText = 'opacity: 1; transform: translateY(0);';
       errorDiv.innerHTML = `<span class="error-icon">❌</span><span class="error-text">${message}</span>`;
       formGroup.appendChild(errorDiv);
       formGroup.classList.add('error-border');
+      this.validationState.set(input.id, false);
       return false;
     }
     
     formGroup.classList.remove('error-border');
+    this.validationState.set(input.id, true);
     return true;
   }
 
-  // Helper methods
   validateLuhn(cardNumber) {
     let sum = 0;
     let shouldDouble = false;
@@ -381,7 +393,7 @@ class ModernValidator {
   }
 
   suggestDomain(domain, commonDomains) {
-    const threshold = 2; // Levenshtein distance threshold
+    const threshold = 2;
     
     for (const commonDomain of commonDomains) {
       if (this.levenshteinDistance(domain, commonDomain) <= threshold) {
@@ -442,7 +454,7 @@ class ModernValidator {
     this.validators.set('city', (input) => this.validateAddress(input, 'City'));
     this.validators.set('state', (input) => this.validateAddress(input, 'State/Province'));
     this.validators.set('zip', (input) => this.validateZip(input));
-    this.validators.set('billingCountry', (input) => input.value ? true : (this.showError(input, 'Please select a country'), false));
+    this.validators.set('billingCountry', (input) => this.validateSelect(input));
     this.validators.set('cardNumber', (input) => this.validateCardNumber(input));
     this.validators.set('expiry', (input) => this.validateExpiry(input));
     this.validators.set('cvv', (input) => this.validateCVV(input));
@@ -454,17 +466,32 @@ class ModernValidator {
       const form = document.getElementById('checkoutForm');
       if (!form) return;
 
+      // Prevent form submission with Enter key unless form is valid
+      form.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.target.tagName !== 'BUTTON') {
+          e.preventDefault();
+          return false;
+        }
+      });
+
       // Form submission
-      form.addEventListener('submit', (e) => this.handleSubmit(e));
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        return this.handleSubmit(e);
+      });
 
       // Live validation
       this.validators.forEach((validator, fieldId) => {
         const field = document.getElementById(fieldId);
         if (!field) return;
 
+        // Initialize validation state
+        this.validationState.set(fieldId, false);
+
         // Blur validation (immediate)
         field.addEventListener('blur', () => {
-          if (field.value.trim()) {
+          if (field.value.trim() || field.hasAttribute('required')) {
             validator(field);
           }
         });
@@ -474,6 +501,8 @@ class ModernValidator {
           this.clearError(field);
           if (field.value.trim()) {
             this.debounceValidation(field, validator);
+          } else if (field.hasAttribute('required')) {
+            this.validationState.set(fieldId, false);
           }
         });
       });
@@ -499,27 +528,77 @@ class ModernValidator {
         });
       }
 
-      // Checkbox validation
+      // Checkbox validation - OPTIONAL, no validation needed
       const checkboxes = ['emailVerified', 'phoneVerified'];
       checkboxes.forEach(id => {
         const checkbox = document.getElementById(id);
         if (checkbox) {
+          // Set to true by default since they're optional
+          this.validationState.set(id, true);
+          
+          // Just track the state, no error messages
           checkbox.addEventListener('change', () => {
-            const messages = {
-              emailVerified: 'Please verify your email address',
-              phoneVerified: 'Please verify your phone number'
-            };
-            this.validateCheckbox(checkbox, messages[id]);
+            // Always valid since it's optional
+            this.validationState.set(id, true);
+            this.updateSubmitButton();
           });
         }
       });
+
+      // Add submit button state management
+      this.updateSubmitButton();
     });
   }
 
+  isFormValid() {
+    const requiredFields = [
+      'name', 'email', 'phone', 'billingAddress', 'city', 
+      'state', 'zip', 'billingCountry', 'cardNumber', 
+      'expiry', 'cvv'
+      // Removed 'emailVerified' and 'phoneVerified' - they are optional
+    ];
+
+    for (const fieldId of requiredFields) {
+      if (!this.validationState.get(fieldId)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  updateSubmitButton() {
+    const submitBtn = document.querySelector('.submit-btn');
+    if (!submitBtn) return;
+
+    // Check form validity on any change
+    const form = document.getElementById('checkoutForm');
+    if (!form) return;
+
+    const updateBtn = () => {
+      const isValid = this.isFormValid();
+      if (isValid) {
+        submitBtn.classList.remove('disabled');
+        submitBtn.removeAttribute('disabled');
+      } else {
+        submitBtn.classList.add('disabled');
+        submitBtn.setAttribute('disabled', 'disabled');
+      }
+    };
+
+    // Listen for any input changes
+    form.addEventListener('input', updateBtn);
+    form.addEventListener('change', updateBtn);
+
+    // Initial check
+    updateBtn();
+  }
+
   handleSubmit(e) {
+    e.preventDefault();
+    
     if (this.isSubmitting) {
-      e.preventDefault();
-      return;
+      return false;
     }
 
     let isValid = true;
@@ -529,48 +608,49 @@ class ModernValidator {
       'expiry', 'cvv', 'quantity'
     ];
 
+    // Clear all previous errors
+    document.querySelectorAll('.input-error').forEach(error => error.remove());
+
     // Validate all fields
-    fields.forEach(fieldId => {
+    for (const fieldId of fields) {
       const field = document.getElementById(fieldId);
       const validator = this.validators.get(fieldId);
       
       if (field && validator) {
-        if (!validator(field)) {
+        const fieldValid = validator(field);
+        if (!fieldValid) {
           isValid = false;
         }
       }
-    });
+    }
 
-    // Validate checkboxes
+    // Don't validate checkboxes - they're optional
+    // Just get their values for the fraud check
     const emailVerified = document.getElementById('emailVerified');
     const phoneVerified = document.getElementById('phoneVerified');
-    
-    if (!this.validateCheckbox(emailVerified, 'Please verify your email address')) {
-      isValid = false;
-    }
-    
-    if (!this.validateCheckbox(phoneVerified, 'Please verify your phone number')) {
-      isValid = false;
-    }
 
     if (!isValid) {
-      e.preventDefault();
       this.focusFirstError();
       this.showValidationSummary();
+      
+      // Shake the submit button
+      const submitBtn = document.querySelector('.submit-btn');
+      if (submitBtn) {
+        submitBtn.style.animation = 'shake 0.5s ease-in-out';
+        setTimeout(() => submitBtn.style.animation = '', 500);
+      }
+      
       return false;
     }
 
-    // Set submitting state
+    // If valid, allow form submission
     this.isSubmitting = true;
     const submitBtn = document.querySelector('.submit-btn');
     if (submitBtn) {
       submitBtn.classList.add('loading');
-      setTimeout(() => {
-        this.isSubmitting = false;
-        submitBtn.classList.remove('loading');
-      }, 5000);
     }
 
+    // Return true to allow fraud check to proceed
     return true;
   }
 
@@ -591,7 +671,7 @@ class ModernValidator {
     if (errors.length === 0) return;
 
     const toast = document.createElement('div');
-    toast.className = 'validation-toast';
+    toast.className = 'validation-toast error-toast';
     toast.innerHTML = `
       <div class="toast-content">
         <span class="toast-icon">⚠️</span>
@@ -644,9 +724,15 @@ class ModernValidator {
         box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
       }
       
-      .verification-item.error-border {
+      .verification-card.error-border {
         border-color: var(--error) !important;
         background: rgba(239, 68, 68, 0.05);
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+      }
+      
+      .verification-card .input-error {
+        margin-top: 12px;
+        font-weight: 500;
       }
       
       @keyframes shake {
@@ -664,11 +750,17 @@ class ModernValidator {
         border: 1px solid var(--error);
         border-radius: 12px;
         padding: 16px;
-        z-index: 1001;
+        z-index: 10001;
         opacity: 0;
         transform: translateY(-20px);
         transition: all 0.3s ease-out;
         max-width: 300px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      
+      .error-toast {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: var(--error);
       }
       
       .toast-content {
@@ -682,6 +774,17 @@ class ModernValidator {
       
       .toast-icon {
         font-size: 16px;
+      }
+      
+      .submit-btn.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: var(--surface-light);
+      }
+      
+      .submit-btn.disabled:hover {
+        transform: none;
+        box-shadow: var(--shadow-lg);
       }
     `;
     document.head.appendChild(style);
