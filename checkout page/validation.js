@@ -1,956 +1,692 @@
-/**
- * Advanced Fraud Detection & User Behavior Tracking
- * Features: Enhanced behavioral analysis, improved performance, better error handling
- */
-
-class FraudShieldTracker {
+// Modern Enhanced Validation System
+class ModernValidator {
   constructor() {
-    this.config = {
-      apiEndpoint: 'http://127.0.0.1:5000/fraud-check',
-      maxRetries: 3,
-      retryDelay: 1000,
-      trackingEnabled: true,
-      debugMode: false
-    };
-
-    this.sessionData = {
-      startTime: Date.now(),
-      pageLoadTime: performance.now(),
-      interactions: [],
-      behaviorMetrics: {
-        mouseMoves: 0,
-        keyPresses: 0,
-        clicks: 0,
-        scrollEvents: 0,
-        focusEvents: 0,
-        idleTime: 0,
-        suspiciousActivity: []
-      },
-      deviceInfo: {},
-      eventTimeline: {
-        pageLoad: Date.now(),
-        firstInteraction: null,
-        firstMouseMove: null,
-        firstKeyPress: null,
-        firstClick: null,
-        formStart: null,
-        formSubmit: null
-      }
-    };
-
-    this.fingerprint = null;
-    this.lastActivity = Date.now();
-    this.idleTimer = null;
-    this.initialized = false;
-
+    this.validators = new Map();
+    this.debounceTimers = new Map();
+    this.isSubmitting = false;
     this.init();
   }
 
-  async init() {
-    try {
-      await this.setupDeviceFingerprinting();
-      this.collectDeviceInfo();
-      this.setupBehaviorTracking();
-      this.setupPerformanceMonitoring();
-      this.setupFormHooks();
-      this.displayStatus();
-      this.initialized = true;
-      
-      if (this.config.debugMode) {
-        console.log('🛡️ FraudShield Tracker initialized', this.sessionData);
-      }
-    } catch (error) {
-      console.error('FraudShield initialization failed:', error);
-    }
+  init() {
+    this.setupValidators();
+    this.attachEventListeners();
+    this.addStyles();
   }
 
-  async setupDeviceFingerprinting() {
-    try {
-      if (typeof FingerprintJS === 'undefined') {
-        console.warn('🔍 FingerprintJS not available, using fallback fingerprinting');
-        this.fingerprint = this.generateFallbackFingerprint();
-        return;
-      }
-
-      const fp = await FingerprintJS.load({
-        monitoring: false
-      });
-      
-      const result = await fp.get();
-      this.fingerprint = result.visitorId;
-      
-      if (this.config.debugMode) {
-        console.log('🔍 Device fingerprint generated:', this.fingerprint);
-      }
-    } catch (error) {
-      console.warn('🔍 Fingerprinting failed, using fallback:', error);
-      this.fingerprint = this.generateFallbackFingerprint();
-    }
-  }
-
-  generateFallbackFingerprint() {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.textBaseline = 'top';
-    ctx.font = '14px Arial';
-    ctx.fillText('FraudShield fingerprint', 2, 2);
+  // Enhanced error display with animations
+  showError(input, message, type = 'error') {
+    this.clearError(input);
     
-    const components = [
-      navigator.userAgent,
-      navigator.language,
-      screen.width + 'x' + screen.height,
-      new Date().getTimezoneOffset(),
-      !!navigator.cookieEnabled,
-      typeof localStorage !== 'undefined',
-      canvas.toDataURL()
-    ];
+    const formGroup = input.closest('.form-group') || input.parentElement;
+    const errorDiv = document.createElement('div');
+    errorDiv.className = `input-error ${type}`;
+    errorDiv.setAttribute('role', 'alert');
+    errorDiv.setAttribute('aria-live', 'polite');
     
-    return this.simpleHash(components.join('|'));
-  }
+    // Add icon based on type
+    const icon = type === 'warning' ? '⚠️' : type === 'success' ? '✅' : '❌';
+    errorDiv.innerHTML = `<span class="error-icon">${icon}</span><span class="error-text">${message}</span>`;
+    
+    formGroup.appendChild(errorDiv);
+    input.classList.add('error-border', type);
+    
+    // Animate error appearance
+    requestAnimationFrame(() => {
+      errorDiv.style.opacity = '1';
+      errorDiv.style.transform = 'translateY(0)';
+    });
 
-  simpleHash(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32-bit integer
+    // Shake animation for severe errors
+    if (type === 'error') {
+      input.style.animation = 'shake 0.4s ease-in-out';
+      setTimeout(() => input.style.animation = '', 400);
     }
-    return Math.abs(hash).toString(16);
+
+    // Auto-remove success messages
+    if (type === 'success') {
+      setTimeout(() => this.clearError(input), 3000);
+    }
   }
 
-  collectDeviceInfo() {
-    this.sessionData.deviceInfo = {
-      userAgent: navigator.userAgent,
-      language: navigator.language,
-      languages: navigator.languages || [],
-      platform: navigator.platform,
-      cookieEnabled: navigator.cookieEnabled,
-      onLine: navigator.onLine,
-      doNotTrack: navigator.doNotTrack,
-      hardwareConcurrency: navigator.hardwareConcurrency || 0,
-      maxTouchPoints: navigator.maxTouchPoints || 0,
-      screen: {
-        width: screen.width,
-        height: screen.height,
-        colorDepth: screen.colorDepth,
-        pixelDepth: screen.pixelDepth,
-        availWidth: screen.availWidth,
-        availHeight: screen.availHeight
-      },
-      window: {
-        innerWidth: window.innerWidth,
-        innerHeight: window.innerHeight,
-        outerWidth: window.outerWidth,
-        outerHeight: window.outerHeight,
-        devicePixelRatio: window.devicePixelRatio || 1
-      },
-      timezone: {
-        offset: new Date().getTimezoneOffset(),
-        zone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      },
-      connection: this.getConnectionInfo(),
-      performance: this.getPerformanceMetrics()
+  clearError(input) {
+    const formGroup = input.closest('.form-group') || input.parentElement;
+    const error = formGroup.querySelector('.input-error');
+    
+    if (error) {
+      error.style.opacity = '0';
+      error.style.transform = 'translateY(-10px)';
+      setTimeout(() => error.remove(), 200);
+    }
+    
+    input.classList.remove('error-border', 'error', 'warning', 'success');
+  }
+
+  // Debounced validation for better UX
+  debounceValidation(input, validator, delay = 500) {
+    const key = input.id || input.name;
+    
+    if (this.debounceTimers.has(key)) {
+      clearTimeout(this.debounceTimers.get(key));
+    }
+    
+    const timer = setTimeout(() => {
+      validator(input);
+      this.debounceTimers.delete(key);
+    }, delay);
+    
+    this.debounceTimers.set(key, timer);
+  }
+
+  // Enhanced validation methods
+  validateName(input) {
+    this.clearError(input);
+    const value = input.value.trim();
+    
+    if (!value) {
+      this.showError(input, "Please enter your full name");
+      return false;
+    }
+    
+    if (value.length < 2) {
+      this.showError(input, "Name must be at least 2 characters long");
+      return false;
+    }
+    
+    if (!/^[a-zA-Z\s'-]+$/.test(value)) {
+      this.showError(input, "Name can only contain letters, spaces, hyphens, and apostrophes");
+      return false;
+    }
+    
+    if (value.split(' ').length < 2) {
+      this.showError(input, "Please enter your full name (first and last)", 'warning');
+      return true; // Allow but warn
+    }
+    
+    this.showError(input, "Name looks good!", 'success');
+    return true;
+  }
+
+  validateEmail(input) {
+    this.clearError(input);
+    const value = input.value.trim();
+    
+    if (!value) {
+      this.showError(input, "Email address is required");
+      return false;
+    }
+    
+    // Enhanced email regex
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    
+    if (!emailRegex.test(value)) {
+      this.showError(input, "Please enter a valid email address");
+      return false;
+    }
+    
+    // Check for common typos
+    const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+    const domain = value.split('@')[1];
+    const suggestion = this.suggestDomain(domain, commonDomains);
+    
+    if (suggestion && suggestion !== domain) {
+      this.showError(input, `Did you mean ${value.replace(domain, suggestion)}?`, 'warning');
+      return true;
+    }
+    
+    this.showError(input, "Email verified!", 'success');
+    return true;
+  }
+
+  validatePhone(input) {
+    this.clearError(input);
+    const value = input.value.replace(/\D/g, '');
+    
+    if (!value) {
+      this.showError(input, "Phone number is required");
+      return false;
+    }
+    
+    if (value.length < 7 || value.length > 15) {
+      this.showError(input, "Please enter a valid phone number (7-15 digits)");
+      return false;
+    }
+    
+    // Format phone number as user types
+    this.formatPhoneNumber(input);
+    
+    this.showError(input, "Phone number verified!", 'success');
+    return true;
+  }
+
+  validateAddress(input, fieldName = "Address") {
+    this.clearError(input);
+    const value = input.value.trim();
+    
+    if (!value) {
+      this.showError(input, `${fieldName} is required`);
+      return false;
+    }
+    
+    if (value.length < 5) {
+      this.showError(input, `${fieldName} seems too short`);
+      return false;
+    }
+    
+    this.showError(input, `${fieldName} verified!`, 'success');
+    return true;
+  }
+
+  validateZip(input) {
+    this.clearError(input);
+    const value = input.value.trim();
+    
+    if (!value) {
+      this.showError(input, "ZIP/Postal code is required");
+      return false;
+    }
+    
+    // Different patterns for different countries
+    const patterns = {
+      US: /^\d{5}(-\d{4})?$/,
+      CA: /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/,
+      UK: /^[A-Za-z]{1,2}\d[A-Za-z\d]?\s*\d[A-Za-z]{2}$/,
+      IN: /^\d{6}$/,
+      DEFAULT: /^[a-zA-Z0-9\s-]{3,12}$/
     };
-  }
-
-  getConnectionInfo() {
-    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    if (!connection) return null;
     
-    return {
-      effectiveType: connection.effectiveType,
-      downlink: connection.downlink,
-      rtt: connection.rtt,
-      saveData: connection.saveData
-    };
-  }
-
-  getPerformanceMetrics() {
-    if (!performance.timing) return null;
+    const country = document.getElementById('billingCountry')?.value || 'DEFAULT';
+    const pattern = patterns[country] || patterns.DEFAULT;
     
-    const timing = performance.timing;
-    return {
-      navigationStart: timing.navigationStart,
-      domContentLoaded: timing.domContentLoadedEventEnd - timing.navigationStart,
-      loadComplete: timing.loadEventEnd - timing.navigationStart,
-      dnsLookup: timing.domainLookupEnd - timing.domainLookupStart,
-      tcpConnection: timing.connectEnd - timing.connectStart,
-      serverResponse: timing.responseEnd - timing.requestStart
-    };
-  }
-
-  setupBehaviorTracking() {
-    // Mouse movement tracking with throttling
-    let mouseThrottle = false;
-    document.addEventListener('mousemove', (e) => {
-      if (mouseThrottle) return;
-      mouseThrottle = true;
-      setTimeout(() => mouseThrottle = false, 50);
-      
-      this.trackInteraction('mousemove', {
-        x: e.clientX,
-        y: e.clientY,
-        timestamp: Date.now()
-      });
-      
-      this.sessionData.behaviorMetrics.mouseMoves++;
-      if (!this.sessionData.eventTimeline.firstMouseMove) {
-        this.sessionData.eventTimeline.firstMouseMove = Date.now();
-      }
-    });
-
-    // Keyboard tracking
-    document.addEventListener('keydown', (e) => {
-      this.trackInteraction('keydown', {
-        key: e.key,
-        code: e.code,
-        ctrlKey: e.ctrlKey,
-        shiftKey: e.shiftKey,
-        altKey: e.altKey,
-        timestamp: Date.now()
-      });
-      
-      this.sessionData.behaviorMetrics.keyPresses++;
-      if (!this.sessionData.eventTimeline.firstKeyPress) {
-        this.sessionData.eventTimeline.firstKeyPress = Date.now();
-      }
-      
-      // Detect suspicious key combinations
-      if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && e.key === 'I')) {
-        this.flagSuspiciousActivity('dev_tools_attempt');
-      }
-    });
-
-    // Click tracking
-    document.addEventListener('click', (e) => {
-      this.trackInteraction('click', {
-        target: e.target.tagName,
-        x: e.clientX,
-        y: e.clientY,
-        timestamp: Date.now()
-      });
-      
-      this.sessionData.behaviorMetrics.clicks++;
-      if (!this.sessionData.eventTimeline.firstClick) {
-        this.sessionData.eventTimeline.firstClick = Date.now();
-      }
-    });
-
-    // Scroll tracking
-    let scrollThrottle = false;
-    document.addEventListener('scroll', () => {
-      if (scrollThrottle) return;
-      scrollThrottle = true;
-      setTimeout(() => scrollThrottle = false, 100);
-      
-      this.sessionData.behaviorMetrics.scrollEvents++;
-      this.trackInteraction('scroll', {
-        scrollY: window.scrollY,
-        timestamp: Date.now()
-      });
-    });
-
-    // Focus tracking
-    document.addEventListener('focusin', (e) => {
-      this.sessionData.behaviorMetrics.focusEvents++;
-      this.trackInteraction('focus', {
-        target: e.target.id || e.target.tagName,
-        timestamp: Date.now()
-      });
-    });
-
-    // Tab visibility changes
-    document.addEventListener('visibilitychange', () => {
-      this.trackInteraction('visibility_change', {
-        hidden: document.hidden,
-        timestamp: Date.now()
-      });
-      
-      if (document.hidden) {
-        this.startIdleTracking();
-      } else {
-        this.stopIdleTracking();
-      }
-    });
-
-    // Context menu (right-click) detection
-    document.addEventListener('contextmenu', (e) => {
-      this.flagSuspiciousActivity('context_menu_usage');
-    });
-
-    // Paste events (could indicate automated filling)
-    document.addEventListener('paste', (e) => {
-      this.trackInteraction('paste', {
-        target: e.target.id || e.target.tagName,
-        timestamp: Date.now()
-      });
-    });
-
-    // Copy events
-    document.addEventListener('copy', (e) => {
-      this.flagSuspiciousActivity('copy_attempt');
-    });
-
-    // Start idle tracking
-    this.startIdleTracking();
-  }
-
-  trackInteraction(type, data) {
-    this.lastActivity = Date.now();
-    
-    if (!this.sessionData.eventTimeline.firstInteraction) {
-      this.sessionData.eventTimeline.firstInteraction = Date.now();
+    if (!pattern.test(value)) {
+      this.showError(input, "Please enter a valid ZIP/postal code");
+      return false;
     }
     
-    this.sessionData.interactions.push({
-      type,
-      data,
-      timestamp: Date.now()
-    });
-    
-    // Keep only last 100 interactions to manage memory
-    if (this.sessionData.interactions.length > 100) {
-      this.sessionData.interactions = this.sessionData.interactions.slice(-100);
-    }
+    this.showError(input, "ZIP code verified!", 'success');
+    return true;
   }
 
-  startIdleTracking() {
-    this.stopIdleTracking();
-    this.idleTimer = setInterval(() => {
-      const idleTime = Date.now() - this.lastActivity;
-      if (idleTime > 30000) { // 30 seconds idle
-        this.sessionData.behaviorMetrics.idleTime += 1000;
+  validateCardNumber(input) {
+    this.clearError(input);
+    const value = input.value.replace(/\s+/g, '');
+    
+    if (!value) {
+      this.showError(input, "Card number is required");
+      return false;
+    }
+    
+    if (!/^\d{13,19}$/.test(value)) {
+      this.showError(input, "Card number must be 13-19 digits");
+      return false;
+    }
+    
+    // Luhn algorithm validation
+    if (!this.validateLuhn(value)) {
+      this.showError(input, "Invalid card number");
+      return false;
+    }
+    
+    // Detect card type and update UI
+    const cardType = this.detectCardType(value);
+    this.updateCardBrands(cardType);
+    
+    this.showError(input, `Valid ${cardType} card detected!`, 'success');
+    return true;
+  }
+
+  validateExpiry(input) {
+    this.clearError(input);
+    const value = input.value;
+    
+    if (!value) {
+      this.showError(input, "Expiry date is required");
+      return false;
+    }
+    
+    const match = value.match(/^(0[1-9]|1[0-2])\/([0-9]{2})$/);
+    if (!match) {
+      this.showError(input, "Expiry must be in MM/YY format");
+      return false;
+    }
+    
+    const month = parseInt(match[1], 10);
+    const year = 2000 + parseInt(match[2], 10);
+    const expiry = new Date(year, month - 1);
+    const now = new Date();
+    now.setDate(1); // Set to first day of current month
+    
+    if (expiry < now) {
+      this.showError(input, "Card has expired");
+      return false;
+    }
+    
+    // Warn if expiring soon (within 3 months)
+    const threeMonthsFromNow = new Date();
+    threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
+    
+    if (expiry < threeMonthsFromNow) {
+      this.showError(input, "Card expires soon", 'warning');
+      return true;
+    }
+    
+    this.showError(input, "Expiry date verified!", 'success');
+    return true;
+  }
+
+  validateCVV(input) {
+    this.clearError(input);
+    const value = input.value.trim();
+    
+    if (!value) {
+      this.showError(input, "CVV is required");
+      return false;
+    }
+    
+    if (!/^\d{3,4}$/.test(value)) {
+      this.showError(input, "CVV must be 3 or 4 digits");
+      return false;
+    }
+    
+    this.showError(input, "CVV verified!", 'success');
+    return true;
+  }
+
+  validateQuantity(input) {
+    this.clearError(input);
+    const value = parseInt(input.value, 10);
+    
+    if (isNaN(value) || value < 1) {
+      this.showError(input, "Quantity must be at least 1");
+      return false;
+    }
+    
+    if (value > 10) {
+      this.showError(input, "Maximum quantity is 10", 'warning');
+      input.value = 10;
+      return true;
+    }
+    
+    return true;
+  }
+
+  validateCheckbox(input, message) {
+    const formGroup = input.closest('.verification-item') || input.parentElement;
+    const existingError = formGroup.querySelector('.input-error');
+    
+    if (existingError) {
+      existingError.remove();
+    }
+    
+    if (!input.checked) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'input-error error';
+      errorDiv.innerHTML = `<span class="error-icon">❌</span><span class="error-text">${message}</span>`;
+      formGroup.appendChild(errorDiv);
+      formGroup.classList.add('error-border');
+      return false;
+    }
+    
+    formGroup.classList.remove('error-border');
+    return true;
+  }
+
+  // Helper methods
+  validateLuhn(cardNumber) {
+    let sum = 0;
+    let shouldDouble = false;
+    
+    for (let i = cardNumber.length - 1; i >= 0; i--) {
+      let digit = parseInt(cardNumber.charAt(i));
+      
+      if (shouldDouble) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
       }
-    }, 1000);
-  }
-
-  stopIdleTracking() {
-    if (this.idleTimer) {
-      clearInterval(this.idleTimer);
-      this.idleTimer = null;
-    }
-  }
-
-  flagSuspiciousActivity(type, details = {}) {
-    this.sessionData.behaviorMetrics.suspiciousActivity.push({
-      type,
-      details,
-      timestamp: Date.now()
-    });
-    
-    if (this.config.debugMode) {
-      console.warn('🚨 Suspicious activity detected:', type, details);
-    }
-  }
-
-  setupPerformanceMonitoring() {
-    // Monitor performance drops that might indicate automation
-    if ('PerformanceObserver' in window) {
-      try {
-        const observer = new PerformanceObserver((list) => {
-          const entries = list.getEntries();
-          entries.forEach(entry => {
-            if (entry.entryType === 'measure' && entry.duration > 1000) {
-              this.flagSuspiciousActivity('performance_anomaly', {
-                name: entry.name,
-                duration: entry.duration
-              });
-            }
-          });
-        });
-        
-        observer.observe({ entryTypes: ['measure', 'navigation'] });
-      } catch (error) {
-        console.warn('Performance monitoring not available:', error);
-      }
-    }
-  }
-
-  setupFormHooks() {
-    const form = document.getElementById('checkoutForm');
-    if (!form) return;
-
-    // Track form start
-    const inputs = form.querySelectorAll('input, select, textarea');
-    inputs.forEach(input => {
-      input.addEventListener('focus', () => {
-        if (!this.sessionData.eventTimeline.formStart) {
-          this.sessionData.eventTimeline.formStart = Date.now();
-        }
-      }, { once: true });
-    });
-
-    // Track form submission
-    form.addEventListener('submit', (e) => {
-      this.sessionData.eventTimeline.formSubmit = Date.now();
-      this.handleFormSubmission(e);
-    });
-  }
-
-  async handleFormSubmission(event) {
-    if (!this.initialized) {
-      console.warn('🛡️ FraudShield not initialized, skipping fraud check');
-      return;
-    }
-
-    try {
-      const fraudData = this.collectFraudData();
       
-      if (this.config.debugMode) {
-        console.log('📊 Fraud data collected:', fraudData);
-      }
-      
-      await this.sendToBackend(fraudData);
-    } catch (error) {
-      console.error('🛡️ Fraud check failed:', error);
-      this.handleFraudCheckError(error);
-    }
-  }
-
-  collectFraudData() {
-    const now = Date.now();
-    const checkoutTime = ((now - this.sessionData.startTime) / 1000).toFixed(2);
-    
-    // Get form data safely
-    const formData = this.getFormData();
-    
-    // Calculate behavior scores
-    const behaviorScore = this.calculateBehaviorScore();
-    
-    return {
-      // Authentication
-      api_key: this.getApiKey(),
-      user_email: this.getUserEmail(),
-      
-      // Session data
-      session_id: this.generateSessionId(),
-      timestamp: new Date().toISOString(),
-      checkout_time: parseFloat(checkoutTime),
-      
-      // Device information
-      device_fingerprint: this.fingerprint,
-      device_info: this.sessionData.deviceInfo,
-      
-      // Behavioral metrics
-      behavior_metrics: {
-        ...this.sessionData.behaviorMetrics,
-        typing_speed: this.calculateTypingSpeed(),
-        mouse_velocity: this.calculateMouseVelocity(),
-        interaction_patterns: this.analyzeInteractionPatterns(),
-        behavior_score: behaviorScore
-      },
-      
-      // Event timeline
-      event_timeline: this.sessionData.eventTimeline,
-      
-      // Form data (sanitized)
-      ...formData,
-      
-      // Risk indicators
-      risk_indicators: this.assessRiskIndicators(),
-      
-      // Performance metrics
-      page_performance: this.sessionData.deviceInfo.performance
-    };
-  }
-
-  getFormData() {
-    const data = {};
-    
-    try {
-      // Product information
-      data.product = this.getElementValue('product');
-      data.quantity = parseInt(this.getElementValue('quantity') || '1');
-      data.expected_price = parseFloat(this.getElementValue('expectedPrice') || '0');
-      data.actual_price = parseFloat(this.getElementValue('actualPrice') || '0');
-      
-      // Personal information (sanitized)
-      data.full_name = this.sanitizeString(this.getElementValue('name'));
-      data.email = this.sanitizeEmail(this.getElementValue('email'));
-      data.phone = this.sanitizePhone(this.getElementValue('phone'));
-      
-      // Address information
-      data.billing_address = this.sanitizeString(this.getElementValue('billingAddress'));
-      data.billing_city = this.sanitizeString(this.getElementValue('city'));
-      data.billing_state = this.sanitizeString(this.getElementValue('state'));
-      data.billing_zip = this.sanitizeString(this.getElementValue('zip'));
-      data.billing_country = this.getElementValue('billingCountry');
-      
-      // Verification status
-      data.email_verified = this.getCheckboxValue('emailVerified');
-      data.phone_verified = this.getCheckboxValue('phoneVerified');
-      
-      // Payment information (tokenized)
-      const cardNumber = this.getElementValue('cardNumber');
-      data.card_bin = this.extractBIN(cardNumber);
-      data.card_type = this.detectCardType(cardNumber);
-      data.card_token = this.tokenizeCard(cardNumber); // In production, use real tokenization
-      
-      // Calculate total
-      data.total_amount = data.actual_price || data.expected_price * data.quantity;
-      
-    } catch (error) {
-      console.error('Error collecting form data:', error);
+      sum += digit;
+      shouldDouble = !shouldDouble;
     }
     
-    return data;
-  }
-
-  getElementValue(id) {
-    const element = document.getElementById(id);
-    return element ? element.value.trim() : null;
-  }
-
-  getCheckboxValue(id) {
-    const element = document.getElementById(id);
-    return element ? element.checked : false;
-  }
-
-  sanitizeString(str) {
-    return str ? str.replace(/[<>\"'&]/g, '').trim() : null;
-  }
-
-  sanitizeEmail(email) {
-    if (!email) return null;
-    return email.toLowerCase().replace(/[<>\"'&]/g, '').trim();
-  }
-
-  sanitizePhone(phone) {
-    if (!phone) return null;
-    return phone.replace(/[^\d+\-\s()]/g, '').trim();
-  }
-
-  extractBIN(cardNumber) {
-    if (!cardNumber) return null;
-    const digits = cardNumber.replace(/\D/g, '');
-    return digits.length >= 6 ? digits.substring(0, 6) : null;
+    return sum % 10 === 0;
   }
 
   detectCardType(cardNumber) {
-    if (!cardNumber) return 'unknown';
-    const digits = cardNumber.replace(/\D/g, '');
-    
-    if (digits.startsWith('4')) return 'visa';
-    if (digits.startsWith('5') || digits.startsWith('2')) return 'mastercard';
-    if (digits.startsWith('3')) return 'amex';
-    return 'unknown';
-  }
-
-  tokenizeCard(cardNumber) {
-    // In production, this should use real tokenization
-    if (!cardNumber) return null;
-    const digits = cardNumber.replace(/\D/g, '');
-    return 'tok_' + this.simpleHash(digits + Date.now());
-  }
-
-  calculateBehaviorScore() {
-    const metrics = this.sessionData.behaviorMetrics;
-    const timeline = this.sessionData.eventTimeline;
-    
-    let score = 100; // Start with perfect score
-    
-    // Penalize for suspicious activities
-    score -= metrics.suspiciousActivity.length * 10;
-    
-    // Check interaction patterns
-    const totalTime = Date.now() - this.sessionData.startTime;
-    const interactionRate = this.sessionData.interactions.length / (totalTime / 1000);
-    
-    if (interactionRate > 10) score -= 20; // Too many interactions
-    if (interactionRate < 0.1) score -= 15; // Too few interactions
-    
-    // Check timing patterns
-    if (timeline.formSubmit && timeline.formStart) {
-      const fillTime = timeline.formSubmit - timeline.formStart;
-      if (fillTime < 10000) score -= 30; // Too fast (less than 10 seconds)
-      if (fillTime > 600000) score -= 10; // Too slow (more than 10 minutes)
-    }
-    
-    return Math.max(0, Math.min(100, score));
-  }
-
-  calculateTypingSpeed() {
-    const keyPresses = this.sessionData.behaviorMetrics.keyPresses;
-    const totalTime = (Date.now() - this.sessionData.startTime) / 1000;
-    return totalTime > 0 ? (keyPresses / totalTime * 60).toFixed(2) : 0;
-  }
-
-  calculateMouseVelocity() {
-    const mouseMoves = this.sessionData.interactions.filter(i => i.type === 'mousemove');
-    if (mouseMoves.length < 2) return 0;
-    
-    let totalDistance = 0;
-    for (let i = 1; i < mouseMoves.length; i++) {
-      const prev = mouseMoves[i - 1].data;
-      const curr = mouseMoves[i].data;
-      const distance = Math.sqrt(Math.pow(curr.x - prev.x, 2) + Math.pow(curr.y - prev.y, 2));
-      totalDistance += distance;
-    }
-    
-    const totalTime = (mouseMoves[mouseMoves.length - 1].timestamp - mouseMoves[0].timestamp) / 1000;
-    return totalTime > 0 ? (totalDistance / totalTime).toFixed(2) : 0;
-  }
-
-  analyzeInteractionPatterns() {
-    const interactions = this.sessionData.interactions;
     const patterns = {
-      regularityScore: 0,
-      diversityScore: 0,
-      humanLikeScore: 0
+      visa: /^4/,
+      mastercard: /^5[1-5]|^2[2-7]/,
+      amex: /^3[47]/,
+      discover: /^6(?:011|5)/,
+      diners: /^3[0689]/,
+      jcb: /^35/
     };
     
-    if (interactions.length < 5) return patterns;
-    
-    // Analyze timing regularity
-    const intervals = [];
-    for (let i = 1; i < interactions.length; i++) {
-      intervals.push(interactions[i].timestamp - interactions[i - 1].timestamp);
-    }
-    
-    const avgInterval = intervals.reduce((a, b) => a + b, 0) / intervals.length;
-    const variance = intervals.reduce((a, b) => a + Math.pow(b - avgInterval, 2), 0) / intervals.length;
-    patterns.regularityScore = Math.min(100, variance / 1000); // Higher variance = more human-like
-    
-    // Analyze interaction diversity
-    const types = new Set(interactions.map(i => i.type));
-    patterns.diversityScore = Math.min(100, types.size * 20);
-    
-    // Overall human-like score
-    patterns.humanLikeScore = (patterns.regularityScore + patterns.diversityScore) / 2;
-    
-    return patterns;
-  }
-
-  assessRiskIndicators() {
-    const indicators = [];
-    
-    // Check for automation signs
-    if (this.sessionData.behaviorMetrics.suspiciousActivity.length > 0) {
-      indicators.push('suspicious_activity_detected');
-    }
-    
-    // Check device consistency
-    if (this.sessionData.deviceInfo.screen.width < 800 || this.sessionData.deviceInfo.screen.height < 600) {
-      indicators.push('unusual_screen_size');
-    }
-    
-    // Check for missing features
-    if (!this.sessionData.deviceInfo.cookieEnabled) {
-      indicators.push('cookies_disabled');
-    }
-    
-    if (this.sessionData.deviceInfo.doNotTrack === '1') {
-      indicators.push('do_not_track_enabled');
-    }
-    
-    // Check behavior patterns
-    const behaviorScore = this.calculateBehaviorScore();
-    if (behaviorScore < 50) {
-      indicators.push('low_behavior_score');
-    }
-    
-    return indicators;
-  }
-
-  generateSessionId() {
-    return 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-  }
-
-  getApiKey() {
-    const userData = sessionStorage.getItem('fraudshield_user');
-    const apiKey = sessionStorage.getItem('fraudshield_api_key');
-    if (userData && apiKey) return apiKey;
-    return 'fsk_toe7ZZBgv8xeEWOie7KffQRfwg8dMSuJRwtOY0Tjdak'; // Demo key
-  }
-
-  getUserEmail() {
-    const userData = sessionStorage.getItem('fraudshield_user');
-    if (userData) {
-      try {
-        const parsed = JSON.parse(userData);
-        return parsed.user?.email || null;
-      } catch (e) {
-        return null;
+    for (const [type, pattern] of Object.entries(patterns)) {
+      if (pattern.test(cardNumber)) {
+        return type.charAt(0).toUpperCase() + type.slice(1);
       }
     }
+    
+    return 'Unknown';
+  }
+
+  updateCardBrands(detectedType) {
+    const brands = document.querySelectorAll('.card-brand');
+    brands.forEach(brand => {
+      brand.style.opacity = '0.3';
+      if (brand.classList.contains(detectedType.toLowerCase())) {
+        brand.style.opacity = '1';
+        brand.style.transform = 'scale(1.1)';
+      }
+    });
+  }
+
+  suggestDomain(domain, commonDomains) {
+    const threshold = 2; // Levenshtein distance threshold
+    
+    for (const commonDomain of commonDomains) {
+      if (this.levenshteinDistance(domain, commonDomain) <= threshold) {
+        return commonDomain;
+      }
+    }
+    
     return null;
   }
 
-  async sendToBackend(payload) {
-    const submitBtn = document.querySelector('.submit-btn');
-    const loadingOverlay = document.getElementById('loadingOverlay');
+  levenshteinDistance(str1, str2) {
+    const matrix = [];
     
-    // Show loading state
-    if (submitBtn) submitBtn.classList.add('loading');
-    if (loadingOverlay) loadingOverlay.classList.add('active');
-    
-    try {
-      const response = await this.makeRequest(payload);
-      const result = await response.json();
-      
-      if (response.ok) {
-        this.displayResult(result);
-        this.clearStoredData();
-      } else {
-        throw new Error(result.error || `API request failed with status ${response.status}`);
-      }
-      
-    } catch (error) {
-      console.error('🛡️ FraudShield API error:', error);
-      this.handleFraudCheckError(error, payload);
-    } finally {
-      // Hide loading state
-      if (submitBtn) submitBtn.classList.remove('loading');
-      if (loadingOverlay) loadingOverlay.classList.remove('active');
+    for (let i = 0; i <= str2.length; i++) {
+      matrix[i] = [i];
     }
+    
+    for (let j = 0; j <= str1.length; j++) {
+      matrix[0][j] = j;
+    }
+    
+    for (let i = 1; i <= str2.length; i++) {
+      for (let j = 1; j <= str1.length; j++) {
+        if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
+          matrix[i][j] = matrix[i - 1][j - 1];
+        } else {
+          matrix[i][j] = Math.min(
+            matrix[i - 1][j - 1] + 1,
+            matrix[i][j - 1] + 1,
+            matrix[i - 1][j] + 1
+          );
+        }
+      }
+    }
+    
+    return matrix[str2.length][str1.length];
   }
 
-  async makeRequest(payload, retryCount = 0) {
-    try {
-      const response = await fetch(this.config.apiEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${payload.api_key}`,
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify(payload),
-        credentials: 'same-origin'
+  formatPhoneNumber(input) {
+    let value = input.value.replace(/\D/g, '');
+    
+    if (value.length >= 10) {
+      value = value.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+    } else if (value.length >= 6) {
+      value = value.replace(/(\d{3})(\d{3})/, '($1) $2');
+    } else if (value.length >= 3) {
+      value = value.replace(/(\d{3})/, '($1)');
+    }
+    
+    input.value = value;
+  }
+
+  setupValidators() {
+    this.validators.set('name', (input) => this.validateName(input));
+    this.validators.set('email', (input) => this.validateEmail(input));
+    this.validators.set('phone', (input) => this.validatePhone(input));
+    this.validators.set('billingAddress', (input) => this.validateAddress(input, 'Billing address'));
+    this.validators.set('city', (input) => this.validateAddress(input, 'City'));
+    this.validators.set('state', (input) => this.validateAddress(input, 'State/Province'));
+    this.validators.set('zip', (input) => this.validateZip(input));
+    this.validators.set('billingCountry', (input) => input.value ? true : (this.showError(input, 'Please select a country'), false));
+    this.validators.set('cardNumber', (input) => this.validateCardNumber(input));
+    this.validators.set('expiry', (input) => this.validateExpiry(input));
+    this.validators.set('cvv', (input) => this.validateCVV(input));
+    this.validators.set('quantity', (input) => this.validateQuantity(input));
+  }
+
+  attachEventListeners() {
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('checkoutForm');
+      if (!form) return;
+
+      // Form submission
+      form.addEventListener('submit', (e) => this.handleSubmit(e));
+
+      // Live validation
+      this.validators.forEach((validator, fieldId) => {
+        const field = document.getElementById(fieldId);
+        if (!field) return;
+
+        // Blur validation (immediate)
+        field.addEventListener('blur', () => {
+          if (field.value.trim()) {
+            validator(field);
+          }
+        });
+
+        // Input validation (debounced)
+        field.addEventListener('input', () => {
+          this.clearError(field);
+          if (field.value.trim()) {
+            this.debounceValidation(field, validator);
+          }
+        });
       });
-      
-      return response;
-    } catch (error) {
-      if (retryCount < this.config.maxRetries) {
-        await this.delay(this.config.retryDelay * (retryCount + 1));
-        return this.makeRequest(payload, retryCount + 1);
+
+      // Special formatting handlers
+      const cardNumber = document.getElementById('cardNumber');
+      if (cardNumber) {
+        cardNumber.addEventListener('input', (e) => {
+          let value = e.target.value.replace(/\D/g, '');
+          value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+          e.target.value = value;
+        });
       }
-      throw error;
-    }
-  }
 
-  delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+      const expiry = document.getElementById('expiry');
+      if (expiry) {
+        expiry.addEventListener('input', (e) => {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+          }
+          e.target.value = value;
+        });
+      }
 
-  handleFraudCheckError(error, payload) {
-    let errorMessage = '🛡️ Fraud detection temporarily unavailable.';
-    
-    if (error.message.includes('Invalid API key') || error.message.includes('401')) {
-      errorMessage = '🔐 Authentication failed. Please check your API key.';
-    } else if (error.message.includes('Network') || error.message.includes('fetch')) {
-      errorMessage = '🌐 Network error. Please check your connection.';
-    } else if (error.message.includes('timeout')) {
-      errorMessage = '⏱️ Request timeout. Please try again.';
-    }
-    
-    this.showNotification(errorMessage, 'error');
-    
-    // Store data for retry
-    if (payload) {
-      localStorage.setItem('fraudshield_retry_data', JSON.stringify({
-        payload,
-        timestamp: Date.now(),
-        attempts: 1
-      }));
-    }
-  }
-
-  displayResult(data) {
-    let resultBox = document.getElementById('fraudResult');
-    if (!resultBox) {
-      resultBox = document.createElement('div');
-      resultBox.id = 'fraudResult';
-      resultBox.className = 'fraud-result';
-      const container = document.querySelector('.checkout-container');
-      if (container) container.appendChild(resultBox);
-    }
-    
-    const fraudData = data.data || data;
-    const isLegit = fraudData.is_fraud !== true;
-    const status = fraudData.is_fraud === true ? '❌ FRAUD DETECTED'
-                 : fraudData.is_fraud === 'chance' ? '🟡 SUSPICIOUS TRANSACTION'  
-                 : '✅ TRANSACTION APPROVED';
-    
-    const statusColor = isLegit ? 'var(--success)' : 'var(--error)';
-    
-    resultBox.innerHTML = `
-      <div style="text-align: center; margin-bottom: 1.5rem;">
-        <h3 style="color: ${statusColor}; font-size: 1.5rem; margin-bottom: 0.5rem;">
-          🛡️ FraudShield Analysis Complete
-        </h3>
-        <div style="font-size: 1.25rem; font-weight: bold; color: ${statusColor};">
-          ${status}
-        </div>
-      </div>
-      
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-        <div style="background: var(--surface); padding: 1rem; border-radius: 0.5rem; text-align: center;">
-          <div style="font-size: 2rem; font-weight: bold; color: ${statusColor};">
-            ${fraudData.fraud_score || 0}
-          </div>
-          <div style="color: var(--text-secondary); font-size: 0.875rem;">Fraud Score</div>
-        </div>
-        
-        <div style="background: var(--surface); padding: 1rem; border-radius: 0.5rem; text-align: center;">
-          <div style="font-size: 1.25rem; font-weight: bold; color: var(--text-primary);">
-            ${fraudData.decision || 'PENDING'}
-          </div>
-          <div style="color: var(--text-secondary); font-size: 0.875rem;">Decision</div>
-        </div>
-      </div>
-      
-      ${fraudData.reasons && fraudData.reasons.length > 0 ? `
-        <div style="margin-bottom: 1.5rem;">
-          <h4 style="color: var(--text-primary); margin-bottom: 0.75rem;">Analysis Details:</h4>
-          <ul style="list-style: none; padding: 0; margin: 0;">
-            ${fraudData.reasons.map(reason => `
-              <li style="background: var(--surface); padding: 0.75rem; margin-bottom: 0.5rem; border-radius: 0.375rem; border-left: 3px solid ${statusColor};">
-                ${reason}
-              </li>
-            `).join('')}
-          </ul>
-        </div>
-      ` : ''}
-      
-      <div style="text-align: center; color: var(--text-secondary); font-size: 0.875rem;">
-        Analysis completed at ${new Date(fraudData.analysis_timestamp || Date.now()).toLocaleString()}
-      </div>
-    `;
-    
-    // Animate result appearance
-    resultBox.style.opacity = '0';
-    resultBox.style.transform = 'translateY(20px)';
-    resultBox.classList.add('show');
-    
-    requestAnimationFrame(() => {
-      resultBox.style.transition = 'all 0.4s ease';
-      resultBox.style.opacity = '1';
-      resultBox.style.transform = 'translateY(0)';
+      // Checkbox validation
+      const checkboxes = ['emailVerified', 'phoneVerified'];
+      checkboxes.forEach(id => {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+          checkbox.addEventListener('change', () => {
+            const messages = {
+              emailVerified: 'Please verify your email address',
+              phoneVerified: 'Please verify your phone number'
+            };
+            this.validateCheckbox(checkbox, messages[id]);
+          });
+        }
+      });
     });
-    
-    // Scroll to result
-    setTimeout(() => {
-      resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 200);
   }
 
-  showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification notification-${type}`;
-    notification.style.cssText = `
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: ${type === 'error' ? 'var(--error)' : 'var(--primary)'};
-      color: white;
-      padding: 1rem 1.5rem;
-      border-radius: 0.5rem;
-      box-shadow: var(--shadow-lg);
-      z-index: 10000;
-      max-width: 400px;
-      transform: translateX(100%);
-      transition: transform 0.3s ease;
+  handleSubmit(e) {
+    if (this.isSubmitting) {
+      e.preventDefault();
+      return;
+    }
+
+    let isValid = true;
+    const fields = [
+      'name', 'email', 'phone', 'billingAddress', 'city', 
+      'state', 'zip', 'billingCountry', 'cardNumber', 
+      'expiry', 'cvv', 'quantity'
+    ];
+
+    // Validate all fields
+    fields.forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      const validator = this.validators.get(fieldId);
+      
+      if (field && validator) {
+        if (!validator(field)) {
+          isValid = false;
+        }
+      }
+    });
+
+    // Validate checkboxes
+    const emailVerified = document.getElementById('emailVerified');
+    const phoneVerified = document.getElementById('phoneVerified');
+    
+    if (!this.validateCheckbox(emailVerified, 'Please verify your email address')) {
+      isValid = false;
+    }
+    
+    if (!this.validateCheckbox(phoneVerified, 'Please verify your phone number')) {
+      isValid = false;
+    }
+
+    if (!isValid) {
+      e.preventDefault();
+      this.focusFirstError();
+      this.showValidationSummary();
+      return false;
+    }
+
+    // Set submitting state
+    this.isSubmitting = true;
+    const submitBtn = document.querySelector('.submit-btn');
+    if (submitBtn) {
+      submitBtn.classList.add('loading');
+      setTimeout(() => {
+        this.isSubmitting = false;
+        submitBtn.classList.remove('loading');
+      }, 5000);
+    }
+
+    return true;
+  }
+
+  focusFirstError() {
+    const firstError = document.querySelector('.error-border');
+    if (firstError) {
+      firstError.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'center',
+        inline: 'nearest'
+      });
+      firstError.focus();
+    }
+  }
+
+  showValidationSummary() {
+    const errors = document.querySelectorAll('.input-error.error');
+    if (errors.length === 0) return;
+
+    const toast = document.createElement('div');
+    toast.className = 'validation-toast';
+    toast.innerHTML = `
+      <div class="toast-content">
+        <span class="toast-icon">⚠️</span>
+        <span class="toast-text">Please fix ${errors.length} error${errors.length > 1 ? 's' : ''} before continuing</span>
+      </div>
     `;
-    notification.textContent = message;
-    
-    document.body.appendChild(notification);
-    
-    // Animate in
+
+    document.body.appendChild(toast);
+
     setTimeout(() => {
-      notification.style.transform = 'translateX(0)';
-    }, 100);
-    
-    // Auto remove
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    }, 10);
+
     setTimeout(() => {
-      notification.style.transform = 'translateX(100%)';
-      setTimeout(() => notification.remove(), 300);
-    }, 5000);
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(-20px)';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
   }
 
-  clearStoredData() {
-    localStorage.removeItem('fraudshield_retry_data');
-  }
-
-  displayStatus() {
-    const apiKey = this.getApiKey();
-    const userEmail = this.getUserEmail();
-    
-    let statusDiv = document.getElementById('apiKeyStatus');
-    if (!statusDiv) {
-      statusDiv = document.createElement('div');
-      statusDiv.id = 'apiKeyStatus';
-      statusDiv.style.cssText = `
+  addStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .input-error {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+        font-size: 12px;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.2s ease-out;
+      }
+      
+      .input-error.error {
+        color: var(--error);
+      }
+      
+      .input-error.warning {
+        color: var(--warning);
+      }
+      
+      .input-error.success {
+        color: var(--success);
+      }
+      
+      .error-border {
+        border-color: var(--error) !important;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+      }
+      
+      .verification-item.error-border {
+        border-color: var(--error) !important;
+        background: rgba(239, 68, 68, 0.05);
+      }
+      
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+      }
+      
+      .validation-toast {
         position: fixed;
         top: 20px;
         right: 20px;
         background: var(--glass-bg);
-        backdrop-filter: blur(10px);
-        border: 1px solid var(--glass-border);
-        border-radius: 0.5rem;
-        padding: 1rem;
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-        z-index: 1000;
-        max-width: 280px;
-        box-shadow: var(--shadow);
-      `;
-      document.body.appendChild(statusDiv);
-    }
-    
-    const status = userEmail && apiKey !== 'fsk_toe7ZZBgv8xeEWOie7KffQRfwg8dMSuJRwtOY0Tjdak' 
-      ? { type: 'authenticated', icon: '🔐', color: 'var(--success)' }
-      : apiKey 
-      ? { type: 'demo', icon: '🔑', color: 'var(--warning)' }
-      : { type: 'none', icon: '❌', color: 'var(--error)' };
-    
-    statusDiv.innerHTML = `
-      <div style="color: ${status.color}; font-weight: 600; margin-bottom: 0.5rem;">
-        ${status.icon} ${status.type === 'authenticated' ? 'Authenticated' : status.type === 'demo' ? 'Demo Mode' : 'Not Authenticated'}
-      </div>
-      ${userEmail ? `<div>User: ${userEmail}</div>` : ''}
-      <div style="font-family: monospace; word-break: break-all;">
-        Key: ${apiKey ? apiKey.substring(0, 15) + '...' : 'None'}
-      </div>
-      <div style="margin-top: 0.5rem; font-size: 0.625rem; opacity: 0.7;">
-        Session: ${this.fingerprint ? this.fingerprint.substring(0, 8) : 'Unknown'}
-      </div>
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--error);
+        border-radius: 12px;
+        padding: 16px;
+        z-index: 1001;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.3s ease-out;
+        max-width: 300px;
+      }
+      
+      .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--text-primary);
+        font-size: 14px;
+        font-weight: 500;
+      }
+      
+      .toast-icon {
+        font-size: 16px;
+      }
     `;
-  }
-
-  // Public methods for external use
-  getSessionData() {
-    return { ...this.sessionData };
-  }
-
-  exportData() {
-    return {
-      sessionData: this.sessionData,
-      fingerprint: this.fingerprint,
-      config: this.config
-    };
+    document.head.appendChild(style);
   }
 }
 
-// Initialize tracker when DOM is ready
-let fraudTracker;
-
-document.addEventListener('DOMContentLoaded', () => {
-  fraudTracker = new FraudShieldTracker();
-  
-  // Expose tracker globally for debugging
-  if (typeof window !== 'undefined') {
-    window.fraudTracker = fraudTracker;
-  }
-  
-  // Handle page unload
-  window.addEventListener('beforeunload', () => {
-    if (fraudTracker) {
-      fraudTracker.stopIdleTracking();
-    }
-  });
-});
-
-// Export for module systems
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = FraudShieldTracker;
-}
+// Initialize the validator
+const validator = new ModernValidator();

@@ -381,9 +381,14 @@ class FraudShieldTracker {
     });
 
     // Track form submission
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // IMPORTANT: Prevent default form submission
+      e.stopPropagation(); // Stop event bubbling
+      
       this.sessionData.eventTimeline.formSubmit = Date.now();
-      this.handleFormSubmission(e);
+      await this.handleFormSubmission(e);
+      
+      return false; // Extra safety to prevent form submission
     });
   }
 
@@ -691,6 +696,12 @@ class FraudShieldTracker {
       if (response.ok) {
         this.displayResult(result);
         this.clearStoredData();
+        
+        // Hide loading state after displaying result
+        setTimeout(() => {
+          if (submitBtn) submitBtn.classList.remove('loading');
+          if (loadingOverlay) loadingOverlay.classList.remove('active');
+        }, 500);
       } else {
         throw new Error(result.error || `API request failed with status ${response.status}`);
       }
@@ -698,8 +709,8 @@ class FraudShieldTracker {
     } catch (error) {
       console.error('🛡️ FraudShield API error:', error);
       this.handleFraudCheckError(error, payload);
-    } finally {
-      // Hide loading state
+      
+      // Hide loading state on error
       if (submitBtn) submitBtn.classList.remove('loading');
       if (loadingOverlay) loadingOverlay.classList.remove('active');
     }

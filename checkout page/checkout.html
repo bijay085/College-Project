@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <form id="checkoutForm" novalidate aria-label="Checkout form">
+    <form id="checkoutForm" novalidate aria-label="Checkout form" onsubmit="return false;">
       <!-- Billing Information Section -->
       <section class="form-section" data-section="billing">
         <div class="section-header">
@@ -493,13 +493,20 @@
       e.target.value = value;
     });
 
-    // Form submission loading state
+    // FIXED: Form submission handling
     document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+      e.preventDefault(); // Prevent default form submission
+      e.stopPropagation(); // Stop event propagation
+      
       const submitBtn = document.querySelector('.submit-btn');
       submitBtn.classList.add('loading');
       
       // Show loading overlay
       document.getElementById('loadingOverlay').classList.add('active');
+      
+      // The fraud check will be handled by FraudShieldTracker
+      console.log('Form submitted, fraud check in progress...');
+      return false;
     });
 
     // Initialize FingerprintJS with error handling
