@@ -1,10 +1,11 @@
-// Rule Management System
+// Rule Management System - Updated for Optimized Database Structure
 class RuleManager {
     constructor() {
         this.rules = [];
         this.originalRules = {};
         this.modifiedRules = new Set();
         this.apiUrl = 'http://127.0.0.1:5000';
+        this.authApiUrl = 'http://127.0.0.1:5001/auth';
         this.init();
     }
 
@@ -18,8 +19,9 @@ class RuleManager {
         // Setup event listeners
         this.setupEventListeners();
         
-        // Load rules
+        // Load rules and system health
         await this.loadRules();
+        await this.checkSystemHealth();
     }
 
     checkAuth() {
@@ -27,6 +29,15 @@ class RuleManager {
         const apiKey = sessionStorage.getItem('fraudshield_api_key');
         
         if (!userData || !apiKey) {
+            // Check persistent storage
+            const persistentUser = localStorage.getItem('fraudshield_persistent_user');
+            const persistentKey = localStorage.getItem('fraudshield_persistent_api_key');
+            
+            if (persistentUser && persistentKey) {
+                sessionStorage.setItem('fraudshield_user', persistentUser);
+                sessionStorage.setItem('fraudshield_api_key', persistentKey);
+                return this.checkAuth();
+            }
             return false;
         }
 
@@ -48,6 +59,22 @@ class RuleManager {
         document.getElementById('refreshBtn').addEventListener('click', () => this.loadRules());
         document.getElementById('saveAllBtn').addEventListener('click', () => this.saveAllChanges());
         document.getElementById('logoutBtn').addEventListener('click', () => this.logout());
+        
+        // Session monitoring
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'fraudshield_user' || e.key === 'fraudshield_api_key') {
+                if (!e.newValue) {
+                    window.location.href = '../user_auth/pages/login.html';
+                }
+            }
+        });
+        
+        // Periodic auth check
+        setInterval(() => {
+            if (!this.checkAuth()) {
+                window.location.href = '../user_auth/pages/login.html';
+            }
+        }, 60000); // Check every minute
     }
 
     async loadRules() {
@@ -113,10 +140,17 @@ class RuleManager {
             categories[category].push(rule);
         });
 
-        // Sort categories
+        // Sort categories by priority
         const sortedCategories = {};
-        ['basic', 'advanced', 'card_patterns', 'future', 'uncategorized'].forEach(cat => {
+        ['critical', 'behavioral', 'medium', 'low', 'experimental'].forEach(cat => {
             if (categories[cat]) {
+                sortedCategories[cat] = categories[cat];
+            }
+        });
+
+        // Add any remaining categories
+        Object.keys(categories).forEach(cat => {
+            if (!sortedCategories[cat]) {
                 sortedCategories[cat] = categories[cat];
             }
         });
@@ -129,19 +163,19 @@ class RuleManager {
         section.className = 'category-section';
 
         const categoryIcons = {
-            'basic': '🔍',
-            'advanced': '🧠',
-            'card_patterns': '💳',
-            'future': '🔮',
-            'uncategorized': '📋'
+            'critical': '🚨',
+            'behavioral': '🧠',
+            'medium': '⚠️',
+            'low': 'ℹ️',
+            'experimental': '🔬'
         };
 
         const categoryNames = {
-            'basic': 'Basic Rules',
-            'advanced': 'Advanced Algorithms',
-            'card_patterns': 'Card Pattern Detection',
-            'future': 'Future Rules (Disabled)',
-            'uncategorized': 'Other Rules'
+            'critical': 'Critical Rules',
+            'behavioral': 'Behavioral Analysis',
+            'medium': 'Medium Priority',
+            'low': 'Low Priority',
+            'experimental': 'Experimental (Disabled)'
         };
 
         section.innerHTML = `
@@ -374,7 +408,7 @@ class RuleManager {
             });
 
             this.modifiedRules.clear();
-            this.renderRules(); // Re-render to clear all modified states
+            this.renderRules();
             this.showToast(`${updates.length} rules updated successfully`, 'success');
             
         } catch (error) {
@@ -406,14 +440,42 @@ class RuleManager {
         const stats = {
             total: this.rules.length,
             enabled: this.rules.filter(r => r.enabled).length,
-            basic: this.rules.filter(r => r.category === 'basic').length,
-            advanced: this.rules.filter(r => r.category === 'advanced').length
+            critical: this.rules.filter(r => r.category === 'critical').length,
+            behavioral: this.rules.filter(r => r.category === 'behavioral').length
         };
 
         document.getElementById('totalRules').textContent = stats.total;
         document.getElementById('enabledRules').textContent = stats.enabled;
-        document.getElementById('basicRules').textContent = stats.basic;
-        document.getElementById('advancedRules').textContent = stats.advanced;
+        document.getElementById('basicRules').textContent = stats.critical;
+        document.getElementById('advancedRules').textContent = stats.behavioral;
+    }
+
+    async checkSystemHealth() {
+        try {
+            const apiKey = sessionStorage.getItem('fraudshield_api_key');
+            
+            // Check fraud API health
+            const fraudHealthResponse = await fetch(`${this.apiUrl}/health`);
+            const fraudHealth = await fraudHealthResponse.json();
+            
+            // Check auth API health
+            const authHealthResponse = await fetch(`${this.authApiUrl}/health`, {
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`
+                }
+            });
+            const authHealth = await authHealthResponse.json();
+            
+            // Update UI based on health status
+            if (fraudHealth.status === 'online' && authHealth.status === 'healthy') {
+                console.log('✅ All systems operational');
+            } else {
+                console.warn('⚠️ System health degraded', { fraudHealth, authHealth });
+            }
+            
+        } catch (error) {
+            console.error('Failed to check system health:', error);
+        }
     }
 
     showToast(message, type = 'info') {
@@ -427,7 +489,14 @@ class RuleManager {
     }
 
     logout() {
+        // Clear session
         sessionStorage.clear();
+        localStorage.removeItem('fraudshield_persistent_user');
+        localStorage.removeItem('fraudshield_persistent_api_key');
+        localStorage.removeItem('fraudshield_persistent_session_id');
+        localStorage.removeItem('fraudshield_remember');
+        localStorage.removeItem('fraudshield_email');
+        
         window.location.href = '../user_auth/pages/login.html';
     }
 }
