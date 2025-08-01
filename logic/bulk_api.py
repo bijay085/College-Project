@@ -17,6 +17,7 @@ class Config:
     MAX_FILE_SIZE = 16 * 1024 * 1024
     ALLOWED_EXTENSIONS = {'csv', 'xlsx', 'json'}
     MAX_RECORDS = 5000
+    MAX_ANONYMOUS_RECORDS = 100
 
 app = Flask(__name__)
 
@@ -103,7 +104,7 @@ def get_api_key_from_request():
     return request.args.get('api_key')
 
 def log_activity(user_info, action, details, fraud_result=None):
-    if audit_logs_collection is None or not user_info:
+    if audit_logs_collection is None:
         return
     
     try:
@@ -117,9 +118,9 @@ def log_activity(user_info, action, details, fraud_result=None):
             log_level = "error"
         
         log_entry = {
-            "user_email": user_info.get("email"),
-            "user_id": user_info.get("user_id"),
-            "api_key": request.headers.get('Authorization', '').replace('Bearer ', '')[:20] + "...",
+            "user_email": user_info.get("email") if user_info else "anonymous",
+            "user_id": user_info.get("user_id") if user_info else None,
+            "api_key": request.headers.get('Authorization', '').replace('Bearer ', '')[:20] + "..." if user_info else "anonymous",
             "action": action,
             "details": details,
             "log_level": log_level,
@@ -182,6 +183,20 @@ def require_api_key(f):
         user_info = validate_api_key(api_key)
         if not user_info:
             return create_error_response("Invalid API key", 403, "API key not found or inactive")
+        
+        setattr(request, 'user_info', user_info)
+        return f(*args, **kwargs)
+    
+    return decorated_function
+
+def optional_api_key(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        api_key = get_api_key_from_request()
+        user_info = None
+        
+        if api_key:
+            user_info = validate_api_key(api_key)
         
         setattr(request, 'user_info', user_info)
         return f(*args, **kwargs)
@@ -661,7 +676,7 @@ def get_real_stats():
 
 @app.route("/bulk-check", methods=["POST"])
 @log_request
-@require_api_key
+@optional_api_key
 def bulk_check():
     if not checker:
         return create_error_response(
@@ -671,8 +686,7 @@ def bulk_check():
         )
     
     user_info = getattr(request, 'user_info', None)
-    if not user_info or 'email' not in user_info:
-        return create_error_response("User information not available", 500)
+    is_anonymous = user_info is None
     
     try:
         if hasattr(checker.metrics, 'increment_metric'):
@@ -684,34 +698,39 @@ def bulk_check():
     
     is_valid, message = validate_file(file)
     if not is_valid:
-        app.logger.warning(f"File validation failed for user {user_info['email']}: {message}")
+        app.logger.warning(f"File validation failed: {message}")
         return create_error_response(message, 400)
     
     if file:
-        app.logger.info(f"Processing file: {file.filename} for user: {user_info['email']}")
+        app.logger.info(f"Processing file: {file.filename} for user: {'anonymous' if is_anonymous else user_info['email']}")
         file.seek(0)
     else:
-        app.logger.warning(f"No file provided by user: {user_info['email']}")
+        app.logger.warning(f"No file provided by user: {'anonymous' if is_anonymous else user_info['email']}")
         return create_error_response("No file provided", 400)
     
     try:
         start_time = time.time()
         
-        app.logger.info(f"Starting enhanced bulk fraud analysis for user: {user_info['email']}")
+        app.logger.info(f"Starting enhanced bulk fraud analysis for user: {'anonymous' if is_anonymous else user_info['email']}")
         results = checker.analyze_bulk(file)
-        app.logger.info(f"Enhanced bulk fraud analysis completed for user: {user_info['email']}, got {len(results)} results")
+        app.logger.info(f"Enhanced bulk fraud analysis completed, got {len(results)} results")
         
         processing_time = time.time() - start_time
         
         if not results:
             return create_error_response("No results generated", 500)
         
-        if len(results) > Config.MAX_RECORDS:
-            app.logger.warning(f"Too many records for user {user_info['email']}: {len(results)}")
-            return create_error_response(
-                f"Too many records. Maximum allowed: {Config.MAX_RECORDS}",
-                400
-            )
+        max_records = Config.MAX_ANONYMOUS_RECORDS if is_anonymous else Config.MAX_RECORDS
+        
+        if len(results) > max_records:
+            app.logger.warning(f"Too many records for {'anonymous' if is_anonymous else user_info['email']}: {len(results)}")
+            
+            if is_anonymous:
+                error_msg = f"Too many records for anonymous users. Maximum allowed: {max_records}. Please sign in for higher limits."
+            else:
+                error_msg = f"Too many records. Maximum allowed: {max_records}"
+            
+            return create_error_response(error_msg, 400)
         
         decision_counts = {}
         algorithm_counts = {}
@@ -733,19 +752,34 @@ def bulk_check():
             else:
                 score_distribution["high"] += 1
         
-        log_activity(
-            user_info,
-            "bulk_analysis",
-            {
-                "filename": file.filename,
-                "total_records": len(results),
-                "processing_time": processing_time,
-                "decision_breakdown": decision_counts,
-                "algorithm_usage": algorithm_counts,
-                "score_distribution": score_distribution,
-                "algorithm_version": "2.0_advanced"
-            }
-        )
+        if user_info:
+            log_activity(
+                user_info,
+                "bulk_analysis",
+                {
+                    "filename": file.filename,
+                    "total_records": len(results),
+                    "processing_time": processing_time,
+                    "decision_breakdown": decision_counts,
+                    "algorithm_usage": algorithm_counts,
+                    "score_distribution": score_distribution,
+                    "algorithm_version": "2.0_advanced"
+                }
+            )
+        else:
+            log_activity(
+                {"email": "anonymous", "user_id": None},
+                "bulk_analysis_anonymous",
+                {
+                    "filename": file.filename,
+                    "total_records": len(results),
+                    "processing_time": processing_time,
+                    "decision_breakdown": decision_counts,
+                    "algorithm_usage": algorithm_counts,
+                    "score_distribution": score_distribution,
+                    "algorithm_version": "2.0_advanced"
+                }
+            )
         
         response_data = {
             "results": results,
@@ -756,8 +790,10 @@ def bulk_check():
                 "decision_breakdown": decision_counts,
                 "algorithm_usage": algorithm_counts,
                 "score_distribution": score_distribution,
-                "user_email": user_info["email"],
-                "algorithm_version": "2.0_advanced"
+                "user_email": "anonymous" if is_anonymous else user_info["email"],
+                "algorithm_version": "2.0_advanced",
+                "is_anonymous": is_anonymous,
+                "record_limit": max_records
             },
             "analysis_insights": {
                 "most_common_algorithm": max(algorithm_counts.items(), key=lambda x: x[1])[0] if algorithm_counts else None,
@@ -767,8 +803,10 @@ def bulk_check():
             }
         }
         
-        app.logger.info(f"Successfully processed {len(results)} records for user: {user_info['email']} in {processing_time:.2f}s with advanced algorithms")
-        app.logger.info(f"Algorithm usage: {algorithm_counts}")
+        if is_anonymous:
+            response_data["upgrade_message"] = "Sign in for higher limits and to save your analysis history"
+        
+        app.logger.info(f"Successfully processed {len(results)} records for {'anonymous' if is_anonymous else user_info['email']} in {processing_time:.2f}s")
         
         return create_success_response(
             response_data, 
@@ -776,16 +814,17 @@ def bulk_check():
         )
         
     except Exception as e:
-        log_activity(
-            user_info,
-            "bulk_analysis_error",
-            {
-                "filename": file.filename if file else "unknown",
-                "error": str(e)
-            }
-        )
+        if user_info:
+            log_activity(
+                user_info,
+                "bulk_analysis_error",
+                {
+                    "filename": file.filename if file else "unknown",
+                    "error": str(e)
+                }
+            )
         
-        app.logger.error(f"Enhanced bulk check failed for user {user_info['email']}: {traceback.format_exc()}")
+        app.logger.error(f"Enhanced bulk check failed: {traceback.format_exc()}")
         
         return create_error_response(
             "An unexpected error occurred during processing", 
@@ -1002,7 +1041,8 @@ if __name__ == "__main__":
     app.logger.info("Starting Enhanced FraudShield API with Advanced Algorithms...")
     app.logger.info(f"Max file size: {Config.MAX_FILE_SIZE // (1024*1024)}MB")
     app.logger.info(f"Allowed extensions: {Config.ALLOWED_EXTENSIONS}")
-    app.logger.info(f"Max records: {Config.MAX_RECORDS}")
+    app.logger.info(f"Max records (authenticated): {Config.MAX_RECORDS}")
+    app.logger.info(f"Max records (anonymous): {Config.MAX_ANONYMOUS_RECORDS}")
     
     if checker:
         app.logger.info("✅ Enhanced FraudChecker initialized")
