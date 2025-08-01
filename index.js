@@ -2177,11 +2177,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     // Check authentication for bulk analysis
+    // Check if user is authenticated (optional for bulk analysis)
     const apiKey = AuthManager.getApiKey();
-    if (!apiKey) {
-      alert('🔑 API key required for bulk analysis. Please sign in first.');
-      return;
-    }
+    const isAnonymous = !apiKey;
     
     // Reset UI
     bulkResultsBox.innerHTML = '';
@@ -2200,16 +2198,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       console.log('Sending request to bulk-check API...');
-      
-      const response = await fetch('http://127.0.0.1:5000/bulk-check', {
+
+      // Build headers - only add Authorization if user is authenticated
+    const headers = {};
+        if (!isAnonymous) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+        }
+
+        const response = await fetch('http://127.0.0.1:5000/bulk-check', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${apiKey}`
-        },
+        headers: headers,
         body: formData,
         mode: 'cors'
-      });
-
+        });
+        console.log('API response received:', response.status);
       if (progressInner) progressInner.style.width = '50%';
 
       if (!response.ok) {
@@ -2242,10 +2244,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
       console.log(`Processing ${results.length} results...`);
 
-      // Render results
-      bulkResultsBox.innerHTML = "<h3>Fraud Analysis Results</h3>";
-      bulkResultsBox.appendChild(renderTable(results));
+    // Render results
+    bulkResultsBox.innerHTML = "<h3>Fraud Analysis Results</h3>";
 
+    // Show anonymous user message if applicable
+    if (summary && summary.is_anonymous) {
+    bulkResultsBox.innerHTML += `
+        <div style="background: #fef3c7; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.2rem;">⚡</span>
+            <div>
+            <strong style="color: #d97706;">Demo Mode</strong>
+            <p style="margin: 0.25rem 0 0 0; color: #92400e; font-size: 0.9rem;">
+                Limited to ${summary.record_limit} records. 
+                <a href="/user_auth/pages/registration.html" style="color: #2563eb; text-decoration: underline;">Sign up</a> 
+                for unlimited analysis.
+            </p>
+            </div>
+        </div>
+        </div>
+    `;
+    }
+
+    bulkResultsBox.appendChild(renderTable(results));
       // Add summary after table
       setTimeout(() => {
         renderResults(results, summary);
