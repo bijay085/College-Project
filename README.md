@@ -10,7 +10,7 @@
 
 **Enterprise-grade fraud detection system with advanced machine learning algorithms, real-time analysis, and comprehensive administrative controls.**
 
-[Live Demo](http://localhost:5500) | [Documentation](#documentation) | [API Reference](#api-reference) | [Contributing](#contributing)
+[Documentation](https://github.com/bijay085/College-Project/blob/main/FraudShield.pdf) | [API Reference](#api-reference) | [Installation](#-installation)
 
 </div>
 
@@ -31,9 +31,7 @@
 - [Performance](#-performance)
 - [Testing](#-testing)
 - [Deployment](#-deployment)
-- [Contributing](#-contributing)
 - [License](#-license)
-- [Support](#-support)
 
 ---
 
@@ -190,7 +188,6 @@ graph TB
 
 - Python 3.8 or higher
 - MongoDB 4.4 or higher
-- Node.js 14+ (for development server)
 - Git
 
 ### Quick Start
@@ -604,53 +601,14 @@ volumes:
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-### Code Style
-
-- Follow PEP 8 for Python code
-- Use ESLint for JavaScript
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 💬 Support
-
-### Getting Help
-
-- 📧 Email: support@fraudshield.com
-- 💬 Discord: [Join our community](https://discord.gg/fraudshield)
-- 📚 Documentation: [docs.fraudshield.com](https://docs.fraudshield.com)
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/fraudshield/issues)
-
-### Professional Support
-
-For enterprise support and custom implementations, contact our sales team at enterprise@fraudshield.com
-
----
-
 <div align="center">
 
 **Built with ❤️ by the FraudShield Team**
-
-[Website](https://fraudshield.com) | [Blog](https://blog.fraudshield.com) | [Twitter](https://twitter.com/fraudshield)
 
 </div>
